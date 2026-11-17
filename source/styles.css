@@ -811,3 +811,10 @@ body.embed .statusbar .clk{width:auto}
 .cardmain{margin-top:12px;padding:12px 14px}
 .cardacts{margin-top:8px}
 .cardacts .btn{padding:10px 6px;font-size:14px;gap:6px}
+/* evidencias: la hora va como epígrafe con ícono de cámara, no sobre la foto */
+figure.ev{margin:0;display:flex;flex-direction:column;gap:5px}
+figure.ev .photo{width:150px;height:105px}
+figure.ev figcaption{display:flex;align-items:center;gap:5px;font-size:12px;font-weight:700;color:var(--g600)}
+figure.ev figcaption .ic{color:var(--g500)}
+figure.ev figcaption.ok,figure.ev figcaption.ok .ic{color:var(--green)}
+.photo .num{position:absolute;top:5px;right:5px;width:18px;height:18px;border-radius:50%;background:#fff;color:var(--g700);font-size:10.5px;font-weight:800;display:grid;place-items:center;box-shadow:0 1px 3px rgba(16,36,63,.3)}

@@ -822,6 +822,13 @@ body.embed .statusbar .clk{width:auto}
 .cardmain{margin-top:12px;padding:12px 14px}
 .cardacts{margin-top:8px}
 .cardacts .btn{padding:10px 6px;font-size:14px;gap:6px}
+/* evidencias: la hora va como epígrafe con ícono de cámara, no sobre la foto */
+figure.ev{margin:0;display:flex;flex-direction:column;gap:5px}
+figure.ev .photo{width:150px;height:105px}
+figure.ev figcaption{display:flex;align-items:center;gap:5px;font-size:12px;font-weight:700;color:var(--g600)}
+figure.ev figcaption .ic{color:var(--g500)}
+figure.ev figcaption.ok,figure.ev figcaption.ok .ic{color:var(--green)}
+.photo .num{position:absolute;top:5px;right:5px;width:18px;height:18px;border-radius:50%;background:#fff;color:var(--g700);font-size:10.5px;font-weight:800;display:grid;place-items:center;box-shadow:0 1px 3px rgba(16,36,63,.3)}
 
 </style>
 </head>
@@ -1835,7 +1842,7 @@ function routeMapSVG(o) {
   }
   function iconChips(path, opts, sel, map) { return '<div class="chips">' + opts.map(function (o) { var on = (sel || []).indexOf(o) >= 0, m = map[o] || ['check', o]; return '<button class="chip ic ' + (on ? 'on' : '') + '" data-a="toggle" data-f="' + path + '" data-v="' + esc(o) + '">' + icon(on ? 'check' : m[0], 16) + esc(m[1]) + '</button>'; }).join('') + '</div>'; }
   function photosField(path, list) {
-    return '<div class="photos">' + (list || []).map(function (k, i) { return '<div class="photo">' + photoSVG(k) + '<span class="tag">' + (i + 1) + '</span></div>'; }).join('') + ((list || []).length < 3 ? '<button class="photo-add" data-a="addPhoto" data-f="' + path + '" title="Agregar foto">' + icon('camera', 22) + '<span>+</span></button>' : '') + '</div>';
+    return '<div class="photos">' + (list || []).map(function (k, i) { return '<div class="photo">' + photoSVG(k) + '<span class="num">' + (i + 1) + '</span></div>'; }).join('') + ((list || []).length < 3 ? '<button class="photo-add" data-a="addPhoto" data-f="' + path + '" title="Agregar foto">' + icon('camera', 22) + '<span>+</span></button>' : '') + '</div>';
   }
   function tagChipC(t) { if (t === 'Urgente') return ichip('alert', 'Urgente', 'red'); return COND[t] ? condChip(t) : actChip(t); }
   function chatThread(side) {
@@ -2123,7 +2130,7 @@ function routeMapSVG(o) {
     h += '</div>';
     if (ch && ch.reasons && ch.reasons.length) h += '<div class="evalbar">' + icon('escalate', 18) + '<b>Requiere decisión</b><span class="sp"></span>' + ch.reasons.map(function (r) { var o = typeof r === 'string' ? { ic: 'alert', t: r } : r; return '<span class="rb" title="' + esc(o.t) + '">' + icon(o.ic, 15) + '</span>'; }).join('') + '<span class="xs">' + ch.reasons.length + ' motivos</span></div>';
     h += '</div>';
-    if (ch && ch.photos && ch.photos.length) h += '<div class="card"><div class="sec-t">Evidencias</div><div class="photos">' + ch.photos.map(function (k) { return '<div class="photo" style="width:150px;height:105px">' + photoSVG(k) + '<span class="tag">' + ce.time + '</span></div>'; }).join('') + (p.result && p.result.photos ? p.result.photos.map(function (k) { return '<div class="photo" style="width:150px;height:105px">' + photoSVG(k) + '<span class="tag">' + icon('checkCircle', 10) + ' ' + p.resultEv.time + '</span></div>'; }).join('') : '') + '</div></div>';
+    if (ch && ch.photos && ch.photos.length) h += '<div class="card"><div class="sec-t">Evidencias</div><div class="photos">' + ch.photos.map(function (k) { return '<figure class="ev"><div class="photo">' + photoSVG(k) + '</div><figcaption>' + icon('camera', 13) + 'Campo · ' + ce.time + '</figcaption></figure>'; }).join('') + (p.result && p.result.photos ? p.result.photos.map(function (k) { return '<figure class="ev"><div class="photo">' + photoSVG(k) + '</div><figcaption class="ok">' + icon('checkCircle', 13) + 'Cierre · ' + p.resultEv.time + '</figcaption></figure>'; }).join('') : '') + '</div></div>';
     if (p.ai.length) { var ai = p.ai[p.ai.length - 1]; h += '<div class="card airow"><span class="ii">' + icon('spark', 20) + '</span><div style="flex:1;min-width:0"><div class="row" style="gap:8px"><b>Consulta a la IA · ' + ai.time + '</b>' + (PRES ? '' : '<span class="pill ia" style="padding:1px 7px;font-size:10.5px">simulada</span>') + '</div><div class="small muted ellipsis" title="' + esc(ai.data.q) + '">«' + esc(ai.data.q) + '»</div></div><div class="ichips" style="flex:none">' + ichip('history', '#0176', 'ia') + ichip('book', ai.data.crit.length + ' criterios', 'ia') + ichip('lock', 'Sin maniobras', 'ok') + '</div></div>'; }
     h += '<div class="card reg">' + regBox(inc, 'd') + '</div>';
     h += '</div><div>';
