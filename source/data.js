@@ -132,7 +132,9 @@ function seedIncidents() {
       events: [
         { id: 'a1', type: 'created', src: 'central', who: 'Operaciones', time: '07:45', synced: true, text: 'Orden creada.' },
         { id: 'a2', type: 'assigned', src: 'central', who: 'Operaciones', time: '07:50', synced: true, text: 'Asignada a Cuadrilla 1.' },
-        { id: 'a3', type: 'started', src: 'campo', who: 'Cuadrilla 1', time: '08:20', synced: true, text: 'Intervención iniciada.' }
+        { id: 'a3', type: 'started', src: 'campo', who: 'Cuadrilla 1', time: '08:20', synced: true, text: 'Intervención iniciada.' },
+        { id: 'a4', type: 'msg', src: 'campo', who: 'Cuadrilla 1', time: '08:25', synced: true, syncedAt: '08:25', data: { text: 'Llegamos. Presión baja en toda la manzana, revisamos la válvula de vereda.', tags: [], photos: [] } },
+        { id: 'a5', type: 'msg', src: 'central', who: 'Operaciones · L. Ferreyra', time: '08:31', synced: true, syncedAt: '08:31', data: { text: 'Ok. Si hace falta un corte, avisame antes por acá.', tags: [], photos: [] } }
       ]
     },
     '0250': {
@@ -140,7 +142,9 @@ function seedIncidents() {
       description: 'Agua en nicho de medidor.', reportedBy: 'Teléfono', reportedAt: '08:30', crew: 'Cuadrilla 2', priority: 'Baja',
       events: [
         { id: 'b1', type: 'created', src: 'central', who: 'Operaciones', time: '08:35', synced: true, text: 'Orden creada.' },
-        { id: 'b2', type: 'assigned', src: 'central', who: 'Operaciones', time: '08:40', synced: true, text: 'Asignada a Cuadrilla 2.' }
+        { id: 'b2', type: 'assigned', src: 'central', who: 'Operaciones', time: '08:40', synced: true, text: 'Asignada a Cuadrilla 2.' },
+        { id: 'b3', type: 'msg', src: 'central', who: 'Operaciones · L. Ferreyra', time: '08:41', synced: true, syncedAt: '08:41', data: { text: 'C2, la #0250 es en el nicho del medidor. El vecino está en casa.', tags: [], photos: [] } },
+        { id: 'b4', type: 'msg', src: 'campo', who: 'Cuadrilla 2', time: '08:44', synced: true, syncedAt: '08:44', data: { text: 'Recibido, vamos para allá.', tags: [], photos: [] } }
       ]
     },
     '0251': {
@@ -165,7 +169,8 @@ function seedIncidents() {
       events: [
         { id: 'd1', type: 'created', src: 'central', who: 'Operaciones', time: '07:00', synced: true, text: 'Orden creada.' },
         { id: 'd2', type: 'assigned', src: 'central', who: 'Operaciones', time: '07:05', synced: true, text: 'Asignada a Cuadrilla 4.' },
-        { id: 'd3', type: 'started', src: 'campo', who: 'Cuadrilla 4', time: '07:30', synced: true, text: 'Intervención iniciada.' }
+        { id: 'd3', type: 'started', src: 'campo', who: 'Cuadrilla 4', time: '07:30', synced: true, text: 'Intervención iniciada.' },
+        { id: 'd4', type: 'msg', src: 'campo', who: 'Cuadrilla 4', time: '07:40', synced: true, syncedAt: '07:40', data: { text: 'Arrancamos con la reposición de vereda, termina antes del mediodía.', tags: [], photos: [] } }
       ]
     }
   };
@@ -186,6 +191,10 @@ const DEMO_CHANGE = {
 };
 
 /* Ruta del día de la Cuadrilla 3 (orden actual, la que sigue y las siguientes) */
+/* Conversaciones de Operaciones con cada cuadrilla (una por orden en curso) */
+const CHAT_INCS = ['0248', '0249', '0250', '0246'];
+const CREW_NAME = { 'Cuadrilla 1': 'Martín · C1', 'Cuadrilla 2': 'Sofía · C2', 'Cuadrilla 3': 'Raúl · C3', 'Cuadrilla 4': 'Diego · C4' };
+
 const ROUTE = [{ id: '0248', time: '09:00' }, { id: '0251', time: '14:00' }, { id: '0253', time: '16:00' }];
 
 /* Chat campo ↔ Operaciones: atajos que la cuadrilla puede sumar al mensaje */

@@ -45,7 +45,7 @@
       incidents: seedIncidents(), history: clone(HISTORY_SEED), alerts: [], chat: [], chatPending: false,
       drafts: { change: null, result: null, update: null, valid: null, composer: '', cmsg: null, omsg: null },
       hist: { q: '', status: 'todos', sector: 'Todos' }, crit: { cat: 'todas', open: null, hl: [] },
-      syncUI: null, newCase: null, seenUpdate: false, seq: 100, fric: false, menu: false, readM: 0, tlOpen: { m: false, d: false }
+      syncUI: null, newCase: null, seenUpdate: false, seq: 100, fric: false, menu: false, readM: 0, readD: { '0249': 1, '0250': 1, '0246': 1 }, tlOpen: { m: false, d: false }
     };
   }
   function save() { if (!persist) return; try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) { } }
@@ -215,15 +215,15 @@
     if (S.online) { S.lastSync = now(); makeAlert(inc, ev); }
     S.drafts.cmsg = null; commit(); scrollEnd('m'); return true;
   }
-  function sendOpsMsg() {
+  function sendOpsMsg(id) {
     ensureOMsg();
-    var d = S.drafts.omsg, inc = inc0248();
+    var d = S.drafts.omsg, inc = S.incidents[id || (S.d.name === 'chat' || S.d.name === 'incidente' ? S.d.id : null) || '0248'], c3 = inc.id === '0248';
     if (!(d.text || '').trim() && !d.priority && !d.authorized.length) return false;
     var pr = d.priority || (d.authorized.length ? proj(inc, 'd').priority : '');
-    addEvent(inc, { type: 'msg', src: 'central', who: S.deskRole === 'supervision' ? 'Supervisión · C. Duarte' : 'Operaciones · L. Ferreyra', time: tick(6), synced: S.online, syncedAt: S.online ? now() : null, data: { text: (d.text || '').trim(), priority: pr, authorized: d.authorized.slice(), pending: [] } });
+    addEvent(inc, { type: 'msg', src: 'central', who: S.deskRole === 'supervision' ? 'Supervisión · C. Duarte' : 'Operaciones · L. Ferreyra', time: tick(6), synced: c3 ? S.online : true, syncedAt: (c3 ? S.online : true) ? now() : null, data: { text: (d.text || '').trim(), priority: pr, authorized: d.authorized.slice(), pending: [] } });
     S.alerts.forEach(function (a) { if (a.inc === inc.id && (a.kind === 'change' || a.kind === 'msg')) a.read = true; });
     S.drafts.omsg = null; S.seenUpdate = false;
-    toast(S.online ? 'Enviado a Cuadrilla 3' : 'Guardado · se entrega cuando C3 tenga señal', 'send');
+    toast(!c3 || S.online ? 'Enviado a ' + inc.crew : 'Guardado · se entrega cuando C3 tenga señal', 'send');
     commit(); return true;
   }
   function makeAlert(inc, ev) {
@@ -595,8 +595,8 @@
     return '<div class="photos">' + (list || []).map(function (k, i) { return '<div class="photo">' + photoSVG(k) + '<span class="num">' + (i + 1) + '</span></div>'; }).join('') + ((list || []).length < 3 ? '<button class="photo-add" data-a="addPhoto" data-f="' + path + '" title="Agregar foto">' + icon('camera', 22) + '<span>+</span></button>' : '') + '</div>';
   }
   function tagChipC(t) { if (t === 'Urgente') return ichip('alert', 'Urgente', 'red'); return COND[t] ? condChip(t) : actChip(t); }
-  function chatThread(side) {
-    var inc = inc0248(), p = proj(inc, side), me = side === 'm' ? 'campo' : 'central', h = '';
+  function chatThread(side, id) {
+    var inc = S.incidents[id || '0248'], p = proj(inc, side), me = side === 'm' ? 'campo' : 'central', h = '';
     var lastCrew = null; p.msgs.forEach(function (e) { if (e.src === 'campo') lastCrew = e; });
     p.events.forEach(function (e) {
       if (e.type === 'assigned') h += '<div class="sysnote">' + icon('users', 13) + 'Orden asignada a C3 · ' + e.time + '</div>';
@@ -605,7 +605,7 @@
       else if (e.type === 'validated') h += '<div class="sysnote ok">' + icon('stamp', 13) + 'Cierre validado · ' + e.time + '</div>';
       else if (e.type === 'msg') {
         var mine = e.src === me, d = e.data;
-        var who = e.src === 'campo' ? 'Raúl · C3' : (e.who && e.who.indexOf('Supervis') === 0 ? 'Carla · Supervisión' : 'Lucía · Operaciones');
+        var who = e.src === 'campo' ? (CREW_NAME[inc.crew] || inc.crew) : (e.who && e.who.indexOf('Supervis') === 0 ? 'Carla · Supervisión' : 'Lucía · Operaciones');
         var st = '';
         if (e.src === 'campo' && side === 'm') st = e.synced ? '<span class="ok" title="Entregado ' + (e.syncedAt || '') + '">' + icon('checks', 14) + '</span>' : '<span class="pend" title="Sin enviar">' + icon('clock', 13) + '</span>';
         if (e.src === 'central' && side === 'd') st = e.synced ? '<span class="ok" title="Entregado">' + icon('checks', 14) + '</span>' : '<span class="pend" title="Sin entregar: C3 sin señal">' + icon('clock', 13) + '</span>';
@@ -629,7 +629,7 @@
       var pend = p.msgs.filter(function (e) { return e.src === 'campo' && !e.synced; }).length;
       if (pend) h += '<div class="sysnote warn">' + icon('wifiOff', 13) + pend + ' sin enviar · salen cuando vuelva la señal</div>';
       else if (p.change && !p.update && !p.result) h += '<div class="sysnote">' + icon('hourglass', 13) + 'Esperando respuesta de Operaciones</div>';
-    } else if (!S.online) h += '<div class="sysnote warn">' + icon('wifiOff', 13) + 'C3 sin señal desde ' + lastCrewContact() + ' · lo que mandes se entrega al reconectar</div>';
+    } else if (!S.online && inc.id === '0248') h += '<div class="sysnote warn">' + icon('wifiOff', 13) + 'C3 sin señal desde ' + lastCrewContact() + ' · lo que mandes se entrega al reconectar</div>';
     return h;
   }
   function mChangeForm() {
@@ -792,14 +792,21 @@
   }
 
   /* ================= APP ESCRITORIO · OPERACIONES / SUPERVISIÓN ================= */
+  function campoMsgs(id) { return proj(S.incidents[id], 'd').msgs.filter(function (e) { return e.src === 'campo'; }).length; }
+  function unreadD(id) { return Math.max(0, campoMsgs(id) - ((S.readD || {})[id] || 0)); }
+  function unreadDTotal() { return CHAT_INCS.reduce(function (n, id) { return n + unreadD(id); }, 0); }
+  function markReadD(id) { if (CHAT_INCS.indexOf(id) < 0) return; S.readD = S.readD || {}; S.readD[id] = campoMsgs(id); }
   function deskApp() {
+    var openChat = S.d.name === 'chat' ? (S.d.id || '0248') : (S.d.name === 'incidente' ? S.d.id : null);
+    if (openChat) markReadD(openChat); // si el chat está a la vista, queda leído
     var r = S.d.name, unread = S.alerts.filter(function (a) { return !a.read; }).length;
     var toValidate = Object.keys(S.incidents).filter(function (k) { return proj(S.incidents[k], 'd').key === 'resuelta'; }).length;
-    var nav = [['panel', 'grid', 'Panel'], ['incidencias', 'list', 'Incidencias'], ['alertas', 'bell', 'Alertas', unread], ['validaciones', 'stamp', 'Validaciones', toValidate], ['historial', 'history', 'Historial'], ['criterios', 'book', 'Criterios']];
+    var chatUn = unreadDTotal();
+    var nav = [['panel', 'grid', 'Panel'], ['incidencias', 'list', 'Incidencias'], ['chat', 'chat', 'Chat', 0, chatUn], ['alertas', 'bell', 'Alertas', unread], ['validaciones', 'stamp', 'Validaciones', toValidate], ['historial', 'history', 'Historial'], ['criterios', 'book', 'Criterios']];
     var navKey = { incidente: 'incidencias', caso: 'historial', cierre: 'validaciones' }[r] || r;
     var sup = S.deskRole === 'supervision';
-    var h = '<div class="dapp"><aside class="side"><div class="logo">' + icon('logo', 26) + '<div>CAMPO<small>' + (sup ? 'Supervisión' : 'Operaciones') + '</small></div></div><nav>' + nav.map(function (n) { return '<button data-a="dgo" data-v="' + n[0] + '" class="' + (navKey === n[0] ? 'on' : '') + '" title="' + n[2] + '">' + icon(n[1], 18) + n[2] + (n[3] ? '<span class="b">' + n[3] + '</span>' : '') + '</button>'; }).join('') + '</nav></aside>';
-    var titles = { panel: 'Panel', incidencias: 'Incidencias', alertas: 'Alertas', validaciones: 'Validaciones', historial: 'Historial', criterios: 'Criterios', incidente: 'Incidencia #' + (S.d.id || ''), caso: 'Caso #' + (S.d.id || ''), cierre: 'Cierre #0248' };
+    var h = '<div class="dapp"><aside class="side"><div class="logo">' + icon('logo', 26) + '<div>CAMPO<small>' + (sup ? 'Supervisión' : 'Operaciones') + '</small></div></div><nav>' + nav.map(function (n) { return '<button data-a="dgo" data-v="' + n[0] + '" class="' + (navKey === n[0] ? 'on' : '') + '" title="' + n[2] + (n[4] ? ' · ' + n[4] + ' sin leer' : '') + '"><span class="navic">' + icon(n[1], 18) + (n[4] ? '<i class="rdot"></i>' : '') + '</span>' + n[2] + (n[3] ? '<span class="b">' + n[3] + '</span>' : '') + '</button>'; }).join('') + '</nav></aside>';
+    var titles = { panel: 'Panel', incidencias: 'Incidencias', chat: 'Chat', alertas: 'Alertas', validaciones: 'Validaciones', historial: 'Historial', criterios: 'Criterios', incidente: 'Incidencia #' + (S.d.id || ''), caso: 'Caso #' + (S.d.id || ''), cierre: 'Cierre #0248' };
     h += '<div class="dcol"><div class="dtop"><div class="tt">' + esc(titles[r] || '') + '</div><span class="sp"></span>';
     h += '<div class="crewsig ' + (S.online ? '' : 'stale') + '" title="Último dato de la Cuadrilla 3">' + icon(S.online ? 'wifi' : 'wifiOff', 15) + '<span class="d"></span>C3 · ' + lastCrewContact() + '</div>';
     h += '<div class="seg" style="background:var(--g100)"><button class="' + (!sup ? 'on' : '') + '" style="color:' + (!sup ? 'var(--navy)' : 'var(--g600)') + '" data-a="deskrole" data-v="operaciones">Operaciones</button><button class="' + (sup ? 'on' : '') + '" style="color:' + (sup ? 'var(--navy)' : 'var(--g600)') + '" data-a="deskrole" data-v="supervision">Supervisión</button></div>';
@@ -817,6 +824,7 @@
       case 'caso': return '<button class="btn ghost sm" data-a="dgo" data-v="historial">' + icon('arrowLeft', 15) + 'Historial</button>' + caseView('d', S.d.id);
       case 'criterios': return criteriaView('d');
       case 'incidente': return dIncident();
+      case 'chat': return dChatPage();
       case 'cierre': return dClosure();
     }
     return '';
@@ -867,7 +875,7 @@
     var inc = S.incidents[S.d.id] || inc0248(), p = proj(inc, 'd');
     var kind = p.change ? p.change.type : inc.kind;
     var h = '<div class="row between wrap"><div class="row wrap"><button class="btn ghost sm" data-a="dgo" data-v="incidencias">' + icon('arrowLeft', 15) + 'Incidencias</button><span class="tic">' + icon(tIc(kind), 20) + '</span><span class="h2">#' + inc.id + ' · ' + esc(tShort(kind)) + '</span>' + statusPill(p) + prioMeter(p.priority) + '</div><span class="ichips">' + ichip('pin', (inc.short || inc.address) + ' · ' + inc.sector) + ichip('users', inc.crew) + '</span></div>';
-    if (inc.id !== '0248') return h + '<div class="card" style="margin-top:14px"><div class="small muted">' + esc(inc.description) + '</div><div class="divider"></div>' + timeline(inc, 'd') + '</div>';
+    if (inc.id !== '0248') return h + '<div class="dgrid" style="margin-top:14px"><div class="card"><div class="small muted">' + esc(inc.description) + '</div><div class="divider"></div>' + timeline(inc, 'd') + '</div><div>' + (CHAT_INCS.indexOf(inc.id) >= 0 ? dChat(inc, p) : '') + '</div></div>';
     if (!p.change) h += '<div class="statusrow gray">' + icon(S.online ? 'info' : 'wifiOff', 20) + '<b>Solo la orden original</b><span class="sp"></span><span class="wait">' + icon('clock', 15) + 'Último dato C3 ' + lastCrewContact() + '</span></div>' + fric('handoff', 'Lo que la cuadrilla registró en campo todavía no llegó a la central: depende de que vuelva la señal y se sincronice, y puede llegar tarde.');
     h += '<div class="dgrid" style="margin-top:14px"><div>';
     var ch = p.change, ce = p.changeEv;
@@ -889,18 +897,28 @@
     h += '<div class="card"><div class="sec-t">Ubicación</div><div class="map" style="height:170px">' + mapSVG(!!ch) + '</div>' + (ch ? '<div class="xs muted row" style="gap:5px;margin-top:8px"><span class="lg red"></span>Área posiblemente afectada</div>' : '') + '</div>';
     return h + '</div></div>';
   }
-  function dChat(inc, p) {
+  function dChat(inc, p, page) {
     ensureOMsg();
     var d = S.drafts.omsg;
-    var h = '<div class="card dchat" data-k="actioncard"><div class="sec-t">Chat con Cuadrilla 3' + demoBtn('opschat') + '</div>';
+    var h = '<div class="card dchat' + (page ? ' page' : '') + '" data-k="actioncard"><div class="sec-t">Chat con ' + inc.crew + (page ? ' · #' + inc.id : '') + '<span class="row" style="gap:4px">' + (page ? '<button class="btn ghost sm" data-a="dinc" data-v="' + inc.id + '">Ver #' + inc.id + ' ' + icon('arrowRight', 14) + '</button>' : '') + (inc.id === '0248' ? demoBtn('opschat') : '') + '</span></div>';
     if (p.change && !p.update) h += fric('sobrecarga', 'Leer el chat, decidir la prioridad y autorizar acciones recae en la misma persona que atiende al resto de las cuadrillas.');
-    h += '<div class="thread dthread" data-sk="d-chat">' + chatThread('d') + '</div>';
+    h += '<div class="thread dthread" data-sk="d-chat">' + chatThread('d', inc.id) + '</div>';
     if (!p.result) {
       h += '<div class="dcomp"><div class="row wrap" style="gap:6px"><span class="xs muted b">Prioridad</span>' + ['Media', 'Alta', 'Crítica'].map(function (x) { return '<button class="chip pchip u' + PLV[x] + (d.priority === x ? ' on' : '') + '" data-a="setx" data-f="omsg.priority" data-v="' + x + '">' + prioMeter(x, true) + x + '</button>'; }).join('') + '<span class="sp"></span><button class="chip ' + (d.auth ? 'on' : '') + '" data-a="setb" data-f="omsg.auth" data-v="' + (d.auth ? '0' : '1') + '">' + icon('shield', 15) + 'Autorizar' + (d.authorized.length ? ' · ' + d.authorized.length : '') + '</button></div>';
       if (d.auth) h += '<div class="checklist authl">' + DEMO_UPDATE.authorized.map(function (a) { return ckItem('omsg.authorized', a, d.authorized.indexOf(a) >= 0, ITEM_IC[a]); }).join('') + '</div>';
-      h += '<div class="crow"><textarea data-f="omsg.text" rows="2" placeholder="Escribile a la cuadrilla…">' + esc(d.text) + '</textarea><button class="snd" data-a="sendOpsMsg" aria-label="Enviar">' + icon('send', 19) + '</button></div></div>';
+      h += '<div class="crow"><textarea data-f="omsg.text" rows="2" placeholder="Escribile a la cuadrilla…">' + esc(d.text) + '</textarea><button class="snd" data-a="sendOpsMsg" data-id="' + inc.id + '" aria-label="Enviar">' + icon('send', 19) + '</button></div></div>';
     }
     return h + '</div>';
+  }
+  function dChatPage() {
+    var sel = S.d.id || '0248';
+    var list = CHAT_INCS.map(function (id) {
+      var inc = S.incidents[id], p = proj(inc, 'd'), lm = p.msgs[p.msgs.length - 1], un = unreadD(id);
+      var snip = lm ? ((lm.src === 'central' ? 'Vos: ' : '') + (lm.data.text || (lm.data.report ? 'Cambio de escenario' : 'Foto'))) : 'Sin mensajes';
+      return '<button class="conv' + (id === sel ? ' on' : '') + (un ? ' unread' : '') + '" data-a="dchat" data-v="' + id + '"><span class="cav">C' + inc.crew.slice(-1) + (un ? '<i class="rdot"></i>' : '') + '</span><span class="cb"><b>' + esc(inc.crew) + ' · #' + id + '</b><span class="xs muted ellipsis">' + esc(snip) + '</span></span><span class="cm"><span class="xs muted">' + (lm ? lm.time : '') + '</span>' + (un ? '<span class="un">' + un + '</span>' : '') + '</span></button>';
+    }).join('');
+    var inc = S.incidents[sel] || inc0248();
+    return '<div class="chatpage"><div class="card convs"><div class="sec-t">Conversaciones</div>' + list + '</div><div>' + dChat(inc, proj(inc, 'd'), true) + '</div></div>';
   }
   function dActionCard(inc, p) {
     var h = '<div class="card">';
@@ -1016,7 +1034,8 @@
       case 'tlToggle': S.tlOpen = S.tlOpen || {}; S.tlOpen[v] = !S.tlOpen[v]; commit(); break;
       case 'sendCrewMsg': sendCrewMsg(); break;
       case 'saveChange': saveChange(); break;
-      case 'sendOpsMsg': sendOpsMsg(); break;
+      case 'sendOpsMsg': sendOpsMsg(id); break;
+      case 'dchat': S.drafts.omsg = null; go('d', 'chat', v); break;
       case 'setx': setPath(f, getPath(f) === v ? '' : v); commit(); break;
       case 'rmPhoto': var rp = (getPath(f) || []).slice(); rp.splice(parseInt(v, 10), 1); setPath(f, rp); commit(); break;
       case 'start': start(id); break;
@@ -1058,7 +1077,7 @@
     var df = ev.target.getAttribute && ev.target.getAttribute('data-f');
     if (df === 'composer' && ev.key === 'Enter' && !ev.shiftKey) { ev.preventDefault(); ask(ev.target.value); }
     if (df === 'cmsg.text' && ev.key === 'Enter' && !ev.shiftKey) { ev.preventDefault(); setPath(df, ev.target.value); sendCrewMsg(); }
-    if (df === 'omsg.text' && ev.key === 'Enter' && !ev.shiftKey) { ev.preventDefault(); setPath(df, ev.target.value); sendOpsMsg(); }
+    if (df === 'omsg.text' && ev.key === 'Enter' && !ev.shiftKey) { ev.preventDefault(); setPath(df, ev.target.value); var bt = ev.target.closest('.dchat') && ev.target.closest('.dchat').querySelector('[data-a="sendOpsMsg"]'); sendOpsMsg(bt ? bt.getAttribute('data-id') : null); }
     if (ev.key === 'Escape' && S.menu) { S.menu = false; commit(); }
     if (ev.key === 'Escape' && modal) { modal = null; renderModal(); }
     if (PRES && ev.altKey && ev.shiftKey && ev.code === 'KeyR') { ev.preventDefault(); resetAll(); }

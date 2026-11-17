@@ -822,3 +822,21 @@ figure.ev figcaption.ok,figure.ev figcaption.ok .ic{color:var(--green)}
 .pm.l1{color:#1b7f50}
 .pm.l1 .pd{background:#1b9e5a;box-shadow:0 0 0 3px rgba(27,158,90,.2)}
 .urg button.on.u1{border-color:#1b9e5a;background:#eaf7ef;box-shadow:0 0 0 2px #cdebd9}
+/* Operaciones: chat en el menú lateral con punto rojo de no leído */
+.side nav .navic{position:relative;display:inline-flex}
+.rdot{position:absolute;top:-3px;right:-4px;width:9px;height:9px;border-radius:50%;background:#e5372b;box-shadow:0 0 0 2px var(--navy)}
+.chatpage{display:grid;grid-template-columns:300px minmax(0,1fr);gap:16px;align-items:start}
+.convs{padding:12px 8px}
+.convs .sec-t{padding:0 8px}
+.conv{display:flex;align-items:center;gap:10px;width:100%;text-align:left;border:0;background:transparent;border-radius:11px;padding:10px 8px}
+.conv:hover{background:var(--g50)}
+.conv.on{background:var(--blue-50)}
+.conv .cav{width:38px;height:38px;border-radius:50%;background:#e2eaf5;color:var(--navy);font-weight:800;font-size:13px;display:grid;place-items:center;flex:none;position:relative}
+.conv .cav .rdot{top:0;right:0;box-shadow:0 0 0 2px #fff}
+.conv .cb{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
+.conv .cb b{font-size:13.5px}
+.conv.unread .cb b,.conv.unread .cb .xs{color:var(--g900);font-weight:700}
+.conv .cm{display:flex;flex-direction:column;align-items:flex-end;gap:4px;flex:none}
+.conv .un{min-width:18px;height:18px;border-radius:9px;background:#e5372b;color:#fff;font-size:10.5px;font-weight:800;display:grid;place-items:center;padding:0 5px}
+.dchat.page .dthread{max-height:none;height:420px}
+@container (max-width:1060px){.chatpage{grid-template-columns:1fr}.side nav .navic .rdot{top:-4px;right:-5px}}
