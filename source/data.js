@@ -122,7 +122,8 @@ function seedIncidents() {
       reportedBy: 'Reclamo telefónico · Centro de atención', reportedAt: '08:52', crew: 'Cuadrilla 3', priority: 'Media',
       events: [
         { id: 'e1', type: 'created', src: 'central', who: 'Operaciones · L. Ferreyra', time: '08:58', synced: true, text: 'Orden #0248 creada a partir de un reclamo telefónico.' },
-        { id: 'e2', type: 'assigned', src: 'central', who: 'Operaciones · L. Ferreyra', time: '09:00', synced: true, text: 'Asignada a Cuadrilla 3 con prioridad media.' }
+        { id: 'e2', type: 'assigned', src: 'central', who: 'Operaciones · L. Ferreyra', time: '09:00', synced: true, text: 'Asignada a Cuadrilla 3 con prioridad media.' },
+        { id: 'e3', type: 'msg', src: 'central', who: 'Operaciones · L. Ferreyra', time: '09:01', synced: true, syncedAt: '09:01', data: { text: 'Hola Raúl, te asigné la #0248: pérdida en vereda, caudal bajo. Cualquier novedad, avisame por acá.', tags: [], photos: [], authorized: [] } }
       ]
     },
     '0249': {
@@ -143,11 +144,19 @@ function seedIncidents() {
       ]
     },
     '0251': {
-      id: '0251', kind: 'Revisión de conexión', address: 'Calle 10 N.º 1215', sector: 'Norte', ref: 'Programada 14:00',
+      id: '0251', kind: 'Revisión de conexión', address: 'Calle 10 N.º 1215', short: 'Calle 10 N.º 1215', sector: 'Norte', ref: 'Programada 14:00',
       description: 'Revisión programada de conexión domiciliaria.', reportedBy: 'Programada', reportedAt: '—', crew: 'Cuadrilla 3', priority: 'Baja',
       events: [
         { id: 'c1', type: 'created', src: 'central', who: 'Operaciones', time: '08:10', synced: true, text: 'Orden programada.' },
         { id: 'c2', type: 'assigned', src: 'central', who: 'Operaciones', time: '08:10', synced: true, text: 'Asignada a Cuadrilla 3 para las 14:00.' }
+      ]
+    },
+    '0253': {
+      id: '0253', kind: 'Pérdida en medidor', address: 'Calle 16 N.º 980', short: 'Calle 16 N.º 980', sector: 'Norte', ref: 'Programada 16:00',
+      description: 'Agua en nicho de medidor, reclamo de la mañana.', reportedBy: 'Teléfono', reportedAt: '08:15', crew: 'Cuadrilla 3', priority: 'Baja',
+      events: [
+        { id: 'f1', type: 'created', src: 'central', who: 'Operaciones', time: '08:20', synced: true, text: 'Orden creada.' },
+        { id: 'f2', type: 'assigned', src: 'central', who: 'Operaciones', time: '08:20', synced: true, text: 'Asignada a Cuadrilla 3 para las 16:00.' }
       ]
     },
     '0246': {
@@ -173,6 +182,17 @@ const DEMO_CHANGE = {
   urgency: 'Alta',
   actions: ['Señalización de la zona', 'Delimitación del paso peatonal', 'Registro fotográfico'],
   actionsText: '',
+  photos: ['calzada', 'vereda']
+};
+
+/* Ruta del día de la Cuadrilla 3 (orden actual, la que sigue y las siguientes) */
+const ROUTE = [{ id: '0248', time: '09:00' }, { id: '0251', time: '14:00' }, { id: '0253', time: '16:00' }];
+
+/* Chat campo ↔ Operaciones: atajos que la cuadrilla puede sumar al mensaje */
+const CHAT_TAGS = ['Agua en calzada', 'Reportes de baja presión', 'Caudal continuo', 'Hundimiento', 'Afecta el tránsito', 'Agua turbia', 'Señalización de la zona', 'Urgente'];
+const DEMO_CHAT = {
+  text: 'La pérdida es más grande de lo que decía la orden: el agua llega a la calzada y hay 4 vecinos sin presión. Ya señalizamos.',
+  tags: ['Agua en calzada', 'Reportes de baja presión', 'Caudal continuo', 'Señalización de la zona', 'Urgente'],
   photos: ['calzada', 'vereda']
 };
 

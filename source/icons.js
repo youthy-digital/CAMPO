@@ -64,6 +64,8 @@ const ICON_PATHS = {
   xCircle: '<circle cx="12" cy="12" r="8.5"/><path d="m9 9 6 6M15 9l-6 6"/>',
   minus: '<path d="M5 12h14"/>',
   escalate: '<path d="M4 18l6-6 4 4 6-6"/><path d="M15 10h5v5"/>',
+  menu: '<path d="M4 7h16M4 12h16M4 17h16"/>',
+  checks: '<path d="m2.5 12.5 4 4 8.5-9"/><path d="m11.5 16.2.3.3 8.7-9"/>',
   gps: '<circle cx="12" cy="12" r="4"/><circle cx="12" cy="12" r="1" fill="currentColor"/><path d="M12 2.5v3M12 18.5v3M2.5 12h3M18.5 12h3"/>'
 };
 function icon(name, size, cls) {

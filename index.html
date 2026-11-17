@@ -630,6 +630,139 @@ body.pres .deskframe{height:min(880px,calc(100vh - 70px))}
 body.pres .stage.split .col-d{max-width:1280px}
 @media (max-width:760px){body.pres .phone,body.pres .deskframe{height:calc(100vh - 40px)}body.pres .stage{padding:0}}
 
+/* ================= v3 · menú hamburguesa, ruta del día y chat ================= */
+.mapp{position:relative}
+.mhead .burger{position:relative}
+.bdot{position:absolute;top:6px;right:6px;width:8px;height:8px;border-radius:50%;background:#e0802c;box-shadow:0 0 0 2px #fff}
+.mhead .row:first-child{min-width:0}
+.mhead .ttl{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+/* menú lateral */
+.drawer-bg{position:absolute;inset:0;background:rgba(16,36,63,.42);z-index:30;animation:fadein .2s}
+.drawer{position:absolute;top:0;left:0;bottom:0;width:84%;max-width:320px;background:#fff;z-index:31;display:flex;flex-direction:column;box-shadow:12px 0 30px rgba(16,36,63,.25);animation:slidein .22s ease-out;overflow-y:auto}
+@keyframes slidein{from{transform:translateX(-100%)}}@keyframes fadein{from{opacity:0}}
+.dhead{display:flex;align-items:center;gap:10px;padding:44px 14px 14px;background:var(--navy);color:#fff}
+.dhead b{display:block;font-size:15px}.dhead small{display:block;font-size:12px;color:#a9bdd6;margin-top:1px}
+.dhead .avatar{background:#20406b;color:#fff}
+.dhead .back{background:#20406b;color:#fff}
+.dmsec{font-size:11px;font-weight:800;letter-spacing:.09em;text-transform:uppercase;color:var(--g500);padding:14px 16px 6px}
+.route{padding:0 10px}
+.stop{display:flex;align-items:flex-start;gap:10px;width:100%;text-align:left;border:0;background:transparent;border-radius:12px;padding:8px 8px 8px 4px;position:relative}
+.stop:hover{background:var(--g50)}
+.stop .rail{width:18px;align-self:stretch;position:relative;flex:none}
+.stop .rail i{position:absolute;left:4px;top:5px;width:10px;height:10px;border-radius:50%;background:#fff;border:2px solid var(--g300)}
+.stop .rail::after{content:"";position:absolute;left:8px;top:18px;bottom:-12px;width:2px;background:var(--g200)}
+.stop:last-child .rail::after{display:none}
+.stop.now .rail i{background:var(--blue-600);border-color:var(--blue-600);box-shadow:0 0 0 4px var(--blue-100)}
+.stop.done .rail i{background:var(--green);border-color:var(--green)}
+.stop .sb{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
+.stop .when{font-size:10.5px;font-weight:800;letter-spacing:.07em;text-transform:uppercase;color:var(--g500)}
+.stop.now .when{color:var(--blue-700)}.stop.done .when{color:var(--green)}
+.stop b{display:flex;align-items:center;gap:5px;font-size:13.5px}
+.stop small{display:flex;align-items:center;gap:3px;font-size:11.5px;color:var(--g500)}
+.stop .pill{margin-top:2px;font-size:10.5px;padding:3px 8px 3px 6px}
+.stop.now{background:var(--blue-50)}
+.dnav{display:flex;flex-direction:column;padding:0 8px}
+.dnav button{display:flex;align-items:center;gap:12px;border:0;background:transparent;padding:11px 10px;border-radius:11px;font-size:14.5px;font-weight:650;color:var(--g700);text-align:left}
+.dnav button .ic{color:var(--g500)}
+.dnav button.on{background:var(--blue-50);color:var(--blue-800)}.dnav button.on .ic{color:var(--blue-600)}
+.dnav button span:first-of-type{flex:1}
+.nb{display:inline-grid;place-items:center;min-width:19px;height:19px;padding:0 5px;border-radius:10px;background:#e0802c;color:#fff;font-size:11px;font-weight:800;margin-left:auto}
+.dfoot{margin-top:auto;padding:14px 14px 18px;display:flex;flex-wrap:wrap;gap:6px;border-top:1px solid var(--g200)}
+.dfoot .ichip{white-space:normal}
+/* ruta del día en inicio */
+.dayroute .rstop{display:flex;gap:10px}
+.dayroute .rail{width:16px;flex:none;position:relative}
+.dayroute .rail i{position:absolute;left:3px;top:4px;width:10px;height:10px;border-radius:50%;background:#fff;border:2px solid var(--g300)}
+.dayroute .rail::after{content:"";position:absolute;left:7px;top:17px;bottom:-4px;width:2px;background:var(--g200)}
+.dayroute .rstop:last-child .rail::after{display:none}
+.dayroute .rstop.now .rail i{background:var(--blue-600);border-color:var(--blue-600);box-shadow:0 0 0 4px var(--blue-100)}
+.dayroute .rstop.done .rail i{background:var(--green);border-color:var(--green)}
+.dayroute .rbody{flex:1;min-width:0;padding-bottom:12px}
+.dayroute .when{font-size:10.5px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--g500);margin:1px 0 6px}
+.dayroute .rstop.now .when{color:var(--blue-700)}
+.dayroute .rstop.done .when{color:var(--green)}
+.dayroute .order.mini{margin-top:0;cursor:pointer;width:100%;text-align:left}
+.dayroute .order.mini>.ic{color:var(--g400)}
+.chatbtn{position:relative}.chatbtn .nb{position:absolute;top:-7px;right:-6px}
+/* vista previa del chat */
+.chatprev{display:flex;align-items:center;gap:10px;width:100%;text-align:left;background:#fff;border:1px solid var(--g200);border-radius:13px;padding:11px 12px;box-shadow:var(--shadow)}
+.chatprev .ci{width:38px;height:38px;border-radius:11px;background:var(--blue-50);color:var(--blue-600);display:grid;place-items:center;flex:none;position:relative}
+.chatprev .ci .nb{position:absolute;top:-6px;right:-6px}
+.chatprev .cb{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
+.chatprev .cb b{font-size:14px}
+.chatprev>.ic{color:var(--g400)}
+/* hilo del chat */
+.chatbody{background:#eef2f7}
+.thread{display:flex;flex-direction:column;gap:8px}
+.sysnote{align-self:center;display:inline-flex;align-items:center;gap:5px;font-size:11.5px;font-weight:700;color:var(--g500);background:rgba(255,255,255,.75);border-radius:999px;padding:4px 10px;text-align:center}
+.sysnote.ok{color:var(--green)}.sysnote.warn{color:var(--amber);background:var(--amber-bg)}
+.sysnote.card{display:block;border-radius:12px;padding:10px 12px;max-width:94%;background:#fff;border:1px solid #efb9b9;box-shadow:none}
+.evalnote .row{justify-content:center}
+.bub{max-width:84%;border-radius:15px;padding:8px 10px 6px;font-size:14px;display:flex;flex-direction:column;gap:6px;box-shadow:0 1px 1px rgba(16,36,63,.06)}
+.bub.me{align-self:flex-end;background:var(--blue-600);color:#fff;border-bottom-right-radius:4px}
+.bub.them{align-self:flex-start;background:#fff;border:1px solid var(--g200);border-bottom-left-radius:4px}
+.bub.pending{background:#5f8fcf}
+.bub .bw{font-size:11px;font-weight:800;color:var(--navy);letter-spacing:.02em}
+.bub .bt{line-height:1.38}
+.bub .bm{align-self:flex-end;display:flex;align-items:center;gap:4px;font-size:10.5px;font-weight:700;opacity:.8}
+.bub.me .bm .ok{color:#cfe8ff}.bub .bm .ok{color:var(--green)}.bub .bm .pend{display:inline-flex;align-items:center;gap:3px}
+.bub.them .bm{color:var(--g500)}
+.bub.me .ichip{background:rgba(255,255,255,.18);color:#fff}
+.bub.me .ichip.red{background:#fff;color:var(--red)}
+.bub .bph{display:flex;gap:6px;flex-wrap:wrap}
+.bub .bph .photo{width:104px;height:74px;border:0}
+.bub .bprio{display:flex;align-items:center;gap:6px;font-size:12.5px;font-weight:700;color:var(--g700)}
+.bub .bauth{background:var(--green-bg);border-radius:10px;padding:7px 9px;color:#14583a}
+.bub .bauth>b{display:flex;align-items:center;gap:5px;font-size:11px;letter-spacing:.06em;text-transform:uppercase}
+.bub .bauth .todo{margin-top:2px}.bub .bauth .todo li{padding:4px 0;font-size:12.5px;border-color:#cfe8d9}
+.bub.me .bauth{color:#14583a}
+/* composer de campo */
+.ccomp{background:#fff;border-top:1px solid var(--g200);padding:8px 10px 10px}
+.qtags{margin:0 0 8px;gap:6px}
+.qtags .chip{padding:6px 10px;font-size:12.5px}
+.qtags .chip.urg>.ic{color:var(--red)}.qtags .chip.urg.on{background:var(--red);border-color:var(--red)}.qtags .chip.urg.on>.ic{color:#fff}
+.attach{display:flex;gap:6px;margin-bottom:8px}
+.attach .photo{width:64px;height:48px}
+.attach .rm{position:absolute;top:3px;right:3px;width:18px;height:18px;border-radius:50%;border:0;background:rgba(16,36,63,.75);color:#fff;display:grid;place-items:center;padding:0}
+.crow{display:flex;gap:8px;align-items:flex-end}
+.crow textarea{flex:1;border:1.5px solid var(--g300);border-radius:14px;padding:10px 12px;font-size:14px;resize:none;min-height:44px;max-height:110px;outline:none;line-height:1.35}
+.crow textarea:focus{border-color:var(--blue-500)}
+.crow .cam{width:44px;height:44px;border-radius:12px;border:1.5px solid var(--g300);background:#fff;color:var(--g600);display:grid;place-items:center;flex:none}
+.crow .snd{width:46px;height:44px;border-radius:12px;border:0;background:var(--blue-600);color:#fff;display:grid;place-items:center;flex:none}
+/* chat en el escritorio */
+.dchat .sec-t .btn{letter-spacing:0;text-transform:none}
+.dthread{max-height:420px;overflow-y:auto;background:#eef2f7;border-radius:12px;padding:12px}
+.dthread .bub{max-width:88%;font-size:13.5px}
+.dthread .bub.me{background:var(--navy)}
+.dthread .bub.me .bm .ok{color:#9fe3bf}
+.dcomp{margin-top:10px;display:flex;flex-direction:column;gap:8px}
+.dcomp .sp{flex:1}
+.dcomp .b{font-weight:800;letter-spacing:.06em;text-transform:uppercase}
+.dcomp .chip{padding:5px 10px;font-size:12.5px}
+.pchip .pm{margin-right:2px}
+.pchip.on.u2{background:#fff8e1;border-color:#d29a00;color:#7a5600}
+.pchip.on.u3{background:#fff3e8;border-color:#e07a1f;color:#a24d0b}
+.pchip.on.u4{background:var(--red-bg);border-color:var(--red);color:var(--red)}
+.authl .ck{padding:7px 9px;font-size:13px}
+.dcomp .crow textarea{min-height:52px}
+.dcomp .crow .snd{height:52px}
+/* prioridad como punto de color */
+.pm .pd{width:10px;height:10px;border-radius:50%;background:var(--g300);flex:none;display:inline-block}
+.pm.l1 .pd{background:#8d99a8;box-shadow:0 0 0 3px rgba(141,153,168,.2)}
+.pm.l2 .pd{background:#e3a008;box-shadow:0 0 0 3px rgba(227,160,8,.2)}
+.pm.l3 .pd{background:#e8710a;box-shadow:0 0 0 3px rgba(232,113,10,.2)}
+.pm.l4 .pd{background:#d93025;box-shadow:0 0 0 3px rgba(217,48,37,.22)}
+.urg button .pm .pd,.pchip .pm .pd{width:12px;height:12px}
+/* registro desplegable */
+.card.reg{padding:6px 14px}
+.reghd{display:flex;align-items:center;gap:8px;width:100%;border:0;background:none;padding:8px 0;text-align:left}
+.reghd .sec-t{margin:0;flex:1}
+.reghd>.ic{color:var(--g500)}
+.regbody{padding-bottom:6px}
+.regbody.shut .tl2 li{opacity:.9}
+.regmore{display:flex;align-items:center;gap:4px;border:0;background:none;color:var(--blue-700);font-weight:700;font-size:12.5px;padding:4px 0 6px 40px}
+.bub.me .bprio{color:#dbe6f3}
+
 </style>
 </head>
 <body>
@@ -762,7 +895,8 @@ function seedIncidents() {
       reportedBy: 'Reclamo telefónico · Centro de atención', reportedAt: '08:52', crew: 'Cuadrilla 3', priority: 'Media',
       events: [
         { id: 'e1', type: 'created', src: 'central', who: 'Operaciones · L. Ferreyra', time: '08:58', synced: true, text: 'Orden #0248 creada a partir de un reclamo telefónico.' },
-        { id: 'e2', type: 'assigned', src: 'central', who: 'Operaciones · L. Ferreyra', time: '09:00', synced: true, text: 'Asignada a Cuadrilla 3 con prioridad media.' }
+        { id: 'e2', type: 'assigned', src: 'central', who: 'Operaciones · L. Ferreyra', time: '09:00', synced: true, text: 'Asignada a Cuadrilla 3 con prioridad media.' },
+        { id: 'e3', type: 'msg', src: 'central', who: 'Operaciones · L. Ferreyra', time: '09:01', synced: true, syncedAt: '09:01', data: { text: 'Hola Raúl, te asigné la #0248: pérdida en vereda, caudal bajo. Cualquier novedad, avisame por acá.', tags: [], photos: [], authorized: [] } }
       ]
     },
     '0249': {
@@ -783,11 +917,19 @@ function seedIncidents() {
       ]
     },
     '0251': {
-      id: '0251', kind: 'Revisión de conexión', address: 'Calle 10 N.º 1215', sector: 'Norte', ref: 'Programada 14:00',
+      id: '0251', kind: 'Revisión de conexión', address: 'Calle 10 N.º 1215', short: 'Calle 10 N.º 1215', sector: 'Norte', ref: 'Programada 14:00',
       description: 'Revisión programada de conexión domiciliaria.', reportedBy: 'Programada', reportedAt: '—', crew: 'Cuadrilla 3', priority: 'Baja',
       events: [
         { id: 'c1', type: 'created', src: 'central', who: 'Operaciones', time: '08:10', synced: true, text: 'Orden programada.' },
         { id: 'c2', type: 'assigned', src: 'central', who: 'Operaciones', time: '08:10', synced: true, text: 'Asignada a Cuadrilla 3 para las 14:00.' }
+      ]
+    },
+    '0253': {
+      id: '0253', kind: 'Pérdida en medidor', address: 'Calle 16 N.º 980', short: 'Calle 16 N.º 980', sector: 'Norte', ref: 'Programada 16:00',
+      description: 'Agua en nicho de medidor, reclamo de la mañana.', reportedBy: 'Teléfono', reportedAt: '08:15', crew: 'Cuadrilla 3', priority: 'Baja',
+      events: [
+        { id: 'f1', type: 'created', src: 'central', who: 'Operaciones', time: '08:20', synced: true, text: 'Orden creada.' },
+        { id: 'f2', type: 'assigned', src: 'central', who: 'Operaciones', time: '08:20', synced: true, text: 'Asignada a Cuadrilla 3 para las 16:00.' }
       ]
     },
     '0246': {
@@ -813,6 +955,17 @@ const DEMO_CHANGE = {
   urgency: 'Alta',
   actions: ['Señalización de la zona', 'Delimitación del paso peatonal', 'Registro fotográfico'],
   actionsText: '',
+  photos: ['calzada', 'vereda']
+};
+
+/* Ruta del día de la Cuadrilla 3 (orden actual, la que sigue y las siguientes) */
+const ROUTE = [{ id: '0248', time: '09:00' }, { id: '0251', time: '14:00' }, { id: '0253', time: '16:00' }];
+
+/* Chat campo ↔ Operaciones: atajos que la cuadrilla puede sumar al mensaje */
+const CHAT_TAGS = ['Agua en calzada', 'Reportes de baja presión', 'Caudal continuo', 'Hundimiento', 'Afecta el tránsito', 'Agua turbia', 'Señalización de la zona', 'Urgente'];
+const DEMO_CHAT = {
+  text: 'La pérdida es más grande de lo que decía la orden: el agua llega a la calzada y hay 4 vecinos sin presión. Ya señalizamos.',
+  tags: ['Agua en calzada', 'Reportes de baja presión', 'Caudal continuo', 'Señalización de la zona', 'Urgente'],
   photos: ['calzada', 'vereda']
 };
 
@@ -919,6 +1072,8 @@ const ICON_PATHS = {
   xCircle: '<circle cx="12" cy="12" r="8.5"/><path d="m9 9 6 6M15 9l-6 6"/>',
   minus: '<path d="M5 12h14"/>',
   escalate: '<path d="M4 18l6-6 4 4 6-6"/><path d="M15 10h5v5"/>',
+  menu: '<path d="M4 7h16M4 12h16M4 17h16"/>',
+  checks: '<path d="m2.5 12.5 4 4 8.5-9"/><path d="m11.5 16.2.3.3 8.7-9"/>',
   gps: '<circle cx="12" cy="12" r="4"/><circle cx="12" cy="12" r="1" fill="currentColor"/><path d="M12 2.5v3M12 18.5v3M2.5 12h3M18.5 12h3"/>'
 };
 function icon(name, size, cls) {
@@ -989,7 +1144,7 @@ function crewMapSVG(o) {
 (function () {
   'use strict';
   var PRES = !!window.CAMPO_PRES; // versión de presentación: dos vistas, sin controles de demo
-  var KEY = PRES ? 'campo-pres-v1' : 'campo-demo-v2';
+  var KEY = PRES ? 'campo-pres-v2' : 'campo-demo-v3';
   var S = null;
   var persist = true, videoMode = false, embedSide = null;
   var modal = null;
@@ -1026,28 +1181,45 @@ function crewMapSVG(o) {
   /* ---------- estado ---------- */
   function seed() {
     return {
-      v: 2, clock: 9 * 60 + 5, online: true, lastSync: '09:05', offlineSince: null, wentOffline: false,
+      v: 3, clock: 9 * 60 + 5, online: true, lastSync: '09:05', offlineSince: null, wentOffline: false,
       role: PRES ? 'dividida' : 'cuadrilla', deskRole: 'operaciones', guide: PRES ? false : null,
       m: { name: 'inicio' }, d: { name: 'panel' },
       incidents: seedIncidents(), history: clone(HISTORY_SEED), alerts: [], chat: [], chatPending: false,
-      drafts: { change: null, result: null, update: null, valid: null, composer: '' },
+      drafts: { change: null, result: null, update: null, valid: null, composer: '', cmsg: null, omsg: null },
       hist: { q: '', status: 'todos', sector: 'Todos' }, crit: { cat: 'todas', open: null, hl: [] },
-      syncUI: null, newCase: null, seenUpdate: false, seq: 100, fric: false
+      syncUI: null, newCase: null, seenUpdate: false, seq: 100, fric: false, menu: false, readM: 0, tlOpen: { m: false, d: false }
     };
   }
   function save() { if (!persist) return; try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) { } }
-  function load() { try { var t = localStorage.getItem(KEY); if (t) { var o = JSON.parse(t); if (o && o.v === 2) return o; } } catch (e) { } return null; }
+  function load() { try { var t = localStorage.getItem(KEY); if (t) { var o = JSON.parse(t); if (o && o.v === 3) return o; } } catch (e) { } return null; }
 
   /* ---------- proyección de la información por lado ---------- */
   // 'm' = dispositivo de la cuadrilla · 'd' = central (Operaciones / Supervisión)
   function visible(inc, side) {
     return inc.events.filter(function (e) { return side === 'm' ? (e.src === 'campo' || e.synced) : (e.src === 'central' || e.synced); });
   }
+  function mergeReport(a, b) {
+    if (!a) return clone(b);
+    var u = function (x, y) { var r = (x || []).slice(); (y || []).forEach(function (v) { if (r.indexOf(v) < 0) r.push(v); }); return r; };
+    var m = clone(a);
+    m.conditions = u(a.conditions, b.conditions); m.actions = u(a.actions, b.actions); m.photos = (a.photos || []).concat(b.photos || []);
+    m.homes = b.homes || a.homes; m.urgency = URG[b.urgency] > URG[a.urgency] ? b.urgency : a.urgency;
+    if (b.type && b.type !== b.kind0) m.type = b.type;
+    m.conditionsText = b.conditionsText || a.conditionsText; m.offline = a.offline || b.offline;
+    var seen = {}; m.reasons = (a.reasons || []).concat(b.reasons || []).filter(function (r) { var k = r.t || r; if (seen[k]) return false; seen[k] = 1; return true; });
+    m.requiresEval = m.reasons.length > 0;
+    return m;
+  }
   function proj(inc, side) {
-    var p = { status: 'Asignada', key: 'asignada', priority: inc.priority, change: null, changeEv: null, update: null, updateEv: null, result: null, resultEv: null, validation: null, validEv: null, ai: [], started: false, events: visible(inc, side) };
+    var p = { status: 'Asignada', key: 'asignada', priority: inc.priority, change: null, changeEv: null, update: null, updateEv: null, result: null, resultEv: null, validation: null, validEv: null, ai: [], msgs: [], started: false, events: visible(inc, side) };
     p.events.forEach(function (e) {
-      if (e.type === 'started') { p.status = 'En curso'; p.key = 'curso'; p.started = true; }
+      if (e.type === 'started') { p.started = true; if (p.key === 'asignada') { p.status = 'En curso'; p.key = 'curso'; } }
       else if (e.type === 'change') { p.status = 'Cambio de escenario'; p.key = 'cambio'; p.change = e.data; p.changeEv = e; }
+      else if (e.type === 'msg') {
+        p.msgs.push(e);
+        if (e.src === 'campo' && e.data.report) { p.change = mergeReport(p.change, e.data.report); if (!p.changeEv) p.changeEv = e; p.lastReportEv = e; if (!p.update && !p.result) { p.status = 'Cambio de escenario'; p.key = 'cambio'; } }
+        if (e.src === 'central' && e.data.priority) { p.update = { priority: e.data.priority, authorized: e.data.authorized || [], pending: e.data.pending || [], message: e.data.text || '' }; p.updateEv = e; p.priority = e.data.priority; if (!p.result) { p.status = 'Autorizada'; p.key = 'autorizada'; } }
+      }
       else if (e.type === 'ai') { p.ai.push(e); }
       else if (e.type === 'update') { p.status = 'Autorizada'; p.key = 'autorizada'; p.priority = e.data.priority; p.update = e.data; p.updateEv = e; }
       else if (e.type === 'result') { p.status = 'A validar'; p.key = 'resuelta'; p.result = e.data; p.resultEv = e; }
@@ -1063,7 +1235,7 @@ function crewMapSVG(o) {
   }
   /* ---------- vocabulario visual: íconos en lugar de texto ---------- */
   var PLV = { 'Baja': 1, 'Media': 2, 'Alta': 3, 'Crítica': 4 };
-  function prioMeter(pr, noLabel) { var l = PLV[pr] || 0; return '<span class="pm l' + l + '" title="Prioridad ' + esc(pr) + '"><span class="bars"><i></i><i></i><i></i><i></i></span>' + (noLabel ? '' : '<b>' + esc(pr) + '</b>') + '</span>'; }
+  function prioMeter(pr, noLabel) { var l = PLV[pr] || 0; return '<span class="pm l' + l + '" title="Prioridad ' + esc(pr) + '"><i class="pd"></i>' + (noLabel ? '' : '<b>' + esc(pr) + '</b>') + '</span>'; }
   function prioTxt(pr) { return prioMeter(pr); }
   var TYPE_IC = { 'Pérdida de agua en vereda': 'drop', 'Pérdida en conexión domiciliaria': 'home', 'Posible pérdida en red distribuidora': 'network', 'Rotura de caño': 'pipe', 'Baja presión': 'gauge', 'Pérdida en medidor': 'gauge', 'Revisión de conexión': 'home', 'Reparación de vereda': 'tool', 'Otro': 'plus' };
   var TYPE_SHORT = { 'Pérdida de agua en vereda': 'Pérdida en vereda', 'Pérdida en conexión domiciliaria': 'Conexión domiciliaria', 'Posible pérdida en red distribuidora': 'Posible falla de red' };
@@ -1103,7 +1275,13 @@ function crewMapSVG(o) {
   }
 
   /* ---------- acciones del flujo ---------- */
-  function go(side, name, id) { S[side] = { name: name, id: id || null }; if (side === 'm' && name === 'incidencia') { var p = proj(inc0248(), 'm'); if (p.update) S.seenUpdate = true; } commit(); }
+  function go(side, name, id) {
+    S[side] = { name: name, id: id || null };
+    if (side === 'm') { S.menu = false; var p = proj(inc0248(), 'm'); if ((name === 'incidencia' || name === 'chat') && p.update) S.seenUpdate = true; if (name === 'chat') S.readM = p.msgs.filter(function (e) { return e.src === 'central'; }).length; }
+    commit();
+    if (side === 'm' && name === 'chat') scrollEnd('m');
+  }
+  function unreadM() { var p = proj(inc0248(), 'm'); return Math.max(0, p.msgs.filter(function (e) { return e.src === 'central'; }).length - (S.readM || 0)); }
   function setRole(r) {
     if (PRES) return;
     if (r === 'dividida') { S.role = 'dividida'; }
@@ -1131,27 +1309,41 @@ function crewMapSVG(o) {
     toast(S.online ? 'Intervención iniciada' : 'Iniciada · sin enviar', 'play');
     S.m = { name: 'incidencia', id: inc.id }; commit();
   }
-  function ensureChangeDraft() {
-    if (!S.drafts.change) { var inc = inc0248(); S.drafts.change = { location: inc.address + ' · ' + inc.ref.toLowerCase() + ' · Sector ' + inc.sector, type: inc.kind, conditions: [], conditionsText: '', homes: '', difference: '', urgency: '', actions: [], actionsText: '', photos: [] }; }
+  function ensureCMsg() { if (!S.drafts.cmsg) S.drafts.cmsg = { text: '', tags: [], photos: [] }; }
+  function ensureOMsg() { if (!S.drafts.omsg) S.drafts.omsg = { text: '', priority: '', authorized: [], auth: false }; }
+  // Lo que la cuadrilla cuenta por chat se resume solo para Operaciones (condiciones, urgencia, domicilios, fotos)
+  function buildReport(d, inc) {
+    var tags = d.tags || [], conds = tags.filter(function (t) { return COND[t]; }), acts = tags.filter(function (t) { return ACT[t]; }), urgent = tags.indexOf('Urgente') >= 0;
+    if (!conds.length && !urgent) return null;
+    var m = (d.text || '').match(/(\d+)\s*(vecinos|domicilios|casas)/i);
+    var type = conds.indexOf('Agua en calzada') >= 0 && conds.indexOf('Reportes de baja presión') >= 0 ? 'Posible pérdida en red distribuidora' : inc.kind;
+    var r = { kind0: inc.kind, type: type, conditions: conds, homes: m ? m[1] : '', urgency: urgent ? 'Alta' : 'Media', actions: acts, photos: (d.photos || []).slice(), conditionsText: (d.text || '').trim(), offline: !S.online };
+    r.reasons = evalChange(r, inc); r.requiresEval = r.reasons.length > 0;
+    r.difference = 'Orden: ' + tShort(inc.kind) + ' (' + inc.priority + '). En el lugar: ' + tShort(type) + ' (' + r.urgency + ').';
+    return r;
   }
-  function saveChange() {
-    ensureChangeDraft();
-    var d = S.drafts.change, inc = inc0248(), miss = [];
-    if (!d.type) miss.push('tipo');
-    if (!(d.conditions.length || d.conditionsText)) miss.push('qué ves');
-    if (!d.urgency) miss.push('urgencia');
-    if (miss.length) { S.formError = 'Falta: ' + miss.join(', '); commit(); return false; }
-    S.formError = null;
-    if (!d.difference) d.difference = 'Orden: ' + tShort(inc.kind) + ' (' + inc.priority + '). En el lugar: ' + tShort(d.type) + ' (' + d.urgency + ').';
-    var data = clone(d); data.reasons = evalChange(d, inc); data.requiresEval = data.reasons.length > 0; data.offline = !S.online;
+  function sendCrewMsg() {
+    ensureCMsg();
+    var d = S.drafts.cmsg, inc = inc0248();
+    if (!(d.text || '').trim() && !d.tags.length && !d.photos.length) return false;
     if (!proj(inc, 'm').started) addEvent(inc, { type: 'started', src: 'campo', who: 'Cuadrilla 3 · R. Benítez', time: tick(1), synced: S.online, syncedAt: S.online ? now() : null, text: 'Intervención iniciada por el encargado.' });
-    var ev = addEvent(inc, { type: 'change', src: 'campo', who: 'Cuadrilla 3 · R. Benítez', time: tick(6), synced: S.online, syncedAt: S.online ? now() : null, data: data });
+    var ev = addEvent(inc, { type: 'msg', src: 'campo', who: 'Cuadrilla 3 · R. Benítez', time: tick(4), synced: S.online, syncedAt: S.online ? now() : null, data: { text: (d.text || '').trim(), tags: d.tags.slice(), photos: d.photos.slice(), report: buildReport(d, inc) } });
     if (S.online) { S.lastSync = now(); makeAlert(inc, ev); }
-    S.drafts.change = null;
-    S.m = { name: 'registrado', id: inc.id }; commit(); return true;
+    S.drafts.cmsg = null; commit(); scrollEnd('m'); return true;
+  }
+  function sendOpsMsg() {
+    ensureOMsg();
+    var d = S.drafts.omsg, inc = inc0248();
+    if (!(d.text || '').trim() && !d.priority && !d.authorized.length) return false;
+    var pr = d.priority || (d.authorized.length ? proj(inc, 'd').priority : '');
+    addEvent(inc, { type: 'msg', src: 'central', who: S.deskRole === 'supervision' ? 'Supervisión · C. Duarte' : 'Operaciones · L. Ferreyra', time: tick(6), synced: S.online, syncedAt: S.online ? now() : null, data: { text: (d.text || '').trim(), priority: pr, authorized: d.authorized.slice(), pending: [] } });
+    S.alerts.forEach(function (a) { if (a.inc === inc.id && (a.kind === 'change' || a.kind === 'msg')) a.read = true; });
+    S.drafts.omsg = null; S.seenUpdate = false;
+    toast(S.online ? 'Enviado a Cuadrilla 3' : 'Guardado · se entrega cuando C3 tenga señal', 'send');
+    commit(); return true;
   }
   function makeAlert(inc, ev) {
-    if (ev.type === 'change') S.alerts.unshift({ id: uid(), inc: inc.id, kind: 'change', title: '#' + inc.id + ' · Cambio de escenario', body: 'Cuadrilla 3 informa: ' + (ev.data.conditions || []).join(', ').toLowerCase() + '. Urgencia preliminar ' + (ev.data.urgency || '').toLowerCase() + '.' + (ev.data.offline ? ' Registrado sin conexión a las ' + ev.time + '.' : ''), time: now(), read: false });
+    if (ev.type === 'msg') S.alerts.unshift({ id: uid(), inc: inc.id, ev: ev.id, kind: ev.data.report ? 'change' : 'msg', title: '#' + inc.id + (ev.data.report ? ' · Cambio de escenario' : ' · Mensaje de C3'), body: ev.data.text, time: now(), read: false });
     if (ev.type === 'result') S.alerts.unshift({ id: uid(), inc: inc.id, kind: 'result', title: '#' + inc.id + ' · Resultado para validar', body: ev.data.outcome + '. Pendiente de validación del cierre.', time: now(), read: false });
   }
   function startSync() {
@@ -1167,13 +1359,13 @@ function crewMapSVG(o) {
     Object.keys(S.incidents).forEach(function (k) {
       var inc = S.incidents[k];
       inc.events.forEach(function (e) {
-        if (!e.synced) { e.synced = true; e.syncedAt = now(); n++; if (e.src === 'campo') makeAlert(inc, e); if (e.src === 'central' && e.type === 'update') gotUpdate = true; }
+        if (!e.synced) { e.synced = true; e.syncedAt = now(); n++; if (e.src === 'campo') makeAlert(inc, e); if (e.src === 'central' && (e.type === 'update' || e.type === 'msg')) gotUpdate = true; }
       });
     });
     S.lastSync = now();
     S.syncUI = { phase: 'shared', count: n || (S.syncUI && S.syncUI.count) || 0, progress: 100 };
     toast('Compartido con Operaciones', 'cloudCheck');
-    if (gotUpdate) toast('Nuevas indicaciones de Operaciones', 'bell');
+    if (gotUpdate) toast('Nuevo mensaje de Operaciones', 'chat');
     commit();
   }
   function doSync() { startSync(); if (videoMode) completeSync(); }
@@ -1193,7 +1385,7 @@ function crewMapSVG(o) {
     var lowp = cond.indexOf('Reportes de baja presion') >= 0 || cond.indexOf('Reportes de baja presión') >= 0 || /presion/.test(t);
     var coinc = [{ t: 'Sector Norte', ic: 'pin', ok: true }, { t: 'Empezó en vereda', ic: 'clipboard', ok: true }, { t: 'Agua en calzada', ic: 'drop', ok: water }, { t: 'Baja presión', ic: 'gauge', ok: lowp }];
     var missing = [];
-    if (!ch) missing.push({ ic: 'edit', t: 'Registrar el cambio en #0248' });
+    if (!ch) missing.push({ ic: 'chat', t: 'Contarle el cambio a Operaciones por chat' });
     if (!ch || !ch.homes) missing.push({ ic: 'home', t: 'Cuántos domicilios sin presión' });
     if (!ch || (ch.photos || []).length < 2) missing.push({ ic: 'camera', t: 'Fotos de vereda y calzada' });
     missing.push({ ic: 'pin', t: 'Origen probable: vereda, calzada o conexión' });
@@ -1209,7 +1401,7 @@ function crewMapSVG(o) {
     var crit = ['CO-DOC-01', 'CO-SEG-01', 'CO-DOC-02', 'CO-MAN-01', 'CO-ESC-01'];
     var situ = ch
       ? 'Orden original: pérdida menor en vereda, prioridad ' + inc.priority.toLowerCase() + '. Registrado en campo (' + p.changeEv.time + '): ' + cond.join(', ').toLowerCase() + (ch.homes ? ' (' + ch.homes + ' domicilios)' : '') + '; urgencia preliminar ' + (ch.urgency || '—').toLowerCase() + '.'
-      : 'Orden original: pérdida menor en vereda, prioridad ' + inc.priority.toLowerCase() + '. Todavía no hay un cambio de escenario registrado en el dispositivo.';
+      : 'Orden original: pérdida menor en vereda, prioridad ' + inc.priority.toLowerCase() + '. Todavía no se contó un cambio por chat.';
     var sources = ['#0248 · registro local', '#0176 · historial local', '#0221 · historial local'].concat(crit).concat(['Datos locales al ' + S.lastSync]);
     return { intent: intent, offline: !S.online, situ: situ, hasChange: !!ch, coinc: coinc, missing: missing, verif: verif, crit: crit, sources: sources, pending: pendingOut(), q: q };
   }
@@ -1230,19 +1422,6 @@ function crewMapSVG(o) {
   }
 
   /* ---------- Operaciones / Supervisión ---------- */
-  function ensureUpdateDraft() { if (!S.drafts.update) S.drafts.update = { priority: 'Alta', authorized: [], pending: [], message: '' }; }
-  function sendUpdate() {
-    ensureUpdateDraft();
-    var d = S.drafts.update;
-    if (!d.authorized.length && !d.message) { S.formError = 'Marcá al menos una acción o escribí un mensaje'; commit(); return false; }
-    S.formError = null;
-    var inc = inc0248();
-    addEvent(inc, { type: 'update', src: 'central', who: 'Operaciones · L. Ferreyra', time: tick(6), synced: S.online, syncedAt: S.online ? now() : null, data: clone(d) });
-    S.alerts.forEach(function (a) { if (a.inc === inc.id && a.kind === 'change') a.read = true; });
-    S.drafts.update = null; S.seenUpdate = false;
-    toast(S.online ? 'Enviado a Cuadrilla 3' : 'Guardado · se entrega cuando C3 tenga señal', 'send');
-    commit(); return true;
-  }
   function ensureResultDraft() { if (!S.drafts.result) S.drafts.result = { done: [], outcome: '', text: '', restored: null, photos: [] }; }
   function sendResult() {
     ensureResultDraft();
@@ -1271,7 +1450,7 @@ function crewMapSVG(o) {
       tags: ['Agua en calzada', 'Baja presión', 'Registrado sin conexión', 'Escalado'],
       initial: 'Reclamo por pérdida de agua en vereda. Prioridad media.',
       found: (ch.conditionsText || '') + (ch.difference ? ' ' + ch.difference : ''),
-      decisions: ['La cuadrilla registró el cambio sin conexión y consultó al asistente (antecedente #0176).', 'Al sincronizar, Operaciones elevó la prioridad a ' + (up.priority || 'alta').toLowerCase() + '.'].concat((up.authorized || []).slice(2, 4).map(function (x) { return 'Autorizado: ' + x.charAt(0).toLowerCase() + x.slice(1) + '.'; })),
+      decisions: ['La cuadrilla contó el cambio por chat sin señal y consultó al asistente (antecedente #0176).', 'Al sincronizar, Operaciones respondió por chat y elevó la prioridad a ' + (up.priority || 'alta').toLowerCase() + '.'].concat((up.authorized || []).slice(2, 4).map(function (x) { return 'Autorizado: ' + x.charAt(0).toLowerCase() + x.slice(1) + '.'; })),
       result: rs.text || rs.outcome || '', lesson: d.lesson || '—', criteria: ['CO-DOC-01', 'CO-OFF-01', 'CO-ESC-01', 'CO-MAN-01', 'CO-CIE-01']
     });
     S.newCase = '0248'; S.drafts.valid = null;
@@ -1282,8 +1461,8 @@ function crewMapSVG(o) {
 
   /* ---------- demo: completar formularios ---------- */
   function demoFill(kind) {
-    if (kind === 'change') S.drafts.change = clone(DEMO_CHANGE);
-    if (kind === 'update') S.drafts.update = { priority: DEMO_UPDATE.priority, authorized: clone(DEMO_UPDATE.authorized), pending: clone(DEMO_UPDATE.pending), message: DEMO_UPDATE.message };
+    if (kind === 'chat') S.drafts.cmsg = clone(DEMO_CHAT);
+    if (kind === 'opschat') S.drafts.omsg = { text: DEMO_UPDATE.message, priority: DEMO_UPDATE.priority, authorized: clone(DEMO_UPDATE.authorized), auth: true };
     if (kind === 'result') { var p = proj(inc0248(), 'm'); S.drafts.result = { done: clone((p.update && p.update.authorized) || []), outcome: DEMO_RESULT.outcome, text: DEMO_RESULT.text, restored: true, photos: clone(DEMO_RESULT.photos) }; }
     if (kind === 'valid') S.drafts.valid = { checks: clone(DEMO_VALIDATION.checks), lesson: DEMO_VALIDATION.lesson };
     S.formError = null; commit();
@@ -1304,7 +1483,7 @@ function crewMapSVG(o) {
     box.scrollTop = el.getBoundingClientRect().top - box.getBoundingClientRect().top + box.scrollTop - 8;
   }
   function scrollEnd(side) { var el = document.querySelector('[data-pane="' + side + '"] [data-sk]'); if (el) el.scrollTop = el.scrollHeight; }
-  var lastRoutes = {};
+  var lastRoutes = {}, lastThread = {};
   function render() {
     var app = document.getElementById('app');
     var scrolls = {};
@@ -1323,6 +1502,11 @@ function crewMapSVG(o) {
       var el = document.querySelector(q);
       if (el) { el.focus(); if (sel && el.setSelectionRange) try { el.setSelectionRange(sel[0], sel[1]); } catch (e) { } }
     }
+    ['m', 'd'].forEach(function (sd) {
+      var th = document.querySelector('[data-pane="' + sd + '"] .thread'); if (!th) { lastThread[sd] = null; return; }
+      var key = JSON.stringify(S[sd]) + th.querySelectorAll('.bub,.sysnote').length;
+      if (lastThread[sd] !== key) { var sc = sd === 'm' ? th.closest('[data-sk]') : th; if (sc) sc.scrollTop = sc.scrollHeight; lastThread[sd] = key; }
+    });
     renderModal();
     document.body.classList.toggle('no-anim', videoMode);
   }
@@ -1352,29 +1536,51 @@ function crewMapSVG(o) {
 
   /* ================= APP MÓVIL · CUADRILLA ================= */
   function mobileApp() {
-    var r = S.m.name;
-    var pend = pendingOut();
+    var r = S.m.name, pend = pendingOut(), unread = unreadM();
+    var top = ['inicio', 'incidencia', 'chat', 'asistente', 'historial', 'criterios'].indexOf(r) >= 0;
+    var titles = { inicio: '', incidencia: 'Orden #0248', chat: 'Chat · Operaciones', asistente: 'Asistente', historial: 'Historial', criterios: 'Criterios', caso: 'Caso #' + (S.m.id || ''), resultado: 'Resultado', cierre: 'Cierre #0248', orden2: 'Orden #' + (S.m.id || '') };
     var h = '<div class="mapp">';
     h += '<div class="statusbar"><span>' + now() + '</span><span class="r"><button class="sigbtn" data-a="toggleNet" title="' + (S.online ? 'Cortar la señal' : 'Recuperar la señal') + '" aria-label="' + (S.online ? 'Cortar la señal' : 'Recuperar la señal') + '">' + (S.online ? icon('wifi', 15) : icon('wifiOff', 15)) + '</button><span class="batt"></span></span></div>';
-    var titles = { incidencia: 'Orden #0248', cambio: 'Registrar cambio', registrado: 'Registro', caso: 'Caso #' + (S.m.id || ''), resultado: 'Resultado', cierre: 'Cierre #0248' };
-    h += '<div class="mhead">';
-    if (['inicio', 'historial', 'criterios', 'asistente'].indexOf(r) >= 0) h += '<div class="t">' + icon('logo', 22) + 'CAMPO</div>';
-    else h += '<div class="row"><button class="back" data-a="mback" aria-label="Volver">' + icon('arrowLeft', 18) + '</button><span class="ttl">' + esc(titles[r] || '') + '</span></div>';
-    h += '<div class="row">' + (pend ? '<span class="pill pend" title="Registros sin enviar">' + icon('cloudPending', 14) + pend + '</span>' : '') + (S.online ? '<button class="pill on sigpill" data-a="toggleNet" title="Cortar la señal">' + icon('wifi', 14) + 'Conectado</button>' : '<button class="pill off sigpill" data-a="toggleNet" title="Recuperar la señal">' + icon('wifiOff', 14) + 'Sin señal</button>') + '</div></div>';
+    h += '<div class="mhead"><div class="row">';
+    h += top ? '<button class="back burger" data-a="menu" aria-label="Abrir menú">' + icon('menu', 20) + ((unread || pend) && !S.menu ? '<span class="bdot"></span>' : '') + '</button>' : '<button class="back" data-a="mback" aria-label="Volver">' + icon('arrowLeft', 18) + '</button>';
+    h += r === 'inicio' ? '<div class="t">' + icon('logo', 22) + 'CAMPO</div>' : '<span class="ttl">' + esc(titles[r] || '') + '</span>';
+    h += '</div><div class="row">' + (pend ? '<span class="pill pend" title="Sin enviar">' + icon('cloudPending', 14) + pend + '</span>' : '') + (S.online ? '<button class="pill on sigpill" data-a="toggleNet" title="Cortar la señal">' + icon('wifi', 14) + 'Conectado</button>' : '<button class="pill off sigpill" data-a="toggleNet" title="Recuperar la señal">' + icon('wifiOff', 14) + 'Sin señal</button>') + '</div></div>';
     if (!S.online) h += '<div class="offline-banner">' + icon('wifiOff', 18) + '<div>Sin conexión<small>Todo se guarda en el celular</small></div></div>';
-    h += '<div class="mbody" data-sk="m-' + r + '">' + mView() + '</div>';
+    h += '<div class="mbody' + (r === 'chat' ? ' chatbody' : '') + '" data-sk="m-' + r + '">' + mView() + '</div>';
     if (r === 'asistente') h += '<div class="composer"><textarea data-f="composer" placeholder="Preguntá…" rows="1">' + esc(S.drafts.composer || '') + '</textarea><button data-a="ask" aria-label="Enviar">' + icon('send', 20) + '</button></div>';
-    var tab = { inicio: 'inicio', incidencia: 'orden', cambio: 'orden', registrado: 'orden', resultado: 'orden', cierre: 'orden', historial: 'historial', caso: 'historial', criterios: 'criterios', asistente: 'asistente' }[r];
-    var tabs = [['inicio', 'home', 'Inicio'], ['orden', 'clipboard', 'Orden'], ['historial', 'history', 'Historial'], ['criterios', 'book', 'Criterios'], ['asistente', 'spark', 'Asistente']];
-    h += '<nav class="tabbar">' + tabs.map(function (t) { return '<button data-a="mtab" data-v="' + t[0] + '" class="' + (tab === t[0] ? 'on' : '') + '">' + icon(t[1], 22) + t[2] + (t[0] === 'inicio' && pend ? '<span class="badge">' + pend + '</span>' : '') + '</button>'; }).join('') + '</nav>';
+    if (r === 'chat') h += chatComposer();
+    if (S.menu) h += drawer();
     return h + '</div>';
+  }
+  function routeStops() {
+    var done = false;
+    return ROUTE.map(function (o, i) {
+      var inc = S.incidents[o.id], p = proj(inc, 'm'), st;
+      if (o.id === '0248') st = p.result ? 'done' : 'now';
+      else st = (i === 1 && proj(inc0248(), 'm').result) ? 'now' : (i === 1 ? 'next' : 'later');
+      return { o: o, inc: inc, p: p, st: st };
+    });
+  }
+  var STOP_L = { now: 'Ahora', next: 'Después', later: 'Más tarde', done: 'Hecha' };
+  function drawer() {
+    var unread = unreadM(), pend = pendingOut();
+    var h = '<div class="drawer-bg" data-a="menu"></div><aside class="drawer" aria-label="Menú">';
+    h += '<div class="dhead"><div class="avatar">RB</div><div style="flex:1;min-width:0"><b>Raúl Benítez</b><small>Cuadrilla 3 · Encargado · Norte</small></div><button class="back" data-a="menu" aria-label="Cerrar">' + icon('x', 18) + '</button></div>';
+    h += '<div class="dmsec">Mi ruta de hoy</div><div class="route">' + routeStops().map(function (x) {
+      var to = x.o.id === '0248' ? 'data-v="incidencia" data-id="0248"' : 'data-v="orden2" data-id="' + x.o.id + '"';
+      return '<button class="stop ' + x.st + '" data-a="mgo" ' + to + '><span class="rail"><i></i></span><span class="sb"><span class="when">' + STOP_L[x.st] + ' · ' + x.o.time + '</span><b>' + icon(tIc(x.inc.kind), 15) + '#' + x.o.id + ' · ' + esc(tShort(x.inc.kind)) + '</b><small>' + icon('pin', 12) + esc(x.inc.short || x.inc.address) + '</small></span>' + (x.st === 'now' ? statusPill(x.p) : '') + '</button>';
+    }).join('') + '</div>';
+    var items = [['inicio', 'home', 'Inicio'], ['incidencia', 'clipboard', 'Orden actual'], ['chat', 'chat', 'Chat con Operaciones', unread], ['asistente', 'spark', 'Asistente'], ['historial', 'history', 'Historial'], ['criterios', 'book', 'Criterios']];
+    h += '<div class="dmsec">Menú</div><nav class="dnav">' + items.map(function (it) { return '<button class="' + (S.m.name === it[0] ? 'on' : '') + '" data-a="mgo" data-v="' + it[0] + '"' + (it[0] === 'incidencia' ? ' data-id="0248"' : '') + '>' + icon(it[1], 19) + '<span>' + it[2] + '</span>' + (it[3] ? '<span class="nb">' + it[3] + '</span>' : '') + '</button>'; }).join('') + '</nav>';
+    h += '<div class="dfoot">' + (S.online ? ichip('wifi', 'Conectado · ' + S.lastSync, 'ok') : ichip('wifiOff', 'Sin señal', 'warn')) + (pend ? ichip('cloudPending', pend + ' sin enviar', 'warn') : '') + ichip('device', 'Historial, criterios y asistente sin señal') + '</div>';
+    return h + '</aside>';
   }
   function mView() {
     switch (S.m.name) {
       case 'inicio': return mHome();
       case 'incidencia': return mIncident();
-      case 'cambio': return mChangeForm();
-      case 'registrado': return mSaved();
+      case 'chat': return mChat();
+      case 'orden2': return mOrder2();
       case 'historial': return historyView('m');
       case 'caso': return caseView('m', S.m.id);
       case 'criterios': return criteriaView('m');
@@ -1382,9 +1588,8 @@ function crewMapSVG(o) {
       case 'resultado': return mResultForm();
       case 'cierre': return mClosure();
     }
-    return '';
+    return mHome();
   }
-  // pasos visuales (nodo → línea → nodo); estado: done | cur | pend | todo
   function hop(nodes) {
     return '<div class="hop">' + nodes.map(function (n, i) { return (i ? '<span class="l ' + (n[2] === 'done' ? '' : n[2]) + '"></span>' : '') + '<div class="n ' + n[2] + '"><i>' + icon(n[0], 18, n[2] === 'cur' ? 'spin' : '') + '</i>' + esc(n[1]) + '</div>'; }).join('') + '</div>';
   }
@@ -1402,45 +1607,68 @@ function crewMapSVG(o) {
     return h;
   }
   function stat(ic, n, l, cls) { return '<div class="stat ' + (cls || '') + '"><div class="row">' + icon(ic, 18) + '<span class="n">' + n + '</span></div><div class="l">' + l + '</div></div>'; }
+  function lastMsg(side) { var p = proj(inc0248(), side); return p.msgs[p.msgs.length - 1]; }
   function mHome() {
-    var inc = inc0248(), p = proj(inc, 'm'), pend = pendingOut();
+    var inc = inc0248(), p = proj(inc, 'm'), unread = unreadM();
     var h = '<div class="hello"><div class="avatar">RB</div><div><div class="h2">Hola, Raúl</div><div class="small muted">Cuadrilla 3 · Norte</div></div></div>';
     if (S.syncUI) h += syncCard() + '<div style="height:12px"></div>';
-    if (p.update && !S.seenUpdate) h += '<button class="notice blue tap" data-a="mgo" data-v="incidencia" data-id="0248">' + icon('bell', 20) + '<div><b>Nuevas indicaciones · #0248</b><span class="row">' + prioMeter(p.update.priority) + '<span class="xs">' + icon('shield', 13) + p.update.authorized.length + ' autorizadas</span></span></div>' + icon('chevronRight', 18) + '</button>';
-    var active = Object.keys(S.incidents).filter(function (k) { var q = proj(S.incidents[k], 'm'); return S.incidents[k].crew === 'Cuadrilla 3' && q.started && q.key !== 'cerrada'; }).length;
-    h += '<div class="stats">' + stat('clipboard', 2, 'Órdenes') + stat('play', active, 'Activas') + stat('cloudPending', pend, 'Sin enviar', pend ? 'amber' : '') + '</div>';
-    if (pend) h += fric('sindueno', 'Los registros quedan pendientes en el dispositivo hasta que vuelva la señal: si nadie los retoma, no está claro quién se hace cargo de que lleguen.');
-    h += '<div class="sec"><div class="sec-t">Hoy</div>';
-    h += '<div class="order hl" data-k="order-0248"><div class="row between"><span class="id">#0248</span>' + statusPill(p) + '</div><div class="row" style="gap:10px;margin-top:8px"><span class="tic">' + icon(tIc(inc.kind), 22) + '</span><div style="min-width:0"><div class="tt">' + esc(tShort(inc.kind)) + '</div><div class="small muted row" style="gap:4px">' + icon('pin', 14) + esc(inc.short) + '</div></div></div><div class="row" style="margin-top:10px;gap:14px">' + prioMeter(p.priority) + '<span class="xs muted row" style="gap:4px">' + icon('clock', 13) + inc.events[1].time + '</span></div>';
-    h += p.started ? '<button class="btn secondary block" style="margin-top:12px" data-a="mgo" data-v="incidencia" data-id="0248">Abrir orden ' + icon('arrowRight', 16) + '</button>' : '<div class="grid2" style="margin-top:12px"><button class="btn secondary" data-a="mgo" data-v="incidencia" data-id="0248">' + icon('eye', 16) + 'Ver</button><button class="btn primary" data-a="start" data-id="0248">' + icon('play', 16) + 'Iniciar</button></div>';
-    h += '</div>';
-    var o2 = S.incidents['0251'];
-    h += '<button class="order mini" data-a="noop"><span class="tic gray">' + icon(tIc(o2.kind), 18) + '</span><div style="flex:1;min-width:0"><div class="row between"><b>#0251 · ' + esc(o2.kind) + '</b></div><div class="xs muted row" style="gap:4px">' + icon('clock', 12) + '14:00 · ' + icon('pin', 12) + esc(o2.address) + '</div></div></button></div>';
-    h += '<div class="sec"><div class="sec-t">Sin señal también</div><div class="tiles">' + [['historial', 'history', 'Historial', S.history.length], ['criterios', 'book', 'Criterios', CRITERIA.length], ['asistente', 'spark', 'Asistente', '']].map(function (t) { return '<button class="tile" data-a="mtab" data-v="' + t[0] + '"><span class="off" title="Disponible sin conexión">' + icon('device', 13) + '</span>' + icon(t[1], 22) + t[2] + (t[3] !== '' ? '<b>' + t[3] + '</b>' : '<b>' + icon('check', 12) + '</b>') + '</button>'; }).join('') + '</div></div>';
+    if (unread) { var lm = lastMsg('m'); h += '<button class="notice blue tap" data-a="mgo" data-v="chat">' + icon('chat', 20) + '<div><b>Operaciones te escribió · ' + unread + '</b><span class="xs ellipsis" style="display:block">' + esc(lm && lm.data.text ? lm.data.text : 'Nuevo mensaje') + '</span></div>' + icon('chevronRight', 18) + '</button>'; }
+    if (pendingOut()) h += fric('sindueno', 'Los registros quedan pendientes en el dispositivo hasta que vuelva la señal: si nadie los retoma, no está claro quién se hace cargo de que lleguen.');
+    h += '<div class="sec"><div class="sec-t">Mi ruta de hoy<span class="xs muted" style="letter-spacing:0;text-transform:none;font-weight:600">' + ROUTE.length + ' órdenes</span></div><div class="dayroute">';
+    h += routeStops().map(function (x) {
+      if (x.o.id === '0248' && x.st === 'now') {
+        var c = '<div class="rstop now"><span class="rail"><i></i></span><div class="rbody"><div class="when">Ahora</div><div class="order hl" data-k="order-0248"><div class="row between"><span class="id">#0248</span>' + statusPill(p) + '</div><div class="row" style="gap:10px;margin-top:8px"><span class="tic">' + icon(tIc(inc.kind), 22) + '</span><div style="min-width:0"><div class="tt">' + esc(tShort(inc.kind)) + '</div><div class="small muted row" style="gap:4px">' + icon('pin', 14) + esc(inc.short) + '</div></div></div><div class="row" style="margin-top:10px;gap:14px">' + prioMeter(p.priority) + '<span class="xs muted row" style="gap:4px">' + icon('clock', 13) + x.o.time + '</span></div>';
+        c += p.started ? '<div class="grid2" style="margin-top:12px"><button class="btn secondary" data-a="mgo" data-v="incidencia" data-id="0248">' + icon('clipboard', 16) + 'Orden</button><button class="btn secondary chatbtn" data-a="mgo" data-v="chat">' + icon('chat', 16) + 'Chat' + (unread ? '<span class="nb">' + unread + '</span>' : '') + '</button></div>' : '<div class="grid2" style="margin-top:12px"><button class="btn secondary" data-a="mgo" data-v="incidencia" data-id="0248">' + icon('eye', 16) + 'Ver</button><button class="btn primary" data-a="start" data-id="0248">' + icon('play', 16) + 'Iniciar</button></div>';
+        return c + '</div></div></div>';
+      }
+      var to = x.o.id === '0248' ? 'data-v="cierre" data-id="0248"' : 'data-v="orden2" data-id="' + x.o.id + '"';
+      return '<div class="rstop ' + x.st + '"><span class="rail"><i></i></span><div class="rbody"><div class="when">' + STOP_L[x.st] + ' · ' + x.o.time + '</div><button class="order mini" data-a="mgo" ' + to + '><span class="tic gray">' + icon(x.st === 'done' ? 'checkCircle' : tIc(x.inc.kind), 18) + '</span><div style="flex:1;min-width:0"><b>#' + x.o.id + ' · ' + esc(tShort(x.inc.kind)) + '</b><div class="xs muted row" style="gap:4px">' + icon('pin', 12) + esc(x.inc.short || x.inc.address) + '</div></div>' + icon('chevronRight', 16) + '</button></div></div>';
+    }).join('');
+    h += '</div></div>';
     return h;
   }
-  var EV_IC = { created: 'plus', assigned: 'users', started: 'play', change: 'edit', ai: 'spark', update: 'bell', result: 'checkCircle', validated: 'stamp' };
-  var EV_T = { created: 'Orden creada', assigned: 'Asignada', started: 'Iniciada', change: 'Cambio registrado', ai: 'Consulta IA', update: 'Orden actualizada', result: 'Resultado', validated: 'Validada' };
+  function mOrder2() {
+    var inc = S.incidents[S.m.id] || S.incidents['0251'], o = ROUTE.filter(function (x) { return x.id === inc.id; })[0] || { time: '—' }, p = proj(inc, 'm');
+    var h = '<div class="card"><div class="row between"><span class="id" style="font-weight:800;color:var(--blue-700)">#' + inc.id + '</span>' + statusPill(p) + '</div><div class="row" style="gap:10px;margin:8px 0 2px"><span class="tic">' + icon(tIc(inc.kind), 22) + '</span><div><div class="h2">' + esc(tShort(inc.kind)) + '</div><div class="small muted row" style="gap:4px">' + icon('pin', 14) + esc(inc.address) + '</div></div></div>';
+    h += '<div class="facts">' + fact('Hora', icon('clock', 14) + o.time) + fact('Prioridad', prioMeter(p.priority)) + fact('Sector', icon('pin', 14) + inc.sector) + '</div></div>';
+    h += '<div class="statusrow gray">' + icon('hourglass', 18) + '<b>Programada</b><span class="sp"></span><span class="wait">' + icon('clipboard', 15) + 'Después de #0248</span></div>';
+    h += '<button class="btn secondary big" style="margin-top:12px" data-a="mgo" data-v="incidencia" data-id="0248">' + icon('arrowLeft', 17) + 'Volver a la orden actual</button>';
+    return h;
+  }
+  var EV_IC = { created: 'plus', assigned: 'users', started: 'play', change: 'edit', ai: 'spark', update: 'bell', result: 'checkCircle', validated: 'stamp', msg: 'chat' };
+  var EV_T = { created: 'Orden creada', assigned: 'Asignada', started: 'Iniciada', change: 'Cambio registrado', ai: 'Consulta IA', update: 'Orden actualizada', result: 'Resultado', validated: 'Validada', msg: 'Mensaje' };
+  function evTitle(e) { if (e.type !== 'msg') return EV_T[e.type]; if (e.src === 'campo') return e.data.report ? 'Cambio por chat' : 'Mensaje a Operaciones'; return e.data.priority ? 'Indicaciones por chat' : 'Mensaje de Operaciones'; }
   function tlKey() { return '<div class="tlkey"><span><i style="background:var(--blue-600)"></i>Cuadrilla</span><span><i style="background:var(--navy)"></i>Central</span><span><i style="background:var(--indigo)"></i>IA</span></div>'; }
-  function timeline(inc, side) {
+  function timeline(inc, side, limit) {
     var p = proj(inc, side);
-    var items = p.events.slice().reverse().map(function (e) {
+    var items = p.events.slice().reverse().slice(0, limit || 999).map(function (e) {
       var who = e.type === 'ai' ? 'ia' : (e.src === 'campo' ? 'campo' : 'central');
       var pendM = side === 'm' && e.src === 'campo' && !e.synced;
       var extra = '';
       if (e.type === 'change') extra = prioMeter(e.data.urgency, true);
       if (e.type === 'update') extra = prioMeter(e.data.priority, true);
+      if (e.type === 'msg' && e.data.report) extra = prioMeter(e.data.report.urgency, true);
+      if (e.type === 'msg' && e.data.priority) extra = prioMeter(e.data.priority, true);
       var st = '';
       if (side === 'm' && e.src === 'campo') st = e.synced ? '<span class="st ok" title="Sincronizado ' + (e.syncedAt || '') + '">' + icon('cloudCheck', 16) + '</span>' : '<span class="st pend" title="Sin enviar">' + icon('cloudPending', 16) + '</span>';
       if (side === 'd' && e.src === 'campo' && e.syncedAt && e.syncedAt !== e.time) st = '<span class="st pend" title="Registrado sin conexión · recibido ' + e.syncedAt + '">' + icon('wifiOff', 15) + '<small>' + e.syncedAt + '</small></span>';
       if (side === 'd' && e.src === 'central' && !e.synced) st = '<span class="st pend" title="Sin entregar a la cuadrilla">' + icon('cloudPending', 16) + '</span>';
-      return '<li class="' + who + (pendM ? ' pend' : '') + '"><span class="ic2">' + icon(EV_IC[e.type] || 'info', 15) + '</span><span class="t">' + EV_T[e.type] + ' ' + extra + '</span>' + st + '<span class="tm">' + e.time + '</span></li>';
+      return '<li class="' + who + (pendM ? ' pend' : '') + '"><span class="ic2">' + icon(EV_IC[e.type] || 'info', 15) + '</span><span class="t">' + evTitle(e) + ' ' + extra + '</span>' + st + '<span class="tm">' + e.time + '</span></li>';
     }).join('');
-    return tlKey() + '<ul class="tl2">' + items + '</ul>';
+    return (limit ? '' : tlKey()) + '<ul class="tl2">' + items + '</ul>';
+  }
+  function regBox(inc, side) {
+    var p = proj(inc, side), n = p.events.length, open = !!(S.tlOpen && S.tlOpen[side]);
+    return '<button class="reghd" data-a="tlToggle" data-v="' + side + '" aria-expanded="' + open + '"><span class="sec-t">Registro</span><span class="xs muted">' + n + ' eventos</span>' + icon(open ? 'chevronDown' : 'chevronRight', 17) + '</button><div class="regbody' + (open ? '' : ' shut') + '">' + timeline(inc, side, open ? 0 : 1) + (open ? '' : '<button class="regmore" data-a="tlToggle" data-v="' + side + '">Ver los ' + n + ' eventos ' + icon('chevronDown', 14) + '</button>') + '</div>';
   }
   function demoBtn(k) { return PRES ? '' : '<button class="btn ghost sm" data-a="demoFill" data-v="' + k + '">' + icon('edit', 14) + 'Completar demo</button>'; }
   function fact(label, v) { return '<div class="fact"><small>' + label + '</small><div class="v">' + v + '</div></div>'; }
   function todoList(list, done, iconMap, cls) { return '<ul class="todo ' + (cls || '') + '">' + list.map(function (a) { var t = typeof a === 'string' ? a : a.t, ic = typeof a === 'string' ? (iconMap && iconMap[a]) || 'check' : a.ic, d = done && done(a); return '<li class="' + (d ? 'done' : '') + '">' + icon(d ? 'checkCircle' : ic, 17) + '<span>' + esc(t) + '</span></li>'; }).join('') + '</ul>'; }
+  function chatPreview(side, nav) {
+    var lm = lastMsg(side), unread = side === 'm' ? unreadM() : 0;
+    var who = lm ? (lm.src === 'campo' ? (side === 'm' ? 'Vos' : 'C3') : (side === 'm' ? 'Operaciones' : 'Vos')) : '';
+    return '<button class="chatprev" ' + nav + '><span class="ci">' + icon('chat', 20) + (unread ? '<span class="nb">' + unread + '</span>' : '') + '</span><span class="cb"><b>Chat con ' + (side === 'm' ? 'Operaciones' : 'Cuadrilla 3') + '</b><span class="xs muted ellipsis">' + (lm ? '<b>' + who + ':</b> ' + esc(lm.data.text || (lm.data.photos && lm.data.photos.length ? 'Foto' : '…')) : 'Sin mensajes') + '</span></span>' + (lm ? '<span class="xs muted">' + lm.time + '</span>' : '') + icon('chevronRight', 16) + '</button>';
+  }
   function mIncident() {
     var inc = inc0248(), p = proj(inc, 'm');
     var h = '<div class="card"><div class="row between"><span class="id" style="font-weight:800;color:var(--blue-700)">#0248</span>' + statusPill(p) + '</div><div class="row" style="gap:10px;margin:8px 0 2px"><span class="tic">' + icon(tIc(inc.kind), 22) + '</span><div><div class="h2">' + esc(tShort(inc.kind)) + '</div><div class="small muted row" style="gap:4px">' + icon('pin', 14) + esc(inc.short) + '</div></div></div>';
@@ -1448,62 +1676,79 @@ function crewMapSVG(o) {
     h += '<div class="facts">' + fact('Prioridad', prioMeter(p.priority)) + (p.change ? fact('En campo', prioMeter(p.change.urgency)) : fact('Reclamo', icon('phone', 14) + inc.reportedAt)) + fact('Sector', icon('pin', 14) + inc.sector) + '</div>';
     h += '<div class="ichips" style="margin-top:10px">' + (inc.cues || []).map(function (c) { return ichip(c[0], c[1]); }).join('') + '</div></div>';
     if (!p.started) h += '<button class="btn primary big" style="margin-top:12px" data-a="start" data-id="0248">' + icon('play', 18) + 'Iniciar intervención</button>';
+    if (p.started) h += '<div style="margin-top:12px">' + chatPreview('m', 'data-a="mgo" data-v="chat"') + '</div>';
     if (p.change && !p.update) {
-      var ce = p.changeEv;
+      var ce = p.lastReportEv || p.changeEv;
       h += ce.synced ? '<div class="statusrow blue">' + icon('cloudCheck', 20) + '<b>Enviado ' + ce.syncedAt + '</b><span class="sp"></span><span class="wait">' + icon('hourglass', 16) + 'Esperando a Operaciones</span></div>'
         : '<div class="statusrow amber">' + icon('cloudPending', 20) + '<b>Sin enviar</b><span class="sp"></span><span class="wait">' + icon('wifi', 15) + 'se envía con señal</span></div>';
       h += fric('espera', 'La cuadrilla necesita la decisión de Operaciones para seguir con la reparación. Mientras no llega, solo puede señalizar, registrar y observar: parte del trabajo queda esperando.');
     }
     if (p.update) {
       var u = p.update;
-      h += '<div class="card upd" style="margin-top:12px"><div class="row between"><div class="h3 row">' + icon('bell', 18) + 'Indicaciones</div><span class="row" style="gap:10px">' + prioMeter(u.priority) + '<span class="xs muted">' + p.updateEv.time + '</span></span></div>';
-      if (u.message) h += '<div class="quote">' + esc(u.message) + '</div>';
-      h += todoList(u.authorized, null, ITEM_IC) + (u.pending.length ? todoList(u.pending.map(function (x) { return { ic: 'hourglass', t: x }; }), null, null, 'pendl') : '') + '</div>';
+      h += '<div class="card upd" style="margin-top:12px"><div class="row between"><div class="h3 row">' + icon('shield', 18) + 'Autorizado</div><span class="row" style="gap:10px">' + prioMeter(u.priority) + '<span class="xs muted">' + p.updateEv.time + '</span></span></div>' + todoList(u.authorized, null, ITEM_IC) + (u.pending.length ? todoList(u.pending.map(function (x) { return { ic: 'hourglass', t: x }; }), null, null, 'pendl') : '') + '</div>';
     }
     if (p.started && !p.result) {
       h += '<div class="stack" style="margin-top:12px">';
-      if (p.update) h += '<button class="btn primary big" data-a="mgo" data-v="resultado" data-id="0248">' + icon('checkCircle', 18) + 'Registrar resultado</button><div class="grid2"><button class="btn secondary" data-a="mgo" data-v="cambio" data-id="0248">' + icon('edit', 17) + 'Cambio</button><button class="btn secondary" style="color:var(--indigo)" data-a="mgo" data-v="asistente">' + icon('spark', 17) + 'Asistente</button></div>';
-      else h += '<button class="btn warn big" data-a="mgo" data-v="cambio" data-id="0248">' + icon('edit', 18) + 'Registrar cambio</button><button class="btn secondary big" style="color:var(--indigo)" data-a="mgo" data-v="asistente">' + icon('spark', 18) + 'Consultar asistente</button>';
+      if (p.update) h += '<button class="btn primary big" data-a="mgo" data-v="resultado" data-id="0248">' + icon('checkCircle', 18) + 'Registrar resultado</button><button class="btn secondary big" style="color:var(--indigo)" data-a="mgo" data-v="asistente">' + icon('spark', 18) + 'Consultar asistente</button>';
+      else h += '<button class="btn warn big" data-a="mgo" data-v="chat">' + icon('chat', 18) + 'Contar un cambio a Operaciones</button><button class="btn secondary big" style="color:var(--indigo)" data-a="mgo" data-v="asistente">' + icon('spark', 18) + 'Consultar asistente</button>';
       h += '</div>';
     }
     if (p.result) h += '<button class="btn secondary big" style="margin-top:12px" data-a="mgo" data-v="cierre" data-id="0248">' + icon('stamp', 18) + (p.validation ? 'Ver cierre' : 'Ver estado del cierre') + '</button>';
-    h += '<div class="sec"><div class="sec-t">Registro</div><div class="card">' + timeline(inc, 'm') + '</div></div>';
+    h += '<div class="sec"><div class="card reg">' + regBox(inc, 'm') + '</div></div>';
     return h;
   }
   function iconChips(path, opts, sel, map) { return '<div class="chips">' + opts.map(function (o) { var on = (sel || []).indexOf(o) >= 0, m = map[o] || ['check', o]; return '<button class="chip ic ' + (on ? 'on' : '') + '" data-a="toggle" data-f="' + path + '" data-v="' + esc(o) + '">' + icon(on ? 'check' : m[0], 16) + esc(m[1]) + '</button>'; }).join('') + '</div>'; }
   function photosField(path, list) {
     return '<div class="photos">' + (list || []).map(function (k, i) { return '<div class="photo">' + photoSVG(k) + '<span class="tag">' + (i + 1) + '</span></div>'; }).join('') + ((list || []).length < 3 ? '<button class="photo-add" data-a="addPhoto" data-f="' + path + '" title="Agregar foto">' + icon('camera', 22) + '<span>+</span></button>' : '') + '</div>';
   }
-  function mChangeForm() {
-    ensureChangeDraft();
-    var d = S.drafts.change, inc = inc0248(), n = parseInt(d.homes || '0', 10) || 0;
-    var h = '<div class="row between"><span class="small muted row" style="gap:5px">' + icon(tIc(inc.kind), 15) + '#0248 · ' + esc(tShort(inc.kind)) + '</span>' + demoBtn('change') + '</div>';
-    h += '<div class="field"><span>Ubicación</span><div class="locrow">' + icon('pin', 18) + '<input class="input" data-f="change.location" value="' + esc(d.location) + '"><span class="gps">' + icon('gps', 13) + 'GPS</span></div></div>';
-    h += '<div class="field"><span>Tipo <em>*</em></span><div class="opts3">' + CHANGE_OPTIONS.types.map(function (t) { return '<button class="opt' + (d.type === t ? ' on' : '') + '" data-a="set" data-f="change.type" data-v="' + esc(t) + '" title="' + esc(t) + '">' + icon(tIc(t), 22) + '<span>' + esc(TYPE_TILE[t] || t) + '</span></button>'; }).join('') + '</div></div>';
-    h += '<div class="field"><span>¿Qué ves? <em>*</em></span>' + iconChips('change.conditions', CHANGE_OPTIONS.conditions, d.conditions, COND) + '</div>';
-    h += '<div class="field"><span>Domicilios sin presión</span><div class="stepper"><button data-a="step" data-f="change.homes" data-v="-1" aria-label="Menos">' + icon('minus', 18) + '</button><span class="val">' + n + '</span><button data-a="step" data-f="change.homes" data-v="1" aria-label="Más">' + icon('plus', 18) + '</button><span class="homes">' + new Array(Math.min(n, 8) + 1).join(icon('home', 17)) + (n > 8 ? '+' : '') + '</span></div></div>';
-    h += '<div class="field"><span>Urgencia <em>*</em></span><div class="urg">' + CHANGE_OPTIONS.urgency.map(function (u) { return '<button class="u' + PLV[u] + (d.urgency === u ? ' on' : '') + '" data-a="set" data-f="change.urgency" data-v="' + u + '">' + prioMeter(u, true) + '<span>' + u + '</span></button>'; }).join('') + '</div>';
-    h += '<div class="cmpmini"><div><small>Orden</small>' + icon(tIc(inc.kind), 16) + prioMeter(inc.priority) + '</div>' + icon('arrowRight', 16) + '<div class="now"><small>Ahora</small>' + icon(tIc(d.type), 16) + (d.urgency ? prioMeter(d.urgency) : '<span class="muted">—</span>') + '</div></div></div>';
-    h += fric('sinautoridad', 'La cuadrilla marca una urgencia preliminar, pero cambiar la prioridad de la orden o pedir más recursos no le corresponde: tiene que consultarlo con Operaciones.');
-    h += '<div class="field"><span>Ya hiciste</span>' + iconChips('change.actions', CHANGE_OPTIONS.actions, d.actions, ACT) + '</div>';
-    h += '<div class="field"><span>Fotos</span>' + photosField('change.photos', d.photos) + '</div>';
-    h += '<label class="field"><span>Nota <i>opcional</i></span><textarea class="textarea sm" data-f="change.conditionsText" placeholder="Algo más para Operaciones">' + esc(d.conditionsText) + '</textarea></label>';
-    if (S.formError) h += '<div class="statusrow red">' + icon('alert', 18) + '<b>' + esc(S.formError) + '</b></div>';
-    h += '<button class="btn primary big" style="margin-top:16px" data-a="saveChange">' + icon(S.online ? 'send' : 'device', 18) + (S.online ? 'Enviar a Operaciones' : 'Guardar en el celular') + '</button>';
-    h += '<button class="btn ghost block" style="margin-top:6px" data-a="mgo" data-v="incidencia" data-id="0248">Cancelar</button>';
+  function tagChipC(t) { if (t === 'Urgente') return ichip('alert', 'Urgente', 'red'); return COND[t] ? condChip(t) : actChip(t); }
+  function chatThread(side) {
+    var inc = inc0248(), p = proj(inc, side), me = side === 'm' ? 'campo' : 'central', h = '';
+    var lastCrew = null; p.msgs.forEach(function (e) { if (e.src === 'campo') lastCrew = e; });
+    p.events.forEach(function (e) {
+      if (e.type === 'assigned') h += '<div class="sysnote">' + icon('users', 13) + 'Orden asignada a C3 · ' + e.time + '</div>';
+      else if (e.type === 'started') h += '<div class="sysnote">' + icon('play', 13) + 'Intervención iniciada · ' + e.time + '</div>';
+      else if (e.type === 'result') h += '<div class="sysnote">' + icon('checkCircle', 13) + 'Resultado enviado a validar · ' + e.time + '</div>';
+      else if (e.type === 'validated') h += '<div class="sysnote ok">' + icon('stamp', 13) + 'Cierre validado · ' + e.time + '</div>';
+      else if (e.type === 'msg') {
+        var mine = e.src === me, d = e.data;
+        var who = e.src === 'campo' ? 'Raúl · C3' : (e.who && e.who.indexOf('Supervis') === 0 ? 'Carla · Supervisión' : 'Lucía · Operaciones');
+        var st = '';
+        if (e.src === 'campo' && side === 'm') st = e.synced ? '<span class="ok" title="Entregado ' + (e.syncedAt || '') + '">' + icon('checks', 14) + '</span>' : '<span class="pend" title="Sin enviar">' + icon('clock', 13) + '</span>';
+        if (e.src === 'central' && side === 'd') st = e.synced ? '<span class="ok" title="Entregado">' + icon('checks', 14) + '</span>' : '<span class="pend" title="Sin entregar: C3 sin señal">' + icon('clock', 13) + '</span>';
+        if (e.src === 'campo' && side === 'd' && e.syncedAt && e.syncedAt !== e.time) st = '<span class="pend" title="Escrito sin señal · llegó ' + e.syncedAt + '">' + icon('wifiOff', 13) + e.syncedAt + '</span>';
+        h += '<div class="bub ' + (mine ? 'me' : 'them') + (e.src === 'campo' && !e.synced ? ' pending' : '') + '">' + (mine ? '' : '<div class="bw">' + esc(who) + '</div>');
+        if (d.priority) h += '<div class="bprio">' + icon('gauge', 14) + 'Prioridad ' + prioMeter(d.priority) + '</div>';
+        if (d.text) h += '<div class="bt">' + esc(d.text) + '</div>';
+        if (d.tags && d.tags.length) h += '<div class="ichips">' + d.tags.map(tagChipC).join('') + '</div>';
+        if (d.photos && d.photos.length) h += '<div class="bph">' + d.photos.map(function (k) { return '<div class="photo">' + photoSVG(k) + '</div>'; }).join('') + '</div>';
+        if (d.authorized && d.authorized.length) h += '<div class="bauth"><b>' + icon('shield', 13) + 'Autorizado</b>' + todoList(d.authorized, null, ITEM_IC) + '</div>';
+        h += '<div class="bm">' + e.time + st + '</div></div>';
+        if (side === 'm' && e.src === 'campo' && d.report && d.report.requiresEval && e === p.lastReportEv) {
+          h += '<div class="sysnote card evalnote"><div class="row" style="gap:6px;color:var(--red);font-weight:800">' + icon('escalate', 15) + 'Lo decide Operaciones</div><div class="ichips" style="margin-top:8px;justify-content:center">' + reasonChips(d.report.reasons) + '</div><div class="lockline" style="justify-content:center">' + icon('lock', 13) + 'Sin maniobras en la red</div></div>';
+          h += fric('sinautoridad', 'El caso excede lo que la cuadrilla puede decidir: reorganizar el trabajo, cambiar prioridades o sumar recursos depende de Operaciones.');
+        }
+        if (side === 'm' && e === lastCrew && d.report) h += fric('handoff', e.synced ? 'El mensaje salió hacia Operaciones, pero no hay confirmación de que alguien lo haya leído ni de que alcance para entender la situación.' : 'El mensaje tiene que llegar a Operaciones cuando vuelva la señal: puede llegar tarde, sin suficiente contexto o sin que sepamos si alguien lo recibió.');
+      }
+    });
+    if (side === 'm') {
+      var pend = p.msgs.filter(function (e) { return e.src === 'campo' && !e.synced; }).length;
+      if (pend) h += '<div class="sysnote warn">' + icon('wifiOff', 13) + pend + ' sin enviar · salen cuando vuelva la señal</div>';
+      else if (p.change && !p.update && !p.result) h += '<div class="sysnote">' + icon('hourglass', 13) + 'Esperando respuesta de Operaciones</div>';
+    } else if (!S.online) h += '<div class="sysnote warn">' + icon('wifiOff', 13) + 'C3 sin señal desde ' + lastCrewContact() + ' · lo que mandes se entrega al reconectar</div>';
     return h;
   }
-  function mSaved() {
-    var p = proj(inc0248(), 'm'), e = p.changeEv; if (!e) return mIncident();
-    var h = '<div class="card hero">';
-    h += e.synced ? '<div class="bigic">' + icon('cloudCheck', 32) + '</div><div class="h2">Enviado a Operaciones</div><div class="small muted" style="margin-top:4px">' + e.time + '</div>'
-      : '<div class="bigic amber">' + icon('device', 32) + '</div><div class="h2">Guardado en el celular</div><div style="margin-top:8px"><span class="pill pend">' + icon('cloudPending', 14) + 'Sin enviar</span></div>';
-    h += hop([['device', 'Celular', 'done'], ['grid', 'Operaciones', e.synced ? 'done' : 'pend']]);
-    h += '</div>';
-    h += fric('handoff', e.synced ? 'El cambio salió hacia Operaciones, pero no hay confirmación de que alguien lo haya recibido ni de que alcance con este registro breve para entender la situación.' : 'El cambio tiene que llegar a Operaciones cuando vuelva la señal: puede llegar tarde, sin suficiente contexto o sin que sepamos si alguien lo recibió.');
-    if (e.data.requiresEval) h += '<div class="card evalc" style="margin-top:12px"><div class="row h3" style="color:var(--red)">' + icon('escalate', 18) + 'Lo decide Operaciones</div><div class="ichips" style="margin-top:10px">' + reasonChips(e.data.reasons) + '</div><div class="lockline">' + icon('lock', 14) + 'Sin maniobras en la red</div></div>';
-    if (e.data.requiresEval) h += fric('sinautoridad', 'El caso excede lo que la cuadrilla puede decidir: reorganizar el trabajo, cambiar prioridades o sumar recursos depende de Operaciones.');
-    h += '<div class="grid2" style="margin-top:12px"><button class="btn ia" data-a="mgo" data-v="asistente">' + icon('spark', 18) + 'Asistente</button><button class="btn secondary" data-a="critgo" data-v="esc">' + icon('book', 18) + 'Criterios</button></div><button class="btn ghost block" style="margin-top:6px" data-a="mgo" data-v="incidencia" data-id="0248">Volver a la orden</button>';
+  function mChat() {
+    ensureCMsg();
+    var h = demoBtn('chat') ? '<div class="row" style="justify-content:flex-end;margin:-4px 0 6px">' + demoBtn('chat') + '</div>' : '';
+    return h + '<div class="thread">' + chatThread('m') + '</div>';
+  }
+  function chatComposer() {
+    ensureCMsg();
+    var d = S.drafts.cmsg;
+    var h = '<div class="ccomp"><div class="chips scrollx qtags">' + CHAT_TAGS.map(function (t) { var on = d.tags.indexOf(t) >= 0, m = t === 'Urgente' ? ['alert', 'Urgente'] : (COND[t] || ACT[t] || ['check', t]); return '<button class="chip ic ' + (on ? 'on' : '') + (t === 'Urgente' ? ' urg' : '') + '" data-a="toggle" data-f="cmsg.tags" data-v="' + esc(t) + '">' + icon(on ? 'check' : m[0], 15) + esc(m[1]) + '</button>'; }).join('') + '</div>';
+    if (d.photos.length) h += '<div class="attach">' + d.photos.map(function (k, i) { return '<div class="photo">' + photoSVG(k) + '<button class="rm" data-a="rmPhoto" data-f="cmsg.photos" data-v="' + i + '" aria-label="Quitar foto">' + icon('x', 12) + '</button></div>'; }).join('') + '</div>';
+    h += '<div class="crow"><button class="cam" data-a="addPhoto" data-f="cmsg.photos" aria-label="Agregar foto">' + icon('camera', 20) + '</button><textarea data-f="cmsg.text" rows="1" placeholder="Escribile a Operaciones…">' + esc(d.text) + '</textarea><button class="snd" data-a="sendCrewMsg" aria-label="Enviar">' + icon(S.online ? 'send' : 'device', 19) + '</button></div></div>';
     return h;
   }
   function anteBlock(a) {
@@ -1527,7 +1772,7 @@ function crewMapSVG(o) {
     }
     if (a.intent === 'status') return h + '<div class="statusrow ' + (a.pending ? 'amber' : 'green') + '" style="margin-top:4px">' + icon(a.pending ? 'cloudPending' : 'cloudCheck', 20) + '<b>' + (a.pending ? a.pending + ' sin enviar' : 'Todo enviado') + '</b></div></div>';
     if (a.intent === 'ante') return h + anteBlock(a) + '</div>';
-    if (!a.hasChange) h += '<button class="btn warn sm" style="margin-bottom:8px" data-a="mgo" data-v="cambio" data-id="0248">' + icon('edit', 15) + 'Registrá el cambio primero</button>';
+    if (!a.hasChange) h += '<button class="btn warn sm" style="margin-bottom:8px" data-a="mgo" data-v="chat">' + icon('chat', 15) + 'Contale el cambio a Operaciones</button>';
     h += anteBlock(a);
     h += '<h5>' + icon('shield', 14) + 'Ahora</h5>' + todoList(a.verif, function (v) { return v.done; });
     h += '<div class="esc">' + icon('device', 16) + icon('arrowRight', 14) + icon('grid', 16) + '<span><b>Escalar a Operaciones</b> · CO-ESC-01' + (a.offline ? ' · al sincronizar' : '') + '</span></div>';
@@ -1569,7 +1814,7 @@ function crewMapSVG(o) {
     if (p.validation) h += '<div class="bigic">' + icon('checkCircle', 34) + '</div><div class="h2">Caso cerrado</div><div class="small muted row" style="justify-content:center;gap:5px;margin-top:4px">' + icon('stamp', 14) + esc(p.validation.by) + ' · ' + p.validEv.time + '</div>' + hop([['send', 'Enviado', 'done'], ['stamp', 'Validado', 'done'], ['history', 'Historial', 'done']]) + '<button class="btn primary big" style="margin-top:14px" data-a="casego" data-v="0248">' + icon('history', 18) + 'Ver en el historial</button>';
     else h += '<div class="bigic amber">' + icon('stamp', 32) + '</div><div class="h2">Enviado a validar</div>' + hop([['send', 'Enviado', p.resultEv.synced ? 'done' : 'pend'], ['stamp', 'Validación', 'pend'], ['history', 'Historial', 'todo']]);
     h += '</div><div class="card" style="margin-top:12px"><div class="ichips">' + outcomeChip(p.result.outcome) + ichip(p.result.restored ? 'tap' : 'xCircle', p.result.restored ? 'Con servicio' : 'Sin servicio', p.result.restored ? 'ok' : 'red') + '</div>' + (p.result.photos && p.result.photos.length ? '<div class="photos" style="margin-top:10px">' + p.result.photos.map(function (k) { return '<div class="photo">' + photoSVG(k) + '</div>'; }).join('') + '</div>' : '') + '</div>';
-    h += '<div class="sec"><div class="sec-t">Registro</div><div class="card">' + timeline(inc, 'm') + '</div></div>';
+    h += '<div class="sec"><div class="card reg">' + regBox(inc, 'm') + '</div></div>';
     return h;
   }
 
@@ -1656,7 +1901,7 @@ function crewMapSVG(o) {
     return '';
   }
   function incTable(compact) {
-    var rows = ['0248', '0249', '0250', '0251', '0246'].map(function (k) {
+    var rows = ['0248', '0249', '0250', '0251', '0253', '0246'].map(function (k) {
       var inc = S.incidents[k], p = proj(inc, 'd'), alert = S.alerts.some(function (a) { return a.inc === k && !a.read; });
       var kind = k === '0248' && p.change ? p.change.type : inc.kind;
       return '<tr class="click ' + (alert ? 'hl' : '') + '" data-a="dinc" data-v="' + k + '"><td class="nw"><b style="color:var(--blue-700)">#' + k + '</b>' + (alert ? ' <span class="newdot" title="Novedad sin revisar"></span>' : '') + '</td><td class="nw"><span class="row" style="gap:8px">' + icon(tIc(kind), 17) + esc(tShort(kind)) + '</span></td>' + (compact ? '' : '<td>' + inc.sector + '</td>') + '<td>' + prioMeter(p.priority) + '</td><td>' + statusPill(p) + '</td>' + (compact ? '' : '<td>C' + inc.crew.slice(-1) + '</td>') + '<td class="small"><span class="row" style="gap:5px;color:var(--g500)">' + (p.last ? icon(p.last.src === 'campo' ? 'device' : 'grid', 14) + '<b style="color:var(--g700)">' + p.last.time + '</b>' : '') + '</span></td></tr>';
@@ -1667,7 +1912,8 @@ function crewMapSVG(o) {
     var inc = S.incidents[a.inc], p = proj(inc, 'd'), body = '';
     if (a.kind === 'change' && p.change) body = (p.change.conditions || []).map(function (c) { return condChip(c); }).join('') + (p.change.homes ? ichip('home', p.change.homes, 'warn') : '') + '<span class="ichip warn">' + prioMeter(p.change.urgency) + '</span>' + (p.change.offline ? ichip('wifiOff', 'Sin señal ' + p.changeEv.time) : '');
     if (a.kind === 'result' && p.result) body = outcomeChip(p.result.outcome) + ichip('hourglass', 'A validar');
-    return '<div class="alertrow ' + (a.read ? 'read' : '') + '"><div class="ico">' + icon(a.kind === 'result' ? 'stamp' : 'alert', 20) + '</div><div style="flex:1;min-width:0"><div class="row between"><b>' + esc(a.title) + '</b><span class="xs muted">' + a.time + '</span></div><div class="ichips" style="margin-top:7px">' + body + '</div></div><button class="btn ' + (a.read ? 'secondary' : 'primary') + ' sm" data-a="openAlert" data-v="' + a.id + '">' + (a.read ? 'Ver' : 'Revisar') + '</button></div>';
+    var snip = (a.kind === 'change' || a.kind === 'msg') && a.body ? '<div class="small muted ellipsis" style="margin-top:4px">' + icon('chat', 13) + ' «' + esc(a.body) + '»</div>' : '';
+    return '<div class="alertrow ' + (a.read ? 'read' : '') + '"><div class="ico">' + icon(a.kind === 'result' ? 'stamp' : a.kind === 'msg' ? 'chat' : 'alert', 20) + '</div><div style="flex:1;min-width:0"><div class="row between"><b>' + esc(a.title) + '</b><span class="xs muted">' + a.time + '</span></div>' + snip + (body ? '<div class="ichips" style="margin-top:7px">' + body + '</div>' : '') + '</div><button class="btn ' + (a.read ? 'secondary' : 'primary') + ' sm" data-a="openAlert" data-v="' + a.id + '">' + (a.read ? 'Ver' : 'Revisar') + '</button></div>';
   }
   function kpi(ic, n, l, cls) { return '<div class="kpi ' + (cls || '') + '"><span class="i">' + icon(ic, 22) + '</span><div><div class="n">' + n + '</div><div class="l">' + l + '</div></div></div>'; }
   function dPanel() {
@@ -1704,9 +1950,9 @@ function crewMapSVG(o) {
     if (!p.change) h += '<div class="statusrow gray">' + icon(S.online ? 'info' : 'wifiOff', 20) + '<b>Solo la orden original</b><span class="sp"></span><span class="wait">' + icon('clock', 15) + 'Último dato C3 ' + lastCrewContact() + '</span></div>' + fric('handoff', 'Lo que la cuadrilla registró en campo todavía no llegó a la central: depende de que vuelva la señal y se sincronice, y puede llegar tarde.');
     h += '<div class="dgrid" style="margin-top:14px"><div>';
     var ch = p.change, ce = p.changeEv;
-    h += '<div class="card"><div class="sec-t">Orden vs. campo</div><div class="cmp"><div class="c"><div class="hd">' + icon('grid', 15) + 'Orden</div><div class="big"><span class="tic">' + icon(tIc(inc.kind), 20) + '</span>' + esc(tShort(inc.kind)) + '</div>' + prioMeter(inc.priority) + '<div class="ichips">' + ichip('phone', 'Reclamo ' + inc.reportedAt) + (inc.cues || []).map(function (c) { return ichip(c[0], c[1]); }).join('') + '</div></div><div class="mid">' + icon('arrowRight', 20) + '</div>';
+    h += '<div class="card"><div class="sec-t">Orden vs. lo que contó campo' + (ch ? '<span class="xs muted row" style="gap:4px;letter-spacing:0;text-transform:none;font-weight:600">' + icon('chat', 13) + 'resumen del chat</span>' : '') + '</div><div class="cmp"><div class="c"><div class="hd">' + icon('grid', 15) + 'Orden</div><div class="big"><span class="tic">' + icon(tIc(inc.kind), 20) + '</span>' + esc(tShort(inc.kind)) + '</div>' + prioMeter(inc.priority) + '<div class="ichips">' + ichip('phone', 'Reclamo ' + inc.reportedAt) + (inc.cues || []).map(function (c) { return ichip(c[0], c[1]); }).join('') + '</div></div><div class="mid">' + icon('arrowRight', 20) + '</div>';
     if (ch) {
-      h += '<div class="c"><div class="hd">' + icon('device', 15) + 'Campo · C3</div><div class="big"><span class="tic warn">' + icon(tIc(ch.type), 20) + '</span>' + esc(tShort(ch.type)) + (ch.type !== inc.kind ? ' <span class="diff">CAMBIÓ</span>' : '') + '</div><div class="row" style="gap:8px">' + prioMeter(ch.urgency) + (URG[ch.urgency] > URG[inc.priority] ? ' <span class="diff">SUBE</span>' : '') + '</div>';
+      h += '<div class="c"><div class="hd">' + icon('chat', 15) + 'Campo · C3</div><div class="big"><span class="tic warn">' + icon(tIc(ch.type), 20) + '</span>' + esc(tShort(ch.type)) + (ch.type !== inc.kind ? ' <span class="diff">CAMBIÓ</span>' : '') + '</div><div class="row" style="gap:8px">' + prioMeter(ch.urgency) + (URG[ch.urgency] > URG[inc.priority] ? ' <span class="diff">SUBE</span>' : '') + '</div>';
       h += '<div class="ichips">' + ch.conditions.map(function (c) { return condChip(c); }).join('') + (ch.homes ? ichip('home', ch.homes + ' domicilios', 'warn') : '') + '</div><div class="ichips">' + (ch.actions || []).map(actChip).join('') + '</div>';
       h += '<div class="ichips">' + (ch.offline ? ichip('wifiOff', 'Registrado ' + ce.time) : ichip('clock', 'Registrado ' + ce.time)) + ichip('cloudCheck', 'Recibido ' + (ce.syncedAt || '—'), 'ok') + '</div>' + (ch.conditionsText ? '<div class="note">«' + esc(ch.conditionsText) + '»</div>' : '') + '</div>';
     } else h += '<div class="c empty-c"><div class="hd">' + icon('device', 15) + 'Campo · C3</div><div class="nodata">' + icon(S.online ? 'hourglass' : 'wifiOff', 26) + '<span>Sin reporte todavía</span></div></div>';
@@ -1715,14 +1961,28 @@ function crewMapSVG(o) {
     h += '</div>';
     if (ch && ch.photos && ch.photos.length) h += '<div class="card"><div class="sec-t">Evidencias</div><div class="photos">' + ch.photos.map(function (k) { return '<div class="photo" style="width:150px;height:105px">' + photoSVG(k) + '<span class="tag">' + ce.time + '</span></div>'; }).join('') + (p.result && p.result.photos ? p.result.photos.map(function (k) { return '<div class="photo" style="width:150px;height:105px">' + photoSVG(k) + '<span class="tag">' + icon('checkCircle', 10) + ' ' + p.resultEv.time + '</span></div>'; }).join('') : '') + '</div></div>';
     if (p.ai.length) { var ai = p.ai[p.ai.length - 1]; h += '<div class="card airow"><span class="ii">' + icon('spark', 20) + '</span><div style="flex:1;min-width:0"><div class="row" style="gap:8px"><b>Consulta a la IA · ' + ai.time + '</b>' + (PRES ? '' : '<span class="pill ia" style="padding:1px 7px;font-size:10.5px">simulada</span>') + '</div><div class="small muted ellipsis" title="' + esc(ai.data.q) + '">«' + esc(ai.data.q) + '»</div></div><div class="ichips" style="flex:none">' + ichip('history', '#0176', 'ia') + ichip('book', ai.data.crit.length + ' criterios', 'ia') + ichip('lock', 'Sin maniobras', 'ok') + '</div></div>'; }
-    h += '<div class="card"><div class="sec-t">Registro</div>' + timeline(inc, 'd') + '</div>';
+    h += '<div class="card reg">' + regBox(inc, 'd') + '</div>';
     h += '</div><div>';
-    h += '<div class="card"><div class="sec-t">Ubicación</div><div class="map" style="height:190px">' + mapSVG(!!ch) + '</div>' + (ch ? '<div class="xs muted row" style="gap:5px;margin-top:8px"><span class="lg red"></span>Área posiblemente afectada</div>' : '') + '</div>';
-    h += dActionCard(inc, p);
+    if (p.result || p.validation) h += dActionCard(inc, p);
+    h += dChat(inc, p);
+    h += '<div class="card"><div class="sec-t">Ubicación</div><div class="map" style="height:170px">' + mapSVG(!!ch) + '</div>' + (ch ? '<div class="xs muted row" style="gap:5px;margin-top:8px"><span class="lg red"></span>Área posiblemente afectada</div>' : '') + '</div>';
     return h + '</div></div>';
   }
+  function dChat(inc, p) {
+    ensureOMsg();
+    var d = S.drafts.omsg;
+    var h = '<div class="card dchat" data-k="actioncard"><div class="sec-t">Chat con Cuadrilla 3' + demoBtn('opschat') + '</div>';
+    if (p.change && !p.update) h += fric('sobrecarga', 'Leer el chat, decidir la prioridad y autorizar acciones recae en la misma persona que atiende al resto de las cuadrillas.');
+    h += '<div class="thread dthread" data-sk="d-chat">' + chatThread('d') + '</div>';
+    if (!p.result) {
+      h += '<div class="dcomp"><div class="row wrap" style="gap:6px"><span class="xs muted b">Prioridad</span>' + ['Media', 'Alta', 'Crítica'].map(function (x) { return '<button class="chip pchip u' + PLV[x] + (d.priority === x ? ' on' : '') + '" data-a="setx" data-f="omsg.priority" data-v="' + x + '">' + prioMeter(x, true) + x + '</button>'; }).join('') + '<span class="sp"></span><button class="chip ' + (d.auth ? 'on' : '') + '" data-a="setb" data-f="omsg.auth" data-v="' + (d.auth ? '0' : '1') + '">' + icon('shield', 15) + 'Autorizar' + (d.authorized.length ? ' · ' + d.authorized.length : '') + '</button></div>';
+      if (d.auth) h += '<div class="checklist authl">' + DEMO_UPDATE.authorized.map(function (a) { return ckItem('omsg.authorized', a, d.authorized.indexOf(a) >= 0, ITEM_IC[a]); }).join('') + '</div>';
+      h += '<div class="crow"><textarea data-f="omsg.text" rows="2" placeholder="Escribile a la cuadrilla…">' + esc(d.text) + '</textarea><button class="snd" data-a="sendOpsMsg" aria-label="Enviar">' + icon('send', 19) + '</button></div></div>';
+    }
+    return h + '</div>';
+  }
   function dActionCard(inc, p) {
-    var h = '<div class="card" data-k="actioncard">';
+    var h = '<div class="card">';
     var byChip = '<div class="ichips" style="margin-top:10px">' + ichip('user', S.deskRole === 'supervision' ? 'Supervisión · C. Duarte' : 'Operaciones · L. Ferreyra') + '</div>';
     if (p.validation) {
       h += '<div class="sec-t">Cierre</div><div class="statusrow green" style="margin-top:0">' + icon('checkCircle', 20) + '<b>Cerrada · ' + p.validEv.time + '</b></div><button class="btn primary block" style="margin-top:10px" data-a="dgo" data-v="cierre" data-id="0248">Ver cierre</button>';
@@ -1730,18 +1990,6 @@ function crewMapSVG(o) {
       ensureValidDraft(); var d = S.drafts.valid;
       h += '<div class="sec-t">Validar cierre' + demoBtn('valid') + '</div><div class="ichips">' + outcomeChip(p.result.outcome) + ichip(p.result.restored ? 'tap' : 'xCircle', p.result.restored ? 'Con servicio' : 'Sin servicio', p.result.restored ? 'ok' : 'red') + '</div>' + (p.result.text ? '<div class="note" style="margin-top:8px">«' + esc(p.result.text) + '»</div>' : '');
       h += '<div class="checklist" style="margin-top:10px">' + DEMO_VALIDATION.checks.map(function (c) { return ckItem('valid.checks', c, d.checks.indexOf(c) >= 0, ITEM_IC[c]); }).join('') + '</div><label class="field"><span>' + icon('bulb', 14) + ' Aprendizaje <i>opcional</i></span><textarea class="textarea sm" data-f="valid.lesson" placeholder="¿Qué conviene recordar?">' + esc(d.lesson) + '</textarea></label>' + byChip + (S.formError ? '<div class="statusrow red">' + icon('alert', 16) + '<b>' + esc(S.formError) + '</b></div>' : '') + '<button class="btn ok block" style="margin-top:12px" data-a="validate">' + icon('stamp', 18) + 'Validar cierre</button>';
-    } else if (p.update) {
-      var u = p.update;
-      h += '<div class="sec-t">Orden actualizada · ' + p.updateEv.time + '</div><div class="row" style="gap:10px">' + prioMeter(u.priority) + '</div>' + (p.updateEv.synced ? '<div class="statusrow green">' + icon('cloudCheck', 18) + '<b>Entregada a C3 · ' + p.updateEv.syncedAt + '</b></div>' : '<div class="statusrow amber">' + icon('cloudPending', 18) + '<b>Sin entregar · C3 sin señal</b></div>') + todoList(u.authorized, null, ITEM_IC) + (u.pending.length ? todoList(u.pending.map(function (x) { return { ic: 'hourglass', t: x }; }), null, null, 'pendl') : '') + '<div class="xs muted row" style="gap:5px;margin-top:10px">' + icon('hourglass', 14) + 'Esperando el resultado</div>';
-    } else if (p.change) {
-      ensureUpdateDraft(); var d2 = S.drafts.update;
-      h += '<div class="sec-t">Actualizar orden' + demoBtn('update') + '</div>' + fric('sobrecarga', 'Revisar el reporte, decidir la prioridad y autorizar acciones recae en la misma persona que atiende al resto de las cuadrillas.');
-      h += '<div class="field" style="margin-top:4px"><span>Prioridad</span><div class="urg" style="grid-template-columns:repeat(3,1fr)">' + ['Media', 'Alta', 'Crítica'].map(function (x) { return '<button class="u' + PLV[x] + (d2.priority === x ? ' on' : '') + '" data-a="set" data-f="update.priority" data-v="' + x + '">' + prioMeter(x, true) + '<span>' + x + '</span></button>'; }).join('') + '</div></div>';
-      h += '<div class="field"><span>' + icon('shield', 14) + ' Autorizar</span><div class="checklist">' + DEMO_UPDATE.authorized.map(function (a) { return ckItem('update.authorized', a, d2.authorized.indexOf(a) >= 0, ITEM_IC[a]); }).join('') + '</div></div>';
-      h += '<div class="field"><span>' + icon('hourglass', 14) + ' Queda pendiente</span><div class="checklist">' + DEMO_UPDATE.pending.map(function (a) { return ckItem('update.pending', a, d2.pending.indexOf(a) >= 0, ITEM_IC[a]); }).join('') + '</div></div>';
-      h += '<label class="field"><span>Mensaje <i>opcional</i></span><textarea class="textarea sm" data-f="update.message" placeholder="Breve, para la cuadrilla">' + esc(d2.message) + '</textarea></label>' + (S.formError ? '<div class="statusrow red">' + icon('alert', 16) + '<b>' + esc(S.formError) + '</b></div>' : '') + '<button class="btn primary block" style="margin-top:12px" data-a="sendUpdate">' + icon('send', 18) + 'Enviar a Cuadrilla 3</button>';
-    } else {
-      h += '<div class="sec-t">Acciones</div><div class="nodata sm">' + icon('checkCircle', 22) + '<span>Sin novedades de campo</span></div>';
     }
     return h + '</div>';
   }
@@ -1750,7 +1998,7 @@ function crewMapSVG(o) {
     if (!p.validation) return dIncident();
     var t = function (type) { var e = inc.events.filter(function (x) { return x.type === type; })[0]; return e ? e.time : '—'; };
     var ce = p.changeEv;
-    var steps = [[t('assigned'), 'users', 'Asignada', 'central'], [t('started'), 'play', 'Iniciada', 'campo'], [ce ? ce.time : '—', 'edit', 'Cambio' + (ce && ce.data.offline ? ' sin señal' : ''), 'campo'], [p.ai.length ? p.ai[0].time : '—', 'spark', 'Consulta IA · #0176', 'ia'], [ce ? ce.syncedAt : '—', 'sync', 'Sincronizado', 'central'], [t('update'), 'bell', 'Orden actualizada', 'central'], [t('result'), 'checkCircle', 'Resultado', 'campo'], [p.validEv.time, 'stamp', 'Validada', 'central']];
+    var steps = [[t('assigned'), 'users', 'Asignada', 'central'], [t('started'), 'play', 'Iniciada', 'campo'], [ce ? ce.time : '—', 'chat', 'Cambio por chat' + (p.change && p.change.offline ? ' sin señal' : ''), 'campo'], [p.ai.length ? p.ai[0].time : '—', 'spark', 'Consulta IA · #0176', 'ia'], [ce ? ce.syncedAt : '—', 'sync', 'Sincronizado', 'central'], [p.updateEv ? p.updateEv.time : '—', 'chat', 'Indicaciones por chat · ' + (p.update ? p.update.priority : ''), 'central'], [t('result'), 'checkCircle', 'Resultado', 'campo'], [p.validEv.time, 'stamp', 'Validada', 'central']];
     var h = '<div class="dgrid even"><div class="card hero"><div class="bigic">' + icon('checkCircle', 34) + '</div><div class="h1">#0248 cerrada</div><div class="small muted row" style="justify-content:center;gap:5px;margin-top:6px">' + icon('stamp', 14) + esc(p.validation.by) + ' · ' + p.validEv.time + '</div>' + hop([['send', 'Resultado', 'done'], ['stamp', 'Validado', 'done'], ['history', 'Historial', 'done']]) + '<div class="row" style="justify-content:center;margin-top:16px;gap:10px"><button class="btn primary" data-a="casego" data-v="0248">' + icon('history', 18) + 'Ver en el historial</button><button class="btn secondary" data-a="dgo" data-v="panel">Panel</button></div></div>';
     h += '<div class="card"><div class="sec-t">Recorrido</div>' + tlKey() + '<ul class="tl2">' + steps.map(function (s) { return '<li class="' + s[3] + '"><span class="ic2">' + icon(s[1], 15) + '</span><span class="t">' + esc(s[2]) + '</span><span class="tm">' + s[0] + '</span></li>'; }).join('') + '</ul>' + (p.validation.lesson ? '<div class="lesson" style="margin-top:12px">' + icon('bulb', 22) + '<span>' + esc(p.validation.lesson) + '</span></div>' : '') + '</div></div>';
     return h;
@@ -1760,39 +2008,41 @@ function crewMapSVG(o) {
   function guideSteps() {
     var inc = inc0248(), all = inc.events;
     var has = function (t) { return all.some(function (e) { return e.type === t; }); };
-    var ch = all.filter(function (e) { return e.type === 'change'; })[0];
+    var rp = all.filter(function (e) { return e.type === 'msg' && e.src === 'campo' && e.data.report; })[0];
+    var upd = all.some(function (e) { return e.type === 'msg' && e.src === 'central' && e.data.priority; });
     return [
-      { n: 'Escena 1 · Asignación', p: 'Operaciones creó la orden #0248 con prioridad media. En el rol Cuadrilla, pulsá «Iniciar» en la orden.', done: has('started'), go: [['Ver en Operaciones', 'operaciones', 'd', 'incidente', '0248'], ['Ir a Cuadrilla', 'cuadrilla', 'm', 'inicio']] },
-      { n: 'Escena 2 · Cambio de escenario', p: 'En la orden, pulsá «Registrar cambio» y completá el formulario (o usá «Completar demo»).', done: !!ch, go: [['Abrir formulario', 'cuadrilla', 'm', 'cambio', '0248']] },
-      { n: 'Escena 3 · Sin conexión', p: 'Pasá «Red de la cuadrilla» a «Sin conexión» (idealmente antes de guardar el cambio). El registro queda pendiente de sincronización y Operaciones no lo ve.', done: S.wentOffline && !!(ch && ch.data.offline), go: [['Ver vista dividida', 'dividida']] },
+      { n: 'Escena 1 · Asignación', p: 'Operaciones asignó la #0248. En el celular, pulsá «Iniciar» en la ruta del día. El menú ☰ muestra la orden actual y las que siguen.', done: has('started'), go: [['Ver en Operaciones', 'operaciones', 'd', 'incidente', '0248'], ['Ir a Cuadrilla', 'cuadrilla', 'm', 'inicio']] },
+      { n: 'Escena 2 · Cambio de escenario', p: 'Abrí el chat de la orden y contale a Operaciones lo que encontrás: texto, atajos (agua en calzada, baja presión, urgente) y fotos. O usá «Completar demo».', done: !!rp, go: [['Abrir chat', 'cuadrilla', 'm', 'chat']] },
+      { n: 'Escena 3 · Sin conexión', p: 'Cortá la señal (interruptor de arriba o el ícono de wifi del celular) antes de enviar el mensaje: queda en el celular y Operaciones no lo ve.', done: S.wentOffline && !!(rp && rp.data.report.offline), go: [['Ver vista dividida', 'dividida']] },
       { n: 'Escena 4 · Consulta a la IA', p: 'Abrí el Asistente sin conexión y enviá la consulta sugerida. Revisá el antecedente #0176, los criterios y los límites.', done: has('ai'), go: [['Abrir asistente', 'cuadrilla', 'm', 'asistente']] },
-      { n: 'Escena 5 · Reconexión', p: 'Volvé a «Conectada» y pulsá «Sincronizar ahora». En Operaciones, revisá la alerta y enviá la actualización de la orden.', done: has('update'), go: [['Ir a Cuadrilla', 'cuadrilla', 'm', 'inicio'], ['Ir a Operaciones', 'operaciones', 'd', 'panel']] },
+      { n: 'Escena 5 · Reconexión', p: 'Volvé a «Conectada» y pulsá «Sincronizar ahora». En Operaciones, abrí la alerta y respondé por el chat con la prioridad y lo que autorizás.', done: upd, go: [['Ir a Cuadrilla', 'cuadrilla', 'm', 'inicio'], ['Ir a Operaciones', 'operaciones', 'd', 'panel']] },
       { n: 'Escena 6 · Resolución', p: 'En Cuadrilla, «Registrar resultado». En Operaciones o Supervisión, validá el cierre y buscá #0248 en el historial.', done: has('validated'), go: [['Resultado (Cuadrilla)', 'cuadrilla', 'm', 'resultado', '0248'], ['Validar (Supervisión)', 'supervision', 'd', 'incidente', '0248']] }
     ];
   }
   var FRIC_GUIDE = [
-    ['handoff', 'Cuadrilla: «Guardado en el celular» y «Compartido». Operaciones: incidencia #0248 antes de sincronizar.'],
-    ['sindueno', 'Cuadrilla: registros pendientes de sincronizar. Operaciones: alertas del panel, pantalla Alertas y Validaciones.'],
-    ['sobrecarga', 'Operaciones: panel de control y formulario «Actualizar orden».'],
-    ['espera', 'Cuadrilla: orden #0248 después de registrar el cambio, mientras espera la decisión de Operaciones.'],
-    ['sinautoridad', 'Cuadrilla: «Urgencia» del formulario y aviso «Lo decide Operaciones».']
+    ['handoff', 'Cuadrilla: chat de la orden después de contar el cambio, y «Compartido». Operaciones: incidencia #0248 antes de sincronizar.'],
+    ['sindueno', 'Cuadrilla: mensajes sin enviar. Operaciones: alertas del panel, pantalla Alertas y Validaciones.'],
+    ['sobrecarga', 'Operaciones: panel de control y chat de la incidencia #0248.'],
+    ['espera', 'Cuadrilla: orden #0248 después de contar el cambio, mientras espera la respuesta de Operaciones.'],
+    ['sinautoridad', 'Cuadrilla: chat, aviso «Lo decide Operaciones» después de contar el cambio.']
   ];
   // Lleva la demostración al momento del recorrido donde se ve cada fricción
   function fricJump(key) {
     timers.forEach(clearTimeout); timers = [];
     var keep = { guide: S.guide }; var wasVideo = videoMode; videoMode = true; persist = false;
     S = seed(); S.guide = keep.guide; S.fric = true;
-    start('0248'); S.m = { name: 'cambio', id: '0248' }; ensureChangeDraft(); demoFill('change');
+    start('0248'); demoFill('chat');
     var target = { side: 'm', sel: '[data-fric="sinautoridad"]' };
-    if (key !== 'sinautoridad') {
-      setOnline(false); saveChange();
-      if (key === 'handoff') { S.role = 'dividida'; S.m = { name: 'registrado', id: '0248' }; S.d = { name: 'incidente', id: '0248' }; target = { side: 'm', sel: '[data-fric="handoff"]' }; }
+    if (key === 'sinautoridad') { sendCrewMsg(); S.role = 'cuadrilla'; S.m = { name: 'chat' }; }
+    else {
+      setOnline(false); sendCrewMsg();
+      if (key === 'handoff') { S.role = 'dividida'; S.m = { name: 'chat' }; S.d = { name: 'incidente', id: '0248' }; target = { side: 'm', sel: '[data-fric="handoff"]' }; }
       else {
         setOnline(true); startSync(); completeSync();
         if (key === 'espera') { S.role = 'cuadrilla'; S.syncUI = null; S.m = { name: 'incidencia', id: '0248' }; target = { side: 'm', sel: '[data-fric="espera"]' }; }
         else { S.role = 'operaciones'; S.deskRole = 'operaciones'; S.d = { name: 'panel' }; target = { side: 'd', sel: '[data-fric="' + key + '"]' }; }
       }
-    } else { S.role = 'cuadrilla'; }
+    }
     videoMode = wasVideo; persist = true;
     try { if (location.hash !== '#' + S.role) location.hash = S.role; } catch (e) { }
     if (window.innerWidth < 760) S.guide = false;
@@ -1840,7 +2090,13 @@ function crewMapSVG(o) {
       case 'doReset': modal = null; resetAll(); break;
       case 'mtab': S.formError = null; if (v === 'orden') go('m', 'incidencia', '0248'); else go('m', v); break;
       case 'mgo': S.formError = null; go('m', v, id); break;
-      case 'mback': S.formError = null; var bk = { incidencia: 'inicio', cambio: 'incidencia', registrado: 'incidencia', caso: 'historial', resultado: 'incidencia', cierre: 'incidencia' }[S.m.name] || 'inicio'; go('m', bk, '0248'); break;
+      case 'mback': S.formError = null; var bk = { caso: 'historial', resultado: 'incidencia', cierre: 'incidencia', orden2: 'inicio' }[S.m.name] || 'inicio'; go('m', bk, '0248'); break;
+      case 'menu': S.menu = !S.menu; commit(); break;
+      case 'tlToggle': S.tlOpen = S.tlOpen || {}; S.tlOpen[v] = !S.tlOpen[v]; commit(); break;
+      case 'sendCrewMsg': sendCrewMsg(); break;
+      case 'sendOpsMsg': sendOpsMsg(); break;
+      case 'setx': setPath(f, getPath(f) === v ? '' : v); commit(); break;
+      case 'rmPhoto': var rp = (getPath(f) || []).slice(); rp.splice(parseInt(v, 10), 1); setPath(f, rp); commit(); break;
       case 'start': start(id); break;
       case 'toggle': var arr = getPath(f) || []; var i = arr.indexOf(v); if (i >= 0) arr.splice(i, 1); else arr.push(v); setPath(f, arr); commit(); break;
       case 'set': setPath(f, v); commit(); break;
@@ -1848,7 +2104,6 @@ function crewMapSVG(o) {
       case 'step': var nn = (parseInt(getPath(f) || '0', 10) || 0) + parseInt(v, 10); setPath(f, nn > 0 ? String(nn) : ''); commit(); break;
       case 'addPhoto': var ph = getPath(f) || []; var kinds = f.indexOf('result') === 0 ? ['reparacion', 'calzada', 'vereda'] : ['calzada', 'vereda', 'reparacion']; ph.push(kinds[ph.length % 3]); setPath(f, ph); commit(); break;
       case 'demoFill': demoFill(v); break;
-      case 'saveChange': saveChange(); break;
       case 'sync': doSync(); break;
       case 'closeSync': S.syncUI = null; commit(); break;
       case 'ask': ask(S.drafts.composer); break;
@@ -1861,7 +2116,6 @@ function crewMapSVG(o) {
       case 'dgo': S.formError = null; go('d', v, id); break;
       case 'dinc': S.formError = null; go('d', 'incidente', v); break;
       case 'openAlert': var al = S.alerts.filter(function (x) { return x.id === v; })[0]; if (al) { al.read = true; go('d', 'incidente', al.inc); } break;
-      case 'sendUpdate': sendUpdate(); break;
       case 'sendResult': sendResult(); break;
       case 'validate': validate(); break;
       case 'gstep': var g = v.split('|'); if (g[1]) setRole(g[1]); if (g[2]) go(g[2], g[3], g[4]); if (window.innerWidth < 760) { S.guide = false; commit(); } break;
@@ -1879,7 +2133,11 @@ function crewMapSVG(o) {
     if (el.tagName === 'SELECT' && el.getAttribute('data-f')) { setPath(el.getAttribute('data-f'), el.value); commit(); }
   }
   function onKey(ev) {
-    if (ev.target.getAttribute && ev.target.getAttribute('data-f') === 'composer' && ev.key === 'Enter' && !ev.shiftKey) { ev.preventDefault(); ask(ev.target.value); }
+    var df = ev.target.getAttribute && ev.target.getAttribute('data-f');
+    if (df === 'composer' && ev.key === 'Enter' && !ev.shiftKey) { ev.preventDefault(); ask(ev.target.value); }
+    if (df === 'cmsg.text' && ev.key === 'Enter' && !ev.shiftKey) { ev.preventDefault(); setPath(df, ev.target.value); sendCrewMsg(); }
+    if (df === 'omsg.text' && ev.key === 'Enter' && !ev.shiftKey) { ev.preventDefault(); setPath(df, ev.target.value); sendOpsMsg(); }
+    if (ev.key === 'Escape' && S.menu) { S.menu = false; commit(); }
     if (ev.key === 'Escape' && modal) { modal = null; renderModal(); }
     if (PRES && ev.altKey && ev.shiftKey && ev.code === 'KeyR') { ev.preventDefault(); resetAll(); }
   }
@@ -1891,6 +2149,7 @@ function crewMapSVG(o) {
     S = load() || seed();
     if (PRES) { S.role = 'dividida'; S.fric = false; S.guide = false; document.body.classList.add('pres'); }
     if (S.chatPending) S.chatPending = false;
+    S.menu = false;
     if (S.syncUI && S.syncUI.phase === 'syncing') S.syncUI.phase = 'recovered';
     document.addEventListener('click', onClick);
     document.addEventListener('input', onInput);
@@ -1907,8 +2166,8 @@ function crewMapSVG(o) {
     loadState: function (o) { S = clone(o); S.chatPending = !!o.chatPending; render(); },
     reset: function () { S = seed(); render(); }, render: render,
     go: function (side, name, id) { go(side, name, id); }, role: setRole, online: setOnline,
-    start: start, saveChange: saveChange, ask: ask, sync: doSync, startSync: startSync, completeSync: completeSync,
-    sendUpdate: sendUpdate, sendResult: sendResult, validate: validate, demoFill: demoFill,
+    start: start, sendCrewMsg: sendCrewMsg, sendOpsMsg: sendOpsMsg, ask: ask, sync: doSync, startSync: startSync, completeSync: completeSync,
+    sendResult: sendResult, validate: validate, demoFill: demoFill,
     set: function (path, v) { var parts = path.split('.'), o = S; for (var i = 0; i < parts.length - 1; i++) o = o[parts[i]]; o[parts[parts.length - 1]] = v; render(); },
     embed: function (side) { embedSide = side; document.body.classList.add('embed'); render(); },
     video: function (on) { videoMode = !!on; persist = !on; render(); },
