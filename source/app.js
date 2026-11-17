@@ -369,6 +369,15 @@
   }
   function scrollEnd(side) { var el = document.querySelector('[data-pane="' + side + '"] [data-sk]'); if (el) el.scrollTop = el.scrollHeight; }
   var lastRoutes = {}, lastThread = {};
+  var PHONE_H = 866; // 844 de pantalla (iPhone 12 Pro: 390 × 844) + marco de 11 px
+  function fitPhone() {
+    var ph = document.querySelector('.phone'), df = document.querySelector('.deskframe');
+    if (!ph) { if (df) df.style.height = ''; return; }
+    if (embedSide || window.innerWidth < 760) { ph.style.zoom = ''; if (df) df.style.height = ''; return; }
+    var z = Math.max(0.6, Math.min(1, (window.innerHeight - (PRES ? 64 : 104)) / PHONE_H));
+    ph.style.zoom = z;
+    if (df) df.style.height = Math.round(PHONE_H * z) + 'px';
+  }
   function render() {
     var app = document.getElementById('app');
     var scrolls = {};
@@ -393,6 +402,7 @@
       if (lastThread[sd] !== key) { var sc = sd === 'm' ? th.closest('[data-sk]') : th; if (sc) sc.scrollTop = sc.scrollHeight; lastThread[sd] = key; }
     });
     renderModal();
+    fitPhone();
     document.body.classList.toggle('no-anim', videoMode);
   }
 
@@ -425,7 +435,7 @@
     var top = ['inicio', 'incidencia', 'asistente', 'historial', 'criterios'].indexOf(r) >= 0; // el chat lleva flecha para volver a Inicio
     var titles = { inicio: '', incidencia: 'Orden #0248', chat: 'Chat · Operaciones', asistente: 'Asistente', historial: 'Historial', criterios: 'Criterios', caso: 'Caso #' + (S.m.id || ''), resultado: 'Resultado', cierre: 'Cierre #0248', cambio: 'Registrar cambio', orden2: 'Orden #' + (S.m.id || '') };
     var h = '<div class="mapp">';
-    h += '<div class="statusbar"><span>' + now() + '</span><span class="r"><button class="sigbtn" data-a="toggleNet" title="' + (S.online ? 'Cortar la señal' : 'Recuperar la señal') + '" aria-label="' + (S.online ? 'Cortar la señal' : 'Recuperar la señal') + '">' + (S.online ? icon('wifi', 15) : icon('wifiOff', 15)) + '</button><span class="batt"></span></span></div>';
+    h += '<div class="statusbar"><span class="clk">' + now() + '</span><span class="notch" aria-hidden="true"></span><span class="r"><button class="sigbtn" data-a="toggleNet" title="' + (S.online ? 'Cortar la señal' : 'Recuperar la señal') + '" aria-label="' + (S.online ? 'Cortar la señal' : 'Recuperar la señal') + '">' + (S.online ? icon('wifi', 15) : icon('wifiOff', 15)) + '</button><span class="batt"></span></span></div>';
     h += '<div class="mhead"><div class="row">';
     h += top ? '<button class="back burger" data-a="menu" aria-label="Abrir menú">' + icon('menu', 20) + ((unread || pend) && !S.menu ? '<span class="bdot"></span>' : '') + '</button>' : '<button class="back" data-a="mback" aria-label="Volver">' + icon('arrowLeft', 18) + '</button>';
     h += r === 'inicio' ? '<div class="t">' + icon('logo', 22) + 'CAMPO</div>' : '<span class="ttl">' + esc(titles[r] || '') + '</span>';
@@ -1067,6 +1077,7 @@
     document.addEventListener('change', onChange);
     document.addEventListener('keydown', onKey);
     window.addEventListener('hashchange', applyHash);
+    window.addEventListener('resize', fitPhone);
     applyHash();
     render();
   }

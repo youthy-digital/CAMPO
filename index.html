@@ -782,6 +782,32 @@ body.pres .stage.split .col-d{max-width:1280px}
 .dotlg.red{background:#d93025;box-shadow:0 0 0 3px rgba(217,48,37,.2)}
 .dotlg.gray{background:#8d99a8;box-shadow:0 0 0 3px rgba(141,153,168,.2)}
 .cmap svg{max-width:560px;margin:0 auto}
+/* aviso de mensaje nuevo: el texto se corta con puntos suspensivos dentro de la caja */
+.notice.tap{overflow:hidden}
+.notice.tap>div{flex:1;min-width:0}
+.notice.tap>div b{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.notice.tap .ellipsis{display:block;max-width:100%;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+.notice.tap>.ic:last-child{flex:none}
+/* ===== Celular a medida de iPhone 12 Pro: pantalla de 390 × 844 ===== */
+.col-m{width:auto;flex:none}
+.phone,body.pres .phone{width:412px;height:866px;min-height:0;padding:11px;border-radius:57px}
+.phone .screen{border-radius:46px}
+.statusbar{position:relative;height:47px;padding:0 26px 0 36px;font-size:15px;font-weight:600;align-items:center}
+.statusbar .clk{width:54px;text-align:center}
+.notch{position:absolute;left:50%;top:0;transform:translateX(-50%);width:210px;height:30px;background:#0d1724;border-radius:0 0 20px 20px}
+.notch::after{content:"";position:absolute;right:58px;top:10px;width:9px;height:9px;border-radius:50%;background:#1d2b3d}
+.notch::before{content:"";position:absolute;left:50%;top:9px;transform:translateX(-50%);width:44px;height:5px;border-radius:3px;background:#1d2b3d}
+body.embed .notch{display:none}
+body.embed .statusbar{height:auto;padding:9px 22px 5px;font-size:13px}
+body.embed .statusbar .clk{width:auto}
+@media (max-width:760px){
+  .notch{display:none}
+  .statusbar{height:auto;padding:9px 22px 5px;font-size:13px}
+  .phone,body.pres .phone{width:100%;height:calc(100vh - 96px);border-radius:0;padding:0}
+  body.pres .phone{height:calc(100vh - 40px)}
+  .phone .screen{border-radius:0}
+  .col-m{width:100%}
+}
 
 </style>
 </head>
@@ -1552,6 +1578,15 @@ function crewMapSVG(o) {
   }
   function scrollEnd(side) { var el = document.querySelector('[data-pane="' + side + '"] [data-sk]'); if (el) el.scrollTop = el.scrollHeight; }
   var lastRoutes = {}, lastThread = {};
+  var PHONE_H = 866; // 844 de pantalla (iPhone 12 Pro: 390 × 844) + marco de 11 px
+  function fitPhone() {
+    var ph = document.querySelector('.phone'), df = document.querySelector('.deskframe');
+    if (!ph) { if (df) df.style.height = ''; return; }
+    if (embedSide || window.innerWidth < 760) { ph.style.zoom = ''; if (df) df.style.height = ''; return; }
+    var z = Math.max(0.6, Math.min(1, (window.innerHeight - (PRES ? 64 : 104)) / PHONE_H));
+    ph.style.zoom = z;
+    if (df) df.style.height = Math.round(PHONE_H * z) + 'px';
+  }
   function render() {
     var app = document.getElementById('app');
     var scrolls = {};
@@ -1576,6 +1611,7 @@ function crewMapSVG(o) {
       if (lastThread[sd] !== key) { var sc = sd === 'm' ? th.closest('[data-sk]') : th; if (sc) sc.scrollTop = sc.scrollHeight; lastThread[sd] = key; }
     });
     renderModal();
+    fitPhone();
     document.body.classList.toggle('no-anim', videoMode);
   }
 
@@ -1608,7 +1644,7 @@ function crewMapSVG(o) {
     var top = ['inicio', 'incidencia', 'asistente', 'historial', 'criterios'].indexOf(r) >= 0; // el chat lleva flecha para volver a Inicio
     var titles = { inicio: '', incidencia: 'Orden #0248', chat: 'Chat · Operaciones', asistente: 'Asistente', historial: 'Historial', criterios: 'Criterios', caso: 'Caso #' + (S.m.id || ''), resultado: 'Resultado', cierre: 'Cierre #0248', cambio: 'Registrar cambio', orden2: 'Orden #' + (S.m.id || '') };
     var h = '<div class="mapp">';
-    h += '<div class="statusbar"><span>' + now() + '</span><span class="r"><button class="sigbtn" data-a="toggleNet" title="' + (S.online ? 'Cortar la señal' : 'Recuperar la señal') + '" aria-label="' + (S.online ? 'Cortar la señal' : 'Recuperar la señal') + '">' + (S.online ? icon('wifi', 15) : icon('wifiOff', 15)) + '</button><span class="batt"></span></span></div>';
+    h += '<div class="statusbar"><span class="clk">' + now() + '</span><span class="notch" aria-hidden="true"></span><span class="r"><button class="sigbtn" data-a="toggleNet" title="' + (S.online ? 'Cortar la señal' : 'Recuperar la señal') + '" aria-label="' + (S.online ? 'Cortar la señal' : 'Recuperar la señal') + '">' + (S.online ? icon('wifi', 15) : icon('wifiOff', 15)) + '</button><span class="batt"></span></span></div>';
     h += '<div class="mhead"><div class="row">';
     h += top ? '<button class="back burger" data-a="menu" aria-label="Abrir menú">' + icon('menu', 20) + ((unread || pend) && !S.menu ? '<span class="bdot"></span>' : '') + '</button>' : '<button class="back" data-a="mback" aria-label="Volver">' + icon('arrowLeft', 18) + '</button>';
     h += r === 'inicio' ? '<div class="t">' + icon('logo', 22) + 'CAMPO</div>' : '<span class="ttl">' + esc(titles[r] || '') + '</span>';
@@ -2250,6 +2286,7 @@ function crewMapSVG(o) {
     document.addEventListener('change', onChange);
     document.addEventListener('keydown', onKey);
     window.addEventListener('hashchange', applyHash);
+    window.addEventListener('resize', fitPhone);
     applyHash();
     render();
   }

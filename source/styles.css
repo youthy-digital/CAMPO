@@ -771,3 +771,29 @@ body.pres .stage.split .col-d{max-width:1280px}
 .dotlg.red{background:#d93025;box-shadow:0 0 0 3px rgba(217,48,37,.2)}
 .dotlg.gray{background:#8d99a8;box-shadow:0 0 0 3px rgba(141,153,168,.2)}
 .cmap svg{max-width:560px;margin:0 auto}
+/* aviso de mensaje nuevo: el texto se corta con puntos suspensivos dentro de la caja */
+.notice.tap{overflow:hidden}
+.notice.tap>div{flex:1;min-width:0}
+.notice.tap>div b{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.notice.tap .ellipsis{display:block;max-width:100%;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+.notice.tap>.ic:last-child{flex:none}
+/* ===== Celular a medida de iPhone 12 Pro: pantalla de 390 × 844 ===== */
+.col-m{width:auto;flex:none}
+.phone,body.pres .phone{width:412px;height:866px;min-height:0;padding:11px;border-radius:57px}
+.phone .screen{border-radius:46px}
+.statusbar{position:relative;height:47px;padding:0 26px 0 36px;font-size:15px;font-weight:600;align-items:center}
+.statusbar .clk{width:54px;text-align:center}
+.notch{position:absolute;left:50%;top:0;transform:translateX(-50%);width:210px;height:30px;background:#0d1724;border-radius:0 0 20px 20px}
+.notch::after{content:"";position:absolute;right:58px;top:10px;width:9px;height:9px;border-radius:50%;background:#1d2b3d}
+.notch::before{content:"";position:absolute;left:50%;top:9px;transform:translateX(-50%);width:44px;height:5px;border-radius:3px;background:#1d2b3d}
+body.embed .notch{display:none}
+body.embed .statusbar{height:auto;padding:9px 22px 5px;font-size:13px}
+body.embed .statusbar .clk{width:auto}
+@media (max-width:760px){
+  .notch{display:none}
+  .statusbar{height:auto;padding:9px 22px 5px;font-size:13px}
+  .phone,body.pres .phone{width:100%;height:calc(100vh - 96px);border-radius:0;padding:0}
+  body.pres .phone{height:calc(100vh - 40px)}
+  .phone .screen{border-radius:0}
+  .col-m{width:100%}
+}
