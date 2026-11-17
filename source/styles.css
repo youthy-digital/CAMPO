@@ -807,3 +807,7 @@ body.embed .statusbar .clk{width:auto}
 .rmap svg{width:100%;display:block}
 .mapcard .maplg{padding:2px 4px 2px}
 .dotlg.me{background:#2f74c8;box-shadow:0 0 0 3px rgba(47,116,200,.25)}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.cardmain{margin-top:12px;padding:12px 14px}
+.cardacts{margin-top:8px}
+.cardacts .btn{padding:10px 6px;font-size:14px;gap:6px}

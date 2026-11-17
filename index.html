@@ -818,6 +818,10 @@ body.embed .statusbar .clk{width:auto}
 .rmap svg{width:100%;display:block}
 .mapcard .maplg{padding:2px 4px 2px}
 .dotlg.me{background:#2f74c8;box-shadow:0 0 0 3px rgba(47,116,200,.25)}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.cardmain{margin-top:12px;padding:12px 14px}
+.cardacts{margin-top:8px}
+.cardacts .btn{padding:10px 6px;font-size:14px;gap:6px}
 
 </style>
 </head>
@@ -1749,7 +1753,7 @@ function routeMapSVG(o) {
     h += routeStops().map(function (x) {
       if (x.o.id === '0248' && x.st === 'now') {
         var c = '<div class="rstop now"><span class="rail"><i></i></span><div class="rbody"><div class="when">Ahora</div><div class="order hl" data-k="order-0248"><div class="row between"><span class="id">#0248</span>' + statusPill(p) + '</div><div class="row" style="gap:10px;margin-top:8px"><span class="tic">' + icon(tIc(inc.kind), 22) + '</span><div style="min-width:0"><div class="tt">' + esc(tShort(inc.kind)) + '</div><div class="small muted row" style="gap:4px">' + icon('pin', 14) + esc(inc.short) + '</div></div></div><div class="row" style="margin-top:10px;gap:14px">' + prioMeter(p.priority) + '<span class="xs muted row" style="gap:4px">' + icon('clock', 13) + x.o.time + '</span></div>';
-        c += p.started ? '<div class="grid2" style="margin-top:12px"><button class="btn secondary" data-a="mgo" data-v="incidencia" data-id="0248">' + icon('clipboard', 16) + 'Orden</button><button class="btn secondary chatbtn" data-a="mgo" data-v="chat">' + icon('chat', 16) + 'Chat' + (unread ? '<span class="nb">' + unread + '</span>' : '') + '</button></div>' : '<div class="grid2" style="margin-top:12px"><button class="btn secondary" data-a="mgo" data-v="incidencia" data-id="0248">' + icon('eye', 16) + 'Ver</button><button class="btn primary" data-a="start" data-id="0248">' + icon('play', 16) + 'Iniciar</button></div>';
+        c += p.started ? (!p.result ? (!p.update ? '<button class="btn warn block cardmain" data-a="mgo" data-v="cambio" data-id="0248">' + icon('edit', 17) + 'Registrar cambio</button>' : '<button class="btn primary block cardmain" data-a="mgo" data-v="resultado" data-id="0248">' + icon('checkCircle', 17) + 'Registrar resultado</button>') : '') + '<div class="grid3 cardacts"><button class="btn secondary" data-a="mgo" data-v="incidencia" data-id="0248">' + icon('clipboard', 16) + 'Orden</button><button class="btn secondary chatbtn" data-a="mgo" data-v="chat">' + icon('chat', 16) + 'Chat' + (unread ? '<span class="nb">' + unread + '</span>' : '') + '</button><button class="btn secondary" style="color:var(--indigo)" data-a="mgo" data-v="asistente">' + icon('spark', 16) + 'IA</button></div>' : '<div class="grid2" style="margin-top:12px"><button class="btn secondary" data-a="mgo" data-v="incidencia" data-id="0248">' + icon('eye', 16) + 'Ver</button><button class="btn primary" data-a="start" data-id="0248">' + icon('play', 16) + 'Iniciar</button></div>';
         return c + '</div></div></div>';
       }
       var to = x.o.id === '0248' ? 'data-v="cierre" data-id="0248"' : 'data-v="orden2" data-id="' + x.o.id + '"';
@@ -1757,7 +1761,6 @@ function routeMapSVG(o) {
     }).join('');
     h += '</div></div>';
     var stops = routeStops();
-    if (p.started && !p.result) h += '<div class="grid2 quick">' + (!p.update ? '<button class="btn secondary qk warnq" data-a="mgo" data-v="cambio" data-id="0248">' + icon('edit', 17) + 'Registrar cambio</button>' : '<button class="btn secondary qk" data-a="mgo" data-v="resultado" data-id="0248">' + icon('checkCircle', 17) + 'Registrar resultado</button>') + '<button class="btn secondary qk iaq" data-a="mgo" data-v="asistente">' + icon('spark', 17) + 'Asistente</button></div>';
     h += '<div class="sec"><div class="sec-t">Mapa de hoy<span class="xs muted row" style="gap:4px;letter-spacing:0;text-transform:none;font-weight:600">' + icon('pin', 12) + 'Sector Norte</span></div><button class="mapcard" data-a="mgo" data-v="incidencia" data-id="0248" aria-label="Abrir la orden actual"><div class="rmap">' + routeMapSVG({ alert: !!p.change && !p.update && !p.result, started: p.started && !p.result, states: stops.map(function (x) { return x.st; }), labels: ['#0248', '#0251 · 14:00', '#0253 · 16:00'] }) + '</div><div class="maplg"><span><i class="dotlg"></i>Orden</span><span><i class="dotlg me"></i>Tu ubicación</span>' + (p.change && !p.update && !p.result ? '<span><i class="dotlg red"></i>Zona afectada</span>' : '') + '</div></button></div>';
     return h;
   }
