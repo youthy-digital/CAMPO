@@ -99,7 +99,8 @@
   var TYPE_SHORT = { 'Pérdida de agua en vereda': 'Pérdida en vereda', 'Pérdida en conexión domiciliaria': 'Conexión domiciliaria', 'Posible pérdida en red distribuidora': 'Posible falla de red' };
   var TYPE_TILE = { 'Pérdida de agua en vereda': 'Vereda', 'Pérdida en conexión domiciliaria': 'Conexión', 'Posible pérdida en red distribuidora': 'Falla de red', 'Rotura de caño': 'Rotura', 'Baja presión': 'Presión', 'Otro': 'Otro' };
   var COND = { 'Agua en calzada': ['drop', 'Agua en calzada'], 'Reportes de baja presión': ['gauge', 'Baja presión'], 'Caudal continuo': ['flow', 'Caudal continuo'], 'Hundimiento': ['hole', 'Hundimiento'], 'Afecta el tránsito': ['car', 'Tránsito'], 'Agua turbia': ['turbid', 'Agua turbia'] };
-  var ACT = { 'Señalización de la zona': ['cone', 'Señalizado'], 'Delimitación del paso peatonal': ['users', 'Paso peatonal'], 'Registro fotográfico': ['camera', 'Fotos'], 'Consulta a vecinos': ['home', 'Vecinos'], 'Cierre de llave de paso domiciliaria': ['tap', 'Llave de paso'] };
+  var ACT = { 'Señalización de la zona': ['cone', 'Señalizado'], 'Delimitación del paso peatonal': ['users', 'Paso peatonal'], 'Registro fotográfico': ['camera', 'Fotos'], 'Consulta a vecinos': ['home', 'Vecinos'], 'Cierre de llave de paso domiciliaria': ['tap', 'Llave de paso'], 'Aviso al usuario': ['phone', 'Usuario avisado'], 'Revisión del medidor': ['gauge', 'Medidor revisado'], 'Desvío del tránsito': ['car', 'Tránsito desviado'], 'Relevamiento de domicilios sin presión': ['home', 'Domicilios relevados'], 'Contención del agua': ['drop', 'Agua contenida'], 'Aviso a vecinos del sector': ['users', 'Vecinos avisados'], 'Medición de presión': ['gauge', 'Presión medida'] };
+  function actionsFor(type) { return ACTIONS_BY_TYPE[type] || CHANGE_OPTIONS.actions; }
   var ITEM_IC = { 'Mantener la zona señalizada': 'cone', 'Esperar al equipo de red · 10:35': 'clock', 'Excavar solo con el equipo de red': 'tool', 'Corte V-N12 · 10:40 a 11:15 (equipo de red)': 'tap', 'Avisar a los vecinos del corte': 'users', 'Confirmar baja presión con telemetría': 'gauge', 'Avisar al municipio': 'bell', 'Evidencia completa': 'camera', 'Acciones dentro de lo autorizado': 'shield', 'Servicio restablecido': 'tap', 'Usuarios informados': 'users' };
   var TAG_IC = { 'Agua en calzada': 'drop', 'Baja presión': 'gauge', 'Escalado': 'escalate', 'Inicio como pérdida domiciliaria': 'home', 'Sin pérdida visible': 'eye', 'Dentro del alcance de la cuadrilla': 'check', 'Medidor': 'gauge', 'Caudal continuo': 'flow', 'Riesgo peatonal': 'users', 'Municipio': 'grid', 'Cámara de válvula': 'tap', 'Calidad': 'turbid', 'Seguimiento': 'clock', 'Terceros': 'tool', 'Registrado sin conexión': 'wifiOff' };
   var CAT_IC = { todas: 'list', seg: 'shield', doc: 'camera', esc: 'escalate', man: 'lock', pri: 'gauge', off: 'wifiOff', cie: 'stamp' };
@@ -181,7 +182,7 @@
     if (!d.urgency) miss.push('urgencia');
     if (miss.length) { S.formError = 'Falta: ' + miss.join(', '); commit(); return false; }
     S.formError = null;
-    var r = clone(d); r.kind0 = inc.kind; r.offline = !S.online; r.reasons = evalChange(d, inc); r.requiresEval = r.reasons.length > 0;
+    var r = clone(d); r.actions = (d.actions || []).filter(function (x) { return actionsFor(d.type).indexOf(x) >= 0; }); r.kind0 = inc.kind; r.offline = !S.online; r.reasons = evalChange(d, inc); r.requiresEval = r.reasons.length > 0;
     if (!r.difference) r.difference = 'Orden: ' + tShort(inc.kind) + ' (' + inc.priority + '). En el lugar: ' + tShort(d.type) + ' (' + d.urgency + ').';
     if (!proj(inc, 'm').started) addEvent(inc, { type: 'started', src: 'campo', who: 'Cuadrilla 3 · R. Benítez', time: tick(1), synced: S.online, syncedAt: S.online ? now() : null, text: 'Intervención iniciada por el encargado.' });
     var ev = addEvent(inc, { type: 'msg', src: 'campo', who: 'Cuadrilla 3 · R. Benítez', time: tick(6), synced: S.online, syncedAt: S.online ? now() : null, data: { text: (d.conditionsText || '').trim(), tags: [], photos: [], form: true, report: r } });
@@ -635,7 +636,7 @@
     h += '<div class="field"><span>Urgencia <em>*</em></span><div class="urg">' + CHANGE_OPTIONS.urgency.map(function (u) { return '<button class="u' + PLV[u] + (d.urgency === u ? ' on' : '') + '" data-a="set" data-f="change.urgency" data-v="' + u + '">' + prioMeter(u, true) + '<span>' + u + '</span></button>'; }).join('') + '</div>';
     h += '<div class="cmpmini"><div><small>Orden</small>' + icon(tIc(inc.kind), 16) + prioMeter(inc.priority) + '</div>' + icon('arrowRight', 16) + '<div class="now"><small>Ahora</small>' + icon(tIc(d.type), 16) + (d.urgency ? prioMeter(d.urgency) : '<span class="muted">—</span>') + '</div></div></div>';
     h += fric('sinautoridad', 'La cuadrilla marca una urgencia preliminar, pero cambiar la prioridad de la orden o pedir más recursos no le corresponde: tiene que consultarlo con Operaciones.');
-    h += '<div class="field"><span>Ya hiciste</span>' + iconChips('change.actions', CHANGE_OPTIONS.actions, d.actions, ACT) + '</div>';
+    h += '<div class="field acts"><span>Ya hiciste <i class="row" style="display:inline-flex;gap:4px;vertical-align:-2px">· ' + icon(tIc(d.type), 13) + esc(TYPE_TILE[d.type] || tShort(d.type)) + '</i></span>' + iconChips('change.actions', actionsFor(d.type), d.actions, ACT) + (NO_MANEUVER_TYPES.indexOf(d.type) >= 0 ? '<div class="lockline">' + icon('lock', 13) + 'Válvulas, cortes y excavación: los autoriza Operaciones</div>' : '') + '</div>';
     h += '<div class="field"><span>Fotos</span>' + photosField('change.photos', d.photos) + '</div>';
     h += '<label class="field"><span>Nota <i>opcional</i></span><textarea class="textarea sm" data-f="change.conditionsText" placeholder="Algo más para Operaciones">' + esc(d.conditionsText) + '</textarea></label>';
     if (S.formError) h += '<div class="statusrow red">' + icon('alert', 18) + '<b>' + esc(S.formError) + '</b></div>';
@@ -1013,7 +1014,7 @@
       case 'rmPhoto': var rp = (getPath(f) || []).slice(); rp.splice(parseInt(v, 10), 1); setPath(f, rp); commit(); break;
       case 'start': start(id); break;
       case 'toggle': var arr = getPath(f) || []; var i = arr.indexOf(v); if (i >= 0) arr.splice(i, 1); else arr.push(v); setPath(f, arr); commit(); break;
-      case 'set': setPath(f, v); commit(); break;
+      case 'set': setPath(f, v); if (f === 'change.type' && S.drafts.change) S.drafts.change.actions = (S.drafts.change.actions || []).filter(function (x) { return actionsFor(v).indexOf(x) >= 0; }); commit(); break;
       case 'setb': setPath(f, v === '1'); commit(); break;
       case 'step': var nn = (parseInt(getPath(f) || '0', 10) || 0) + parseInt(v, 10); setPath(f, nn > 0 ? String(nn) : ''); commit(); break;
       case 'addPhoto': var ph = getPath(f) || []; var kinds = f.indexOf('result') === 0 ? ['reparacion', 'calzada', 'vereda'] : ['calzada', 'vereda', 'reparacion']; ph.push(kinds[ph.length % 3]); setPath(f, ph); commit(); break;

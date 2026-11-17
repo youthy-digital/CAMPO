@@ -180,7 +180,7 @@ const DEMO_CHANGE = {
   homes: '4',
   difference: '',
   urgency: 'Alta',
-  actions: ['Señalización de la zona', 'Delimitación del paso peatonal', 'Registro fotográfico'],
+  actions: ['Señalización de la zona', 'Delimitación del paso peatonal', 'Relevamiento de domicilios sin presión', 'Registro fotográfico'],
   actionsText: '',
   photos: ['calzada', 'vereda']
 };
@@ -232,3 +232,15 @@ const CHANGE_OPTIONS = {
   urgency: ['Baja', 'Media', 'Alta', 'Crítica'],
   actions: ['Señalización de la zona', 'Delimitación del paso peatonal', 'Registro fotográfico', 'Consulta a vecinos', 'Cierre de llave de paso domiciliaria']
 };
+
+/* Lo que la cuadrilla puede haber hecho ya, según el tipo de incidencia */
+const ACTIONS_BY_TYPE = {
+  'Pérdida de agua en vereda': ['Señalización de la zona', 'Delimitación del paso peatonal', 'Cierre de llave de paso domiciliaria', 'Consulta a vecinos', 'Registro fotográfico'],
+  'Pérdida en conexión domiciliaria': ['Cierre de llave de paso domiciliaria', 'Aviso al usuario', 'Revisión del medidor', 'Señalización de la zona', 'Registro fotográfico'],
+  'Posible pérdida en red distribuidora': ['Señalización de la zona', 'Delimitación del paso peatonal', 'Desvío del tránsito', 'Relevamiento de domicilios sin presión', 'Registro fotográfico'],
+  'Rotura de caño': ['Señalización de la zona', 'Contención del agua', 'Aviso a vecinos del sector', 'Desvío del tránsito', 'Registro fotográfico'],
+  'Baja presión': ['Medición de presión', 'Relevamiento de domicilios sin presión', 'Revisión del medidor', 'Consulta a vecinos', 'Registro fotográfico'],
+  'Otro': ['Señalización de la zona', 'Consulta a vecinos', 'Registro fotográfico']
+};
+/* Tipos en los que la cuadrilla no puede maniobrar la red sin autorización */
+const NO_MANEUVER_TYPES = ['Posible pérdida en red distribuidora', 'Rotura de caño'];
