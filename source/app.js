@@ -517,6 +517,9 @@
       return '<div class="rstop ' + x.st + '"><span class="rail"><i></i></span><div class="rbody"><div class="when">' + STOP_L[x.st] + ' · ' + x.o.time + '</div><button class="order mini" data-a="mgo" ' + to + '><span class="tic gray">' + icon(x.st === 'done' ? 'checkCircle' : tIc(x.inc.kind), 18) + '</span><div style="flex:1;min-width:0"><b>#' + x.o.id + ' · ' + esc(tShort(x.inc.kind)) + '</b><div class="xs muted row" style="gap:4px">' + icon('pin', 12) + esc(x.inc.short || x.inc.address) + '</div></div>' + icon('chevronRight', 16) + '</button></div></div>';
     }).join('');
     h += '</div></div>';
+    var stops = routeStops();
+    if (p.started && !p.result) h += '<div class="grid2 quick">' + (!p.update ? '<button class="btn secondary qk warnq" data-a="mgo" data-v="cambio" data-id="0248">' + icon('edit', 17) + 'Registrar cambio</button>' : '<button class="btn secondary qk" data-a="mgo" data-v="resultado" data-id="0248">' + icon('checkCircle', 17) + 'Registrar resultado</button>') + '<button class="btn secondary qk iaq" data-a="mgo" data-v="asistente">' + icon('spark', 17) + 'Asistente</button></div>';
+    h += '<div class="sec"><div class="sec-t">Mapa de hoy<span class="xs muted row" style="gap:4px;letter-spacing:0;text-transform:none;font-weight:600">' + icon('pin', 12) + 'Sector Norte</span></div><button class="mapcard" data-a="mgo" data-v="incidencia" data-id="0248" aria-label="Abrir la orden actual"><div class="rmap">' + routeMapSVG({ alert: !!p.change && !p.update && !p.result, started: p.started && !p.result, states: stops.map(function (x) { return x.st; }), labels: ['#0248', '#0251 · 14:00', '#0253 · 16:00'] }) + '</div><div class="maplg"><span><i class="dotlg"></i>Orden</span><span><i class="dotlg me"></i>Tu ubicación</span>' + (p.change && !p.update && !p.result ? '<span><i class="dotlg red"></i>Zona afectada</span>' : '') + '</div></button></div>';
     return h;
   }
   function mOrder2() {
@@ -564,7 +567,6 @@
   function mIncident() {
     var inc = inc0248(), p = proj(inc, 'm');
     var h = '<div class="card"><div class="row between"><span class="id" style="font-weight:800;color:var(--blue-700)">#0248</span>' + statusPill(p) + '</div><div class="row" style="gap:10px;margin:8px 0 2px"><span class="tic">' + icon(tIc(inc.kind), 22) + '</span><div><div class="h2">' + esc(tShort(inc.kind)) + '</div><div class="small muted row" style="gap:4px">' + icon('pin', 14) + esc(inc.short) + '</div></div></div>';
-    h += '<div class="map" style="margin-top:10px">' + mapSVG(!!p.change) + '</div>';
     h += '<div class="facts">' + fact('Prioridad', prioMeter(p.priority)) + (p.change ? fact('En campo', prioMeter(p.change.urgency)) : fact('Reclamo', icon('phone', 14) + inc.reportedAt)) + fact('Sector', icon('pin', 14) + inc.sector) + '</div>';
     h += '<div class="ichips" style="margin-top:10px">' + (inc.cues || []).map(function (c) { return ichip(c[0], c[1]); }).join('') + '</div></div>';
     if (!p.started) h += '<button class="btn primary big" style="margin-top:12px" data-a="start" data-id="0248">' + icon('play', 18) + 'Iniciar intervención</button>';
@@ -581,8 +583,8 @@
     }
     if (p.started && !p.result) {
       h += '<div class="stack" style="margin-top:12px">';
-      if (p.update) h += '<button class="btn primary big" data-a="mgo" data-v="resultado" data-id="0248">' + icon('checkCircle', 18) + 'Registrar resultado</button><button class="btn secondary big" style="color:var(--indigo)" data-a="mgo" data-v="asistente">' + icon('spark', 18) + 'Consultar asistente</button>';
-      else h += '<button class="btn warn big" data-a="mgo" data-v="cambio" data-id="0248">' + icon('edit', 18) + 'Registrar cambio</button><button class="btn secondary big" style="color:var(--indigo)" data-a="mgo" data-v="asistente">' + icon('spark', 18) + 'Consultar asistente</button>';
+      if (p.update) h += '<button class="btn primary big" data-a="mgo" data-v="resultado" data-id="0248">' + icon('checkCircle', 18) + 'Registrar resultado</button>';
+      else h += '<button class="btn warn big" data-a="mgo" data-v="cambio" data-id="0248">' + icon('edit', 18) + 'Registrar cambio</button>';
       h += '</div>';
     }
     if (p.result) h += '<button class="btn secondary big" style="margin-top:12px" data-a="mgo" data-v="cierre" data-id="0248">' + icon('stamp', 18) + (p.validation ? 'Ver cierre' : 'Ver estado del cierre') + '</button>';

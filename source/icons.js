@@ -140,3 +140,23 @@ function crewMapSVG(o) {
   var scale = '<g transform="translate(248 192)"><path d="M0 0h34" stroke="#4f5e71" stroke-width="2"/><path d="M0 -3v6M34 -3v6" stroke="#4f5e71" stroke-width="1.4"/><text x="38" y="3" font-size="7" font-weight="700" fill="#4f5e71">500 m</text></g>';
   return '<svg viewBox="0 0 ' + W + ' ' + H + '" xmlns="http://www.w3.org/2000/svg" font-family="Inter,system-ui,sans-serif"><rect width="' + W + '" height="' + H + '" fill="#eef0ea"/>' + blocks + park + river + roads + sectors + streetNames + labels + incs + pins + ctrls + scale + '</svg>';
 }
+
+/* Mapa de la ruta del día de la cuadrilla (inicio del celular) */
+function routeMapSVG(o) {
+  o = o || {};
+  var W = 340, H = 160, i, j, blocks = '';
+  for (i = 0; i < 14; i++) for (j = 0; j < 8; j++) blocks += '<rect x="' + (3 + i * 25) + '" y="' + (3 + j * 21) + '" width="21" height="17" rx="2.5" fill="#e3e6de"/>';
+  var roads = '<g stroke="#fff" stroke-linecap="round"><path d="M0 67H340M103 0V160M228 0V160" stroke-width="5"/><path d="M0 25H340M0 109H340M0 151H340M53 0V160M153 0V160M278 0V160" stroke-width="2.3"/></g><path d="M0 150 L340 20" stroke="#f2d98c" stroke-width="4"/>';
+  var P = o.points || [[78, 88], [196, 38], [292, 118]];
+  var route = '<path d="M' + P[0][0] + ' ' + P[0][1] + ' L' + P[0][0] + ' 67 L' + P[1][0] + ' 67 L' + P[1][0] + ' ' + P[1][1] + ' M' + P[1][0] + ' 67 L' + P[2][0] + ' 67 L' + P[2][0] + ' ' + P[2][1] + '" fill="none" stroke="#1f5fae" stroke-width="3" stroke-dasharray="6 5" stroke-linecap="round" opacity=".75"/>';
+  var area = o.alert ? '<ellipse cx="' + P[0][0] + '" cy="' + P[0][1] + '" rx="44" ry="26" fill="#d93025" opacity=".14" stroke="#d93025" stroke-width="1.2" stroke-dasharray="4 3"/>' : '';
+  var st = o.states || ['now', 'next', 'later'];
+  var pin = function (p, n, s) {
+    var fill = s === 'done' ? '#1b7f50' : s === 'now' ? (o.alert ? '#d93025' : '#1f5fae') : '#fff', tc = s === 'next' || s === 'later' ? '#1f5fae' : '#fff', r = s === 'now' ? 12 : 10;
+    return '<g transform="translate(' + p[0] + ' ' + p[1] + ')"><circle r="' + r + '" fill="' + fill + '" stroke="' + (s === 'later' || s === 'next' ? '#1f5fae' : '#fff') + '" stroke-width="2.5"/>' + (s === 'done' ? '<path d="m-4.5 0 3 3 6-6" stroke="#fff" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>' : '<text y="4" text-anchor="middle" font-size="11" font-weight="800" fill="' + tc + '">' + n + '</text>') + '</g>';
+  };
+  var me = o.started ? '<circle cx="' + (P[0][0] + 22) + '" cy="' + (P[0][1] + 16) + '" r="11" fill="#2f74c8" opacity=".18"><animate attributeName="r" values="7;13;7" dur="2s" repeatCount="indefinite"/></circle><circle cx="' + (P[0][0] + 22) + '" cy="' + (P[0][1] + 16) + '" r="5" fill="#2f74c8" stroke="#fff" stroke-width="2"/>' : '';
+  var lab = function (p, t, dy) { return '<text x="' + p[0] + '" y="' + (p[1] + dy) + '" text-anchor="middle" font-size="9" font-weight="800" fill="#3a4859" stroke="#eef0ea" stroke-width="3" paint-order="stroke">' + t + '</text>'; };
+  var labels = lab(P[0], (o.labels || [])[0] || '', 26) + lab(P[1], (o.labels || [])[1] || '', -16) + lab(P[2], (o.labels || [])[2] || '', 26);
+  return '<svg viewBox="0 0 ' + W + ' ' + H + '" xmlns="http://www.w3.org/2000/svg" font-family="Inter,system-ui,sans-serif"><rect width="' + W + '" height="' + H + '" fill="#eef0ea"/>' + blocks + roads + area + route + me + pin(P[2], 3, st[2]) + pin(P[1], 2, st[1]) + pin(P[0], 1, st[0]) + labels + '</svg>';
+}
