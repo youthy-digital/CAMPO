@@ -818,3 +818,7 @@ figure.ev figcaption{display:flex;align-items:center;gap:5px;font-size:12px;font
 figure.ev figcaption .ic{color:var(--g500)}
 figure.ev figcaption.ok,figure.ev figcaption.ok .ic{color:var(--green)}
 .photo .num{position:absolute;top:5px;right:5px;width:18px;height:18px;border-radius:50%;background:#fff;color:var(--g700);font-size:10.5px;font-weight:800;display:grid;place-items:center;box-shadow:0 1px 3px rgba(16,36,63,.3)}
+/* prioridad baja en verde */
+.pm.l1{color:#1b7f50}
+.pm.l1 .pd{background:#1b9e5a;box-shadow:0 0 0 3px rgba(27,158,90,.2)}
+.urg button.on.u1{border-color:#1b9e5a;background:#eaf7ef;box-shadow:0 0 0 2px #cdebd9}

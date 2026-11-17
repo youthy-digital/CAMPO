@@ -233,7 +233,7 @@ const CHANGE_OPTIONS = {
   actions: ['Señalización de la zona', 'Delimitación del paso peatonal', 'Registro fotográfico', 'Consulta a vecinos', 'Cierre de llave de paso domiciliaria']
 };
 
-/* Lo que la cuadrilla puede haber hecho ya, según el tipo de incidencia */
+/* Acciones tomadas por la cuadrilla, según el tipo de incidencia */
 const ACTIONS_BY_TYPE = {
   'Pérdida de agua en vereda': ['Señalización de la zona', 'Delimitación del paso peatonal', 'Cierre de llave de paso domiciliaria', 'Consulta a vecinos', 'Registro fotográfico'],
   'Pérdida en conexión domiciliaria': ['Cierre de llave de paso domiciliaria', 'Aviso al usuario', 'Revisión del medidor', 'Señalización de la zona', 'Registro fotográfico'],
