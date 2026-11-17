@@ -751,3 +751,13 @@ body.pres .stage.split .col-d{max-width:1280px}
 .regbody.shut .tl2 li{opacity:.9}
 .regmore{display:flex;align-items:center;gap:4px;border:0;background:none;color:var(--blue-700);font-weight:700;font-size:12.5px;padding:4px 0 6px 40px}
 .bub.me .bprio{color:#dbe6f3}
+/* tarjeta del cambio dentro del chat */
+.rcard{background:#fff;color:var(--g900);border-radius:11px;padding:9px 10px;display:flex;flex-direction:column;gap:7px;border:1px solid var(--g200)}
+.rch{display:flex;align-items:center;gap:6px;font-size:10.5px;font-weight:800;letter-spacing:.07em;text-transform:uppercase;color:#b45309}
+.rch .sp{flex:1}.rch .pm{text-transform:none;letter-spacing:0}
+.rct{display:flex;align-items:center;gap:8px;font-size:14px}
+.rcard .bph .photo{width:96px;height:68px}
+.bub.me .rcard .ichip{background:var(--g100);color:var(--g700)}
+.bub.me .rcard .ichip.warn{background:#fff1e3;color:#9a4a07}
+.bub.me .rcard .ichip.ok{background:var(--green-bg);color:var(--green)}
+.regbtn{border-color:#e9b27e;color:#a24d0b;background:#fff8f0}.regbtn>.ic{color:#c26412}

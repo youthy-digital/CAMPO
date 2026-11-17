@@ -762,6 +762,16 @@ body.pres .stage.split .col-d{max-width:1280px}
 .regbody.shut .tl2 li{opacity:.9}
 .regmore{display:flex;align-items:center;gap:4px;border:0;background:none;color:var(--blue-700);font-weight:700;font-size:12.5px;padding:4px 0 6px 40px}
 .bub.me .bprio{color:#dbe6f3}
+/* tarjeta del cambio dentro del chat */
+.rcard{background:#fff;color:var(--g900);border-radius:11px;padding:9px 10px;display:flex;flex-direction:column;gap:7px;border:1px solid var(--g200)}
+.rch{display:flex;align-items:center;gap:6px;font-size:10.5px;font-weight:800;letter-spacing:.07em;text-transform:uppercase;color:#b45309}
+.rch .sp{flex:1}.rch .pm{text-transform:none;letter-spacing:0}
+.rct{display:flex;align-items:center;gap:8px;font-size:14px}
+.rcard .bph .photo{width:96px;height:68px}
+.bub.me .rcard .ichip{background:var(--g100);color:var(--g700)}
+.bub.me .rcard .ichip.warn{background:#fff1e3;color:#9a4a07}
+.bub.me .rcard .ichip.ok{background:var(--green-bg);color:var(--green)}
+.regbtn{border-color:#e9b27e;color:#a24d0b;background:#fff8f0}.regbtn>.ic{color:#c26412}
 
 </style>
 </head>
@@ -1276,6 +1286,8 @@ function crewMapSVG(o) {
 
   /* ---------- acciones del flujo ---------- */
   function go(side, name, id) {
+    if (side === 'm' && name === 'chat' && S.m.name !== 'chat' && S.m.name !== 'cambio') S.chatFrom = { name: S.m.name, id: S.m.id }; // la flecha del chat vuelve a la pantalla anterior
+    if (side === 'm' && name === 'cambio' && S.m.name !== 'cambio') S.cambioFrom = { name: S.m.name, id: S.m.id };
     S[side] = { name: name, id: id || null };
     if (side === 'm') { S.menu = false; var p = proj(inc0248(), 'm'); if ((name === 'incidencia' || name === 'chat') && p.update) S.seenUpdate = true; if (name === 'chat') S.readM = p.msgs.filter(function (e) { return e.src === 'central'; }).length; }
     commit();
@@ -1308,6 +1320,29 @@ function crewMapSVG(o) {
     if (S.online) S.lastSync = now();
     toast(S.online ? 'Intervención iniciada' : 'Iniciada · sin enviar', 'play');
     S.m = { name: 'incidencia', id: inc.id }; commit();
+  }
+  function ensureChangeDraft() {
+    if (!S.drafts.change) { var inc = inc0248(); S.drafts.change = { location: inc.address + ' · ' + inc.ref.toLowerCase(), type: inc.kind, conditions: [], conditionsText: '', homes: '', difference: '', urgency: '', actions: [], actionsText: '', photos: [] }; }
+  }
+  // El registro del cambio se completa con el formulario de siempre y se envía como mensaje del chat
+  function saveChange() {
+    ensureChangeDraft();
+    var d = S.drafts.change, inc = inc0248(), miss = [];
+    if (!d.type) miss.push('tipo');
+    if (!(d.conditions.length || d.conditionsText)) miss.push('qué ves');
+    if (!d.urgency) miss.push('urgencia');
+    if (miss.length) { S.formError = 'Falta: ' + miss.join(', '); commit(); return false; }
+    S.formError = null;
+    var r = clone(d); r.kind0 = inc.kind; r.offline = !S.online; r.reasons = evalChange(d, inc); r.requiresEval = r.reasons.length > 0;
+    if (!r.difference) r.difference = 'Orden: ' + tShort(inc.kind) + ' (' + inc.priority + '). En el lugar: ' + tShort(d.type) + ' (' + d.urgency + ').';
+    if (!proj(inc, 'm').started) addEvent(inc, { type: 'started', src: 'campo', who: 'Cuadrilla 3 · R. Benítez', time: tick(1), synced: S.online, syncedAt: S.online ? now() : null, text: 'Intervención iniciada por el encargado.' });
+    var ev = addEvent(inc, { type: 'msg', src: 'campo', who: 'Cuadrilla 3 · R. Benítez', time: tick(6), synced: S.online, syncedAt: S.online ? now() : null, data: { text: (d.conditionsText || '').trim(), tags: [], photos: [], form: true, report: r } });
+    if (S.online) { S.lastSync = now(); makeAlert(inc, ev); }
+    S.drafts.change = null;
+    var from = S.cambioFrom && S.cambioFrom.name !== 'chat' ? S.cambioFrom : { name: 'incidencia', id: '0248' };
+    S.m = { name: 'chat' }; S.chatFrom = from; S.readM = proj(inc, 'm').msgs.filter(function (e) { return e.src === 'central'; }).length;
+    toast(S.online ? 'Cambio enviado por chat' : 'Cambio guardado · sale con señal', S.online ? 'send' : 'device');
+    commit(); return true;
   }
   function ensureCMsg() { if (!S.drafts.cmsg) S.drafts.cmsg = { text: '', tags: [], photos: [] }; }
   function ensureOMsg() { if (!S.drafts.omsg) S.drafts.omsg = { text: '', priority: '', authorized: [], auth: false }; }
@@ -1385,7 +1420,7 @@ function crewMapSVG(o) {
     var lowp = cond.indexOf('Reportes de baja presion') >= 0 || cond.indexOf('Reportes de baja presión') >= 0 || /presion/.test(t);
     var coinc = [{ t: 'Sector Norte', ic: 'pin', ok: true }, { t: 'Empezó en vereda', ic: 'clipboard', ok: true }, { t: 'Agua en calzada', ic: 'drop', ok: water }, { t: 'Baja presión', ic: 'gauge', ok: lowp }];
     var missing = [];
-    if (!ch) missing.push({ ic: 'chat', t: 'Contarle el cambio a Operaciones por chat' });
+    if (!ch) missing.push({ ic: 'edit', t: 'Registrar el cambio (se envía por chat)' });
     if (!ch || !ch.homes) missing.push({ ic: 'home', t: 'Cuántos domicilios sin presión' });
     if (!ch || (ch.photos || []).length < 2) missing.push({ ic: 'camera', t: 'Fotos de vereda y calzada' });
     missing.push({ ic: 'pin', t: 'Origen probable: vereda, calzada o conexión' });
@@ -1462,6 +1497,7 @@ function crewMapSVG(o) {
   /* ---------- demo: completar formularios ---------- */
   function demoFill(kind) {
     if (kind === 'chat') S.drafts.cmsg = clone(DEMO_CHAT);
+    if (kind === 'change') S.drafts.change = clone(DEMO_CHANGE);
     if (kind === 'opschat') S.drafts.omsg = { text: DEMO_UPDATE.message, priority: DEMO_UPDATE.priority, authorized: clone(DEMO_UPDATE.authorized), auth: true };
     if (kind === 'result') { var p = proj(inc0248(), 'm'); S.drafts.result = { done: clone((p.update && p.update.authorized) || []), outcome: DEMO_RESULT.outcome, text: DEMO_RESULT.text, restored: true, photos: clone(DEMO_RESULT.photos) }; }
     if (kind === 'valid') S.drafts.valid = { checks: clone(DEMO_VALIDATION.checks), lesson: DEMO_VALIDATION.lesson };
@@ -1537,8 +1573,8 @@ function crewMapSVG(o) {
   /* ================= APP MÓVIL · CUADRILLA ================= */
   function mobileApp() {
     var r = S.m.name, pend = pendingOut(), unread = unreadM();
-    var top = ['inicio', 'incidencia', 'chat', 'asistente', 'historial', 'criterios'].indexOf(r) >= 0;
-    var titles = { inicio: '', incidencia: 'Orden #0248', chat: 'Chat · Operaciones', asistente: 'Asistente', historial: 'Historial', criterios: 'Criterios', caso: 'Caso #' + (S.m.id || ''), resultado: 'Resultado', cierre: 'Cierre #0248', orden2: 'Orden #' + (S.m.id || '') };
+    var top = ['inicio', 'incidencia', 'asistente', 'historial', 'criterios'].indexOf(r) >= 0; // el chat lleva flecha para volver a Inicio
+    var titles = { inicio: '', incidencia: 'Orden #0248', chat: 'Chat · Operaciones', asistente: 'Asistente', historial: 'Historial', criterios: 'Criterios', caso: 'Caso #' + (S.m.id || ''), resultado: 'Resultado', cierre: 'Cierre #0248', cambio: 'Registrar cambio', orden2: 'Orden #' + (S.m.id || '') };
     var h = '<div class="mapp">';
     h += '<div class="statusbar"><span>' + now() + '</span><span class="r"><button class="sigbtn" data-a="toggleNet" title="' + (S.online ? 'Cortar la señal' : 'Recuperar la señal') + '" aria-label="' + (S.online ? 'Cortar la señal' : 'Recuperar la señal') + '">' + (S.online ? icon('wifi', 15) : icon('wifiOff', 15)) + '</button><span class="batt"></span></span></div>';
     h += '<div class="mhead"><div class="row">';
@@ -1580,6 +1616,7 @@ function crewMapSVG(o) {
       case 'inicio': return mHome();
       case 'incidencia': return mIncident();
       case 'chat': return mChat();
+      case 'cambio': return mChangeForm();
       case 'orden2': return mOrder2();
       case 'historial': return historyView('m');
       case 'caso': return caseView('m', S.m.id);
@@ -1690,7 +1727,7 @@ function crewMapSVG(o) {
     if (p.started && !p.result) {
       h += '<div class="stack" style="margin-top:12px">';
       if (p.update) h += '<button class="btn primary big" data-a="mgo" data-v="resultado" data-id="0248">' + icon('checkCircle', 18) + 'Registrar resultado</button><button class="btn secondary big" style="color:var(--indigo)" data-a="mgo" data-v="asistente">' + icon('spark', 18) + 'Consultar asistente</button>';
-      else h += '<button class="btn warn big" data-a="mgo" data-v="chat">' + icon('chat', 18) + 'Contar un cambio a Operaciones</button><button class="btn secondary big" style="color:var(--indigo)" data-a="mgo" data-v="asistente">' + icon('spark', 18) + 'Consultar asistente</button>';
+      else h += '<button class="btn warn big" data-a="mgo" data-v="cambio" data-id="0248">' + icon('edit', 18) + 'Registrar cambio</button><button class="btn secondary big" style="color:var(--indigo)" data-a="mgo" data-v="asistente">' + icon('spark', 18) + 'Consultar asistente</button>';
       h += '</div>';
     }
     if (p.result) h += '<button class="btn secondary big" style="margin-top:12px" data-a="mgo" data-v="cierre" data-id="0248">' + icon('stamp', 18) + (p.validation ? 'Ver cierre' : 'Ver estado del cierre') + '</button>';
@@ -1719,6 +1756,7 @@ function crewMapSVG(o) {
         if (e.src === 'campo' && side === 'd' && e.syncedAt && e.syncedAt !== e.time) st = '<span class="pend" title="Escrito sin señal · llegó ' + e.syncedAt + '">' + icon('wifiOff', 13) + e.syncedAt + '</span>';
         h += '<div class="bub ' + (mine ? 'me' : 'them') + (e.src === 'campo' && !e.synced ? ' pending' : '') + '">' + (mine ? '' : '<div class="bw">' + esc(who) + '</div>');
         if (d.priority) h += '<div class="bprio">' + icon('gauge', 14) + 'Prioridad ' + prioMeter(d.priority) + '</div>';
+        if (d.form && d.report) h += reportCard(d.report, side);
         if (d.text) h += '<div class="bt">' + esc(d.text) + '</div>';
         if (d.tags && d.tags.length) h += '<div class="ichips">' + d.tags.map(tagChipC).join('') + '</div>';
         if (d.photos && d.photos.length) h += '<div class="bph">' + d.photos.map(function (k) { return '<div class="photo">' + photoSVG(k) + '</div>'; }).join('') + '</div>';
@@ -1738,15 +1776,42 @@ function crewMapSVG(o) {
     } else if (!S.online) h += '<div class="sysnote warn">' + icon('wifiOff', 13) + 'C3 sin señal desde ' + lastCrewContact() + ' · lo que mandes se entrega al reconectar</div>';
     return h;
   }
+  function mChangeForm() {
+    ensureChangeDraft();
+    var d = S.drafts.change, inc = inc0248(), n = parseInt(d.homes || '0', 10) || 0;
+    var h = '<div class="row between"><span class="small muted row" style="gap:5px">' + icon('chat', 15) + 'Se envía por el chat de #0248</span>' + demoBtn('change') + '</div>';
+    h += '<div class="field"><span>Ubicación</span><div class="locrow">' + icon('pin', 18) + '<input class="input" data-f="change.location" value="' + esc(d.location) + '"><span class="gps">' + icon('gps', 13) + 'GPS</span></div></div>';
+    h += '<div class="field"><span>Tipo <em>*</em></span><div class="opts3">' + CHANGE_OPTIONS.types.map(function (t) { return '<button class="opt' + (d.type === t ? ' on' : '') + '" data-a="set" data-f="change.type" data-v="' + esc(t) + '" title="' + esc(t) + '">' + icon(tIc(t), 22) + '<span>' + esc(TYPE_TILE[t] || t) + '</span></button>'; }).join('') + '</div></div>';
+    h += '<div class="field"><span>¿Qué ves? <em>*</em></span>' + iconChips('change.conditions', CHANGE_OPTIONS.conditions, d.conditions, COND) + '</div>';
+    h += '<div class="field"><span>Domicilios sin presión</span><div class="stepper"><button data-a="step" data-f="change.homes" data-v="-1" aria-label="Menos">' + icon('minus', 18) + '</button><span class="val">' + n + '</span><button data-a="step" data-f="change.homes" data-v="1" aria-label="Más">' + icon('plus', 18) + '</button><span class="homes">' + new Array(Math.min(n, 8) + 1).join(icon('home', 17)) + (n > 8 ? '+' : '') + '</span></div></div>';
+    h += '<div class="field"><span>Urgencia <em>*</em></span><div class="urg">' + CHANGE_OPTIONS.urgency.map(function (u) { return '<button class="u' + PLV[u] + (d.urgency === u ? ' on' : '') + '" data-a="set" data-f="change.urgency" data-v="' + u + '">' + prioMeter(u, true) + '<span>' + u + '</span></button>'; }).join('') + '</div>';
+    h += '<div class="cmpmini"><div><small>Orden</small>' + icon(tIc(inc.kind), 16) + prioMeter(inc.priority) + '</div>' + icon('arrowRight', 16) + '<div class="now"><small>Ahora</small>' + icon(tIc(d.type), 16) + (d.urgency ? prioMeter(d.urgency) : '<span class="muted">—</span>') + '</div></div></div>';
+    h += fric('sinautoridad', 'La cuadrilla marca una urgencia preliminar, pero cambiar la prioridad de la orden o pedir más recursos no le corresponde: tiene que consultarlo con Operaciones.');
+    h += '<div class="field"><span>Ya hiciste</span>' + iconChips('change.actions', CHANGE_OPTIONS.actions, d.actions, ACT) + '</div>';
+    h += '<div class="field"><span>Fotos</span>' + photosField('change.photos', d.photos) + '</div>';
+    h += '<label class="field"><span>Nota <i>opcional</i></span><textarea class="textarea sm" data-f="change.conditionsText" placeholder="Algo más para Operaciones">' + esc(d.conditionsText) + '</textarea></label>';
+    if (S.formError) h += '<div class="statusrow red">' + icon('alert', 18) + '<b>' + esc(S.formError) + '</b></div>';
+    h += '<button class="btn primary big" style="margin-top:16px" data-a="saveChange">' + icon(S.online ? 'chat' : 'device', 18) + (S.online ? 'Enviar por el chat' : 'Guardar · sale con señal') + '</button>';
+    h += '<button class="btn ghost block" style="margin-top:6px" data-a="mback">Cancelar</button>';
+    return h;
+  }
+  function reportCard(r, side) {
+    var h = '<div class="rcard"><div class="rch">' + icon('edit', 14) + 'Cambio de escenario<span class="sp"></span>' + prioMeter(r.urgency) + '</div>';
+    h += '<div class="rct"><span class="tic sm">' + icon(tIc(r.type), 17) + '</span><b>' + esc(tShort(r.type)) + '</b></div>';
+    h += '<div class="ichips">' + (r.conditions || []).map(function (c) { return condChip(c); }).join('') + (r.homes ? ichip('home', r.homes + ' domicilios', 'warn') : '') + '</div>';
+    if ((r.actions || []).length) h += '<div class="ichips">' + r.actions.map(actChip).join('') + '</div>';
+    if ((r.photos || []).length) h += '<div class="bph">' + r.photos.map(function (k) { return '<div class="photo">' + photoSVG(k) + '</div>'; }).join('') + '</div>';
+    return h + '</div>';
+  }
   function mChat() {
     ensureCMsg();
-    var h = demoBtn('chat') ? '<div class="row" style="justify-content:flex-end;margin:-4px 0 6px">' + demoBtn('chat') + '</div>' : '';
-    return h + '<div class="thread">' + chatThread('m') + '</div>';
+    return '<div class="thread">' + chatThread('m') + '</div>';
   }
   function chatComposer() {
     ensureCMsg();
     var d = S.drafts.cmsg;
-    var h = '<div class="ccomp"><div class="chips scrollx qtags">' + CHAT_TAGS.map(function (t) { var on = d.tags.indexOf(t) >= 0, m = t === 'Urgente' ? ['alert', 'Urgente'] : (COND[t] || ACT[t] || ['check', t]); return '<button class="chip ic ' + (on ? 'on' : '') + (t === 'Urgente' ? ' urg' : '') + '" data-a="toggle" data-f="cmsg.tags" data-v="' + esc(t) + '">' + icon(on ? 'check' : m[0], 15) + esc(m[1]) + '</button>'; }).join('') + '</div>';
+    var p = proj(inc0248(), 'm');
+    var h = '<div class="ccomp">' + (p.started && !p.result ? '<div class="qtags"><button class="chip ic regbtn" data-a="mgo" data-v="cambio" data-id="0248">' + icon('edit', 15) + 'Registrar cambio</button></div>' : '');
     if (d.photos.length) h += '<div class="attach">' + d.photos.map(function (k, i) { return '<div class="photo">' + photoSVG(k) + '<button class="rm" data-a="rmPhoto" data-f="cmsg.photos" data-v="' + i + '" aria-label="Quitar foto">' + icon('x', 12) + '</button></div>'; }).join('') + '</div>';
     h += '<div class="crow"><button class="cam" data-a="addPhoto" data-f="cmsg.photos" aria-label="Agregar foto">' + icon('camera', 20) + '</button><textarea data-f="cmsg.text" rows="1" placeholder="Escribile a Operaciones…">' + esc(d.text) + '</textarea><button class="snd" data-a="sendCrewMsg" aria-label="Enviar">' + icon(S.online ? 'send' : 'device', 19) + '</button></div></div>';
     return h;
@@ -1772,7 +1837,7 @@ function crewMapSVG(o) {
     }
     if (a.intent === 'status') return h + '<div class="statusrow ' + (a.pending ? 'amber' : 'green') + '" style="margin-top:4px">' + icon(a.pending ? 'cloudPending' : 'cloudCheck', 20) + '<b>' + (a.pending ? a.pending + ' sin enviar' : 'Todo enviado') + '</b></div></div>';
     if (a.intent === 'ante') return h + anteBlock(a) + '</div>';
-    if (!a.hasChange) h += '<button class="btn warn sm" style="margin-bottom:8px" data-a="mgo" data-v="chat">' + icon('chat', 15) + 'Contale el cambio a Operaciones</button>';
+    if (!a.hasChange) h += '<button class="btn warn sm" style="margin-bottom:8px" data-a="mgo" data-v="cambio" data-id="0248">' + icon('edit', 15) + 'Registrá el cambio primero</button>';
     h += anteBlock(a);
     h += '<h5>' + icon('shield', 14) + 'Ahora</h5>' + todoList(a.verif, function (v) { return v.done; });
     h += '<div class="esc">' + icon('device', 16) + icon('arrowRight', 14) + icon('grid', 16) + '<span><b>Escalar a Operaciones</b> · CO-ESC-01' + (a.offline ? ' · al sincronizar' : '') + '</span></div>';
@@ -2012,8 +2077,8 @@ function crewMapSVG(o) {
     var upd = all.some(function (e) { return e.type === 'msg' && e.src === 'central' && e.data.priority; });
     return [
       { n: 'Escena 1 · Asignación', p: 'Operaciones asignó la #0248. En el celular, pulsá «Iniciar» en la ruta del día. El menú ☰ muestra la orden actual y las que siguen.', done: has('started'), go: [['Ver en Operaciones', 'operaciones', 'd', 'incidente', '0248'], ['Ir a Cuadrilla', 'cuadrilla', 'm', 'inicio']] },
-      { n: 'Escena 2 · Cambio de escenario', p: 'Abrí el chat de la orden y contale a Operaciones lo que encontrás: texto, atajos (agua en calzada, baja presión, urgente) y fotos. O usá «Completar demo».', done: !!rp, go: [['Abrir chat', 'cuadrilla', 'm', 'chat']] },
-      { n: 'Escena 3 · Sin conexión', p: 'Cortá la señal (interruptor de arriba o el ícono de wifi del celular) antes de enviar el mensaje: queda en el celular y Operaciones no lo ve.', done: S.wentOffline && !!(rp && rp.data.report.offline), go: [['Ver vista dividida', 'dividida']] },
+      { n: 'Escena 2 · Cambio de escenario', p: 'En la orden, pulsá «Registrar cambio», completá el formulario (o «Completar demo») y envialo: llega a Operaciones como mensaje del chat.', done: !!rp, go: [['Abrir formulario', 'cuadrilla', 'm', 'cambio', '0248']] },
+      { n: 'Escena 3 · Sin conexión', p: 'Cortá la señal (interruptor de arriba o el ícono de wifi del celular) antes de enviar el cambio: queda en el chat del celular y Operaciones no lo ve.', done: S.wentOffline && !!(rp && rp.data.report.offline), go: [['Ver vista dividida', 'dividida']] },
       { n: 'Escena 4 · Consulta a la IA', p: 'Abrí el Asistente sin conexión y enviá la consulta sugerida. Revisá el antecedente #0176, los criterios y los límites.', done: has('ai'), go: [['Abrir asistente', 'cuadrilla', 'm', 'asistente']] },
       { n: 'Escena 5 · Reconexión', p: 'Volvé a «Conectada» y pulsá «Sincronizar ahora». En Operaciones, abrí la alerta y respondé por el chat con la prioridad y lo que autorizás.', done: upd, go: [['Ir a Cuadrilla', 'cuadrilla', 'm', 'inicio'], ['Ir a Operaciones', 'operaciones', 'd', 'panel']] },
       { n: 'Escena 6 · Resolución', p: 'En Cuadrilla, «Registrar resultado». En Operaciones o Supervisión, validá el cierre y buscá #0248 en el historial.', done: has('validated'), go: [['Resultado (Cuadrilla)', 'cuadrilla', 'm', 'resultado', '0248'], ['Validar (Supervisión)', 'supervision', 'd', 'incidente', '0248']] }
@@ -2024,18 +2089,18 @@ function crewMapSVG(o) {
     ['sindueno', 'Cuadrilla: mensajes sin enviar. Operaciones: alertas del panel, pantalla Alertas y Validaciones.'],
     ['sobrecarga', 'Operaciones: panel de control y chat de la incidencia #0248.'],
     ['espera', 'Cuadrilla: orden #0248 después de contar el cambio, mientras espera la respuesta de Operaciones.'],
-    ['sinautoridad', 'Cuadrilla: chat, aviso «Lo decide Operaciones» después de contar el cambio.']
+    ['sinautoridad', 'Cuadrilla: «Urgencia» del formulario de cambio y aviso «Lo decide Operaciones» en el chat.']
   ];
   // Lleva la demostración al momento del recorrido donde se ve cada fricción
   function fricJump(key) {
     timers.forEach(clearTimeout); timers = [];
     var keep = { guide: S.guide }; var wasVideo = videoMode; videoMode = true; persist = false;
     S = seed(); S.guide = keep.guide; S.fric = true;
-    start('0248'); demoFill('chat');
+    start('0248'); S.m = { name: 'cambio', id: '0248' }; demoFill('change');
     var target = { side: 'm', sel: '[data-fric="sinautoridad"]' };
-    if (key === 'sinautoridad') { sendCrewMsg(); S.role = 'cuadrilla'; S.m = { name: 'chat' }; }
+    if (key === 'sinautoridad') { S.role = 'cuadrilla'; }
     else {
-      setOnline(false); sendCrewMsg();
+      setOnline(false); saveChange();
       if (key === 'handoff') { S.role = 'dividida'; S.m = { name: 'chat' }; S.d = { name: 'incidente', id: '0248' }; target = { side: 'm', sel: '[data-fric="handoff"]' }; }
       else {
         setOnline(true); startSync(); completeSync();
@@ -2090,10 +2155,11 @@ function crewMapSVG(o) {
       case 'doReset': modal = null; resetAll(); break;
       case 'mtab': S.formError = null; if (v === 'orden') go('m', 'incidencia', '0248'); else go('m', v); break;
       case 'mgo': S.formError = null; go('m', v, id); break;
-      case 'mback': S.formError = null; var bk = { caso: 'historial', resultado: 'incidencia', cierre: 'incidencia', orden2: 'inicio' }[S.m.name] || 'inicio'; go('m', bk, '0248'); break;
+      case 'mback': S.formError = null; if (S.m.name === 'cambio') { var mf = S.cambioFrom || { name: 'incidencia', id: '0248' }; go('m', mf.name, mf.id); break; } if (S.m.name === 'chat') { var cf = S.chatFrom || { name: 'inicio' }; go('m', cf.name === 'chat' ? 'inicio' : cf.name, cf.id); break; } var bk = { caso: 'historial', resultado: 'incidencia', cierre: 'incidencia', orden2: 'inicio', chat: 'inicio' }[S.m.name] || 'inicio'; go('m', bk, '0248'); break;
       case 'menu': S.menu = !S.menu; commit(); break;
       case 'tlToggle': S.tlOpen = S.tlOpen || {}; S.tlOpen[v] = !S.tlOpen[v]; commit(); break;
       case 'sendCrewMsg': sendCrewMsg(); break;
+      case 'saveChange': saveChange(); break;
       case 'sendOpsMsg': sendOpsMsg(); break;
       case 'setx': setPath(f, getPath(f) === v ? '' : v); commit(); break;
       case 'rmPhoto': var rp = (getPath(f) || []).slice(); rp.splice(parseInt(v, 10), 1); setPath(f, rp); commit(); break;
@@ -2166,7 +2232,7 @@ function crewMapSVG(o) {
     loadState: function (o) { S = clone(o); S.chatPending = !!o.chatPending; render(); },
     reset: function () { S = seed(); render(); }, render: render,
     go: function (side, name, id) { go(side, name, id); }, role: setRole, online: setOnline,
-    start: start, sendCrewMsg: sendCrewMsg, sendOpsMsg: sendOpsMsg, ask: ask, sync: doSync, startSync: startSync, completeSync: completeSync,
+    start: start, saveChange: saveChange, sendCrewMsg: sendCrewMsg, sendOpsMsg: sendOpsMsg, ask: ask, sync: doSync, startSync: startSync, completeSync: completeSync,
     sendResult: sendResult, validate: validate, demoFill: demoFill,
     set: function (path, v) { var parts = path.split('.'), o = S; for (var i = 0; i < parts.length - 1; i++) o = o[parts[i]]; o[parts[parts.length - 1]] = v; render(); },
     embed: function (side) { embedSide = side; document.body.classList.add('embed'); render(); },
