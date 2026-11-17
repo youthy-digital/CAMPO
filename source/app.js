@@ -451,11 +451,7 @@
     var unread = unreadM(), pend = pendingOut();
     var h = '<div class="drawer-bg" data-a="menu"></div><aside class="drawer" aria-label="Menú">';
     h += '<div class="dhead"><div class="avatar">RB</div><div style="flex:1;min-width:0"><b>Raúl Benítez</b><small>Cuadrilla 3 · Encargado · Norte</small></div><button class="back" data-a="menu" aria-label="Cerrar">' + icon('x', 18) + '</button></div>';
-    h += '<div class="dmsec">Mi ruta de hoy</div><div class="route">' + routeStops().map(function (x) {
-      var to = x.o.id === '0248' ? 'data-v="incidencia" data-id="0248"' : 'data-v="orden2" data-id="' + x.o.id + '"';
-      return '<button class="stop ' + x.st + '" data-a="mgo" ' + to + '><span class="rail"><i></i></span><span class="sb"><span class="when">' + STOP_L[x.st] + ' · ' + x.o.time + '</span><b>' + icon(tIc(x.inc.kind), 15) + '#' + x.o.id + ' · ' + esc(tShort(x.inc.kind)) + '</b><small>' + icon('pin', 12) + esc(x.inc.short || x.inc.address) + '</small></span>' + (x.st === 'now' ? statusPill(x.p) : '') + '</button>';
-    }).join('') + '</div>';
-    var items = [['inicio', 'home', 'Inicio'], ['incidencia', 'clipboard', 'Orden actual'], ['chat', 'chat', 'Chat con Operaciones', unread], ['asistente', 'spark', 'Asistente'], ['historial', 'history', 'Historial'], ['criterios', 'book', 'Criterios']];
+    var items = [['inicio', 'home', 'Inicio'], ['incidencia', 'clipboard', 'Orden actual · #0248'], ['chat', 'chat', 'Chat con Operaciones', unread], ['asistente', 'spark', 'Asistente'], ['historial', 'history', 'Historial'], ['criterios', 'book', 'Criterios']];
     h += '<div class="dmsec">Menú</div><nav class="dnav">' + items.map(function (it) { return '<button class="' + (S.m.name === it[0] ? 'on' : '') + '" data-a="mgo" data-v="' + it[0] + '"' + (it[0] === 'incidencia' ? ' data-id="0248"' : '') + '>' + icon(it[1], 19) + '<span>' + it[2] + '</span>' + (it[3] ? '<span class="nb">' + it[3] + '</span>' : '') + '</button>'; }).join('') + '</nav>';
     h += '<div class="dfoot">' + (S.online ? ichip('wifi', 'Conectado · ' + S.lastSync, 'ok') : ichip('wifiOff', 'Sin señal', 'warn')) + (pend ? ichip('cloudPending', pend + ' sin enviar', 'warn') : '') + ichip('device', 'Historial, criterios y asistente sin señal') + '</div>';
     return h + '</aside>';
