@@ -13,6 +13,8 @@ Todo funciona en el navegador, sin servidor: datos ficticios, conexión, sincron
 - **Menú del celular (☰):** accesos a la orden actual, Chat, Asistente, Historial y Criterios.
 - **Chat de la orden:** la cuadrilla completa «Registrar cambio» (tipo, qué ve, domicilios, urgencia, fotos) y el cambio llega a Operaciones como una tarjeta en el chat; también puede escribir mensajes libres. Operaciones responde desde el escritorio y, si hace falta, fija la prioridad y lo que autoriza. La flecha del chat vuelve a la pantalla desde donde se abrió.
 - **Chat de Operaciones:** en el menú lateral del escritorio hay una sección Chat con las conversaciones de cada cuadrilla. Cuando llega un mensaje sin leer aparece un punto rojo, que se va al abrir esa conversación.
+- **Cerrar orden:** desde la orden, la cuadrilla saca la foto del trabajo terminado (obligatoria), elige el motivo de cierre y cómo queda el servicio, y deja un comentario. Ve también el mensaje que va a leer el vecino en MiAguas. Operaciones valida el cierre con la foto a la vista y recién ahí se publica «Resuelto».
+- **Datos del caso base:** distritos (Norte, Centro, Litoral, Oeste, Sur), prioridades P1 a P4, estados de MiAguas, motivos de cierre, criterios y casos del historial salen del documento de Aguas del Este (piezas AE-01 a AE-20).
 - **Cortar o recuperar la señal del celular:** tocar el ícono de wifi de la barra de estado del celular o el indicador «Conectado / Sin señal». Sin señal, los mensajes quedan en el celular y salen al sincronizar.
 - **Volver al inicio:** abrir la dirección con `#reiniciar` al final, o apretar `Alt + Shift + R`. El avance queda guardado en el navegador aunque se recargue la página.
 

@@ -19,7 +19,7 @@
   function getPath(p) { var parts = p.split('.'), o = S.drafts; for (var i = 0; i < parts.length; i++) { if (o == null) return undefined; o = o[parts[i]]; } return o; }
   function setPath(p, v) { var parts = p.split('.'), o = S.drafts; for (var i = 0; i < parts.length - 1; i++) { if (o[parts[i]] == null) o[parts[i]] = {}; o = o[parts[i]]; } o[parts[parts.length - 1]] = v; }
   function todayStr() { var d = new Date(); return ('0' + d.getDate()).slice(-2) + '/' + ('0' + (d.getMonth() + 1)).slice(-2) + '/' + d.getFullYear(); }
-  var URG = { 'Baja': 0, 'Media': 1, 'Alta': 2, 'Crítica': 3 };
+  var URG = { 'Programable': 0, 'Normal': 1, 'Alta': 2, 'Emergencia': 3 }; // OPS-PRIO-11: P4 a P1
 
   /* ---------- fricciones operativas (Clase 29 · Actividad 3) ---------- */
   var FRIC = {
@@ -92,19 +92,20 @@
     return '<span class="pill ' + cls + '">' + icon(ic, 13) + esc(p.status) + '</span>';
   }
   /* ---------- vocabulario visual: íconos en lugar de texto ---------- */
-  var PLV = { 'Baja': 1, 'Media': 2, 'Alta': 3, 'Crítica': 4 };
-  function prioMeter(pr, noLabel) { var l = PLV[pr] || 0; return '<span class="pm l' + l + '" title="Prioridad ' + esc(pr) + '"><i class="pd"></i>' + (noLabel ? '' : '<b>' + esc(pr) + '</b>') + '</span>'; }
+  var PLV = { 'Programable': 1, 'Normal': 2, 'Alta': 3, 'Emergencia': 4 };
+  var PCODE = { 'Programable': 'P4', 'Normal': 'P3', 'Alta': 'P2', 'Emergencia': 'P1' };
+  function prioMeter(pr, noLabel) { var l = PLV[pr] || 0; return '<span class="pm l' + l + '" title="Prioridad ' + (PCODE[pr] ? PCODE[pr] + ' · ' : '') + esc(pr) + '"><i class="pd"></i>' + (noLabel ? '' : '<b>' + esc(pr) + '</b>') + '</span>'; }
   function prioTxt(pr) { return prioMeter(pr); }
-  var TYPE_IC = { 'Pérdida de agua en vereda': 'drop', 'Pérdida en conexión domiciliaria': 'home', 'Posible pérdida en red distribuidora': 'network', 'Rotura de caño': 'pipe', 'Baja presión': 'gauge', 'Pérdida en medidor': 'gauge', 'Revisión de conexión': 'home', 'Reparación de vereda': 'tool', 'Otro': 'plus' };
+  var TYPE_IC = { 'Pérdida de agua en vereda': 'drop', 'Pérdida en conexión domiciliaria': 'home', 'Posible pérdida en red distribuidora': 'network', 'Rotura de caño': 'pipe', 'Baja presión': 'gauge', 'Pérdida en medidor': 'gauge', 'Revisión de conexión': 'home', 'Tapa de cámara dañada': 'hole', 'Pérdida en red distribuidora': 'network', 'Medidor sin lectura': 'gauge', 'Desborde cloacal': 'turbid', 'Hundimiento': 'hole', 'Otro': 'plus' };
   var TYPE_SHORT = { 'Pérdida de agua en vereda': 'Pérdida en vereda', 'Pérdida en conexión domiciliaria': 'Conexión domiciliaria', 'Posible pérdida en red distribuidora': 'Posible falla de red' };
   var TYPE_TILE = { 'Pérdida de agua en vereda': 'Vereda', 'Pérdida en conexión domiciliaria': 'Conexión', 'Posible pérdida en red distribuidora': 'Falla de red', 'Rotura de caño': 'Rotura', 'Baja presión': 'Presión', 'Otro': 'Otro' };
   var COND = { 'Agua en calzada': ['drop', 'Agua en calzada'], 'Reportes de baja presión': ['gauge', 'Baja presión'], 'Caudal continuo': ['flow', 'Caudal continuo'], 'Hundimiento': ['hole', 'Hundimiento'], 'Afecta el tránsito': ['car', 'Tránsito'], 'Agua turbia': ['turbid', 'Agua turbia'] };
   var ACT = { 'Señalización de la zona': ['cone', 'Señalizado'], 'Delimitación del paso peatonal': ['users', 'Paso peatonal'], 'Registro fotográfico': ['camera', 'Fotos'], 'Consulta a vecinos': ['home', 'Vecinos'], 'Cierre de llave de paso domiciliaria': ['tap', 'Llave de paso'], 'Aviso al usuario': ['phone', 'Usuario avisado'], 'Revisión del medidor': ['gauge', 'Medidor revisado'], 'Desvío del tránsito': ['car', 'Tránsito desviado'], 'Relevamiento de domicilios sin presión': ['home', 'Domicilios relevados'], 'Contención del agua': ['drop', 'Agua contenida'], 'Aviso a vecinos del sector': ['users', 'Vecinos avisados'], 'Medición de presión': ['gauge', 'Presión medida'] };
   function actionsFor(type) { return ACTIONS_BY_TYPE[type] || CHANGE_OPTIONS.actions; }
-  var ITEM_IC = { 'Mantener la zona señalizada': 'cone', 'Esperar al equipo de red · 10:35': 'clock', 'Excavar solo con el equipo de red': 'tool', 'Corte V-N12 · 10:40 a 11:15 (equipo de red)': 'tap', 'Avisar a los vecinos del corte': 'users', 'Confirmar baja presión con telemetría': 'gauge', 'Avisar al municipio': 'bell', 'Evidencia completa': 'camera', 'Acciones dentro de lo autorizado': 'shield', 'Servicio restablecido': 'tap', 'Usuarios informados': 'users' };
-  var TAG_IC = { 'Agua en calzada': 'drop', 'Baja presión': 'gauge', 'Escalado': 'escalate', 'Inicio como pérdida domiciliaria': 'home', 'Sin pérdida visible': 'eye', 'Dentro del alcance de la cuadrilla': 'check', 'Medidor': 'gauge', 'Caudal continuo': 'flow', 'Riesgo peatonal': 'users', 'Municipio': 'grid', 'Cámara de válvula': 'tap', 'Calidad': 'turbid', 'Seguimiento': 'clock', 'Terceros': 'tool', 'Registrado sin conexión': 'wifiOff' };
-  var CAT_IC = { todas: 'list', seg: 'shield', doc: 'camera', esc: 'escalate', man: 'lock', pri: 'gauge', off: 'wifiOff', cie: 'stamp' };
-  var OUTCOMES = [['Pérdida reparada y servicio restablecido', 'checkCircle', 'Reparada', 'ok'], ['Pérdida controlada · requiere seguimiento', 'clock', 'Controlada', 'amber'], ['No resuelta · requiere otro equipo', 'xCircle', 'No resuelta', 'red']];
+  var ITEM_IC = { 'Mantener la zona señalizada': 'cone', 'Esperar al equipo de red · 10:35': 'clock', 'Excavar solo con el equipo de red': 'tool', 'Corte V-N12 · 10:40 a 11:15 (equipo de red)': 'tap', 'Avisar a los vecinos del corte': 'users', 'Confirmar la presión en HIDRA': 'gauge', 'Avisar al municipio': 'bell', 'Foto del cierre': 'camera', 'Acciones dentro de lo autorizado': 'shield', 'Presión verificada en HIDRA': 'gauge', 'Mensaje para el vecino': 'users' };
+  var TAG_IC = { 'Agua en calzada': 'drop', 'Baja presión': 'gauge', 'Escalado': 'escalate', 'Inicio como pérdida domiciliaria': 'home', 'Sin pérdida visible': 'eye', 'Dentro del alcance de la cuadrilla': 'check', 'Medidor': 'gauge', 'Caudal continuo': 'flow', 'Riesgo peatonal': 'users', 'Municipio': 'grid', 'Cámara de válvula': 'tap', 'Calidad': 'turbid', 'Seguimiento': 'clock', 'Terceros': 'tool', 'Registrado sin conexión': 'wifiOff', 'Contratista': 'tool', 'Reclamos unidos': 'link', 'Recontacto': 'phone', 'Evento de red': 'network', 'Reabierto': 'refresh', 'Repriorizado': 'escalate', 'Hidrojet': 'pipe', 'Estimación cambiada': 'clock', 'Programable': 'clock', 'Sin recontacto': 'checkCircle', 'Cerrada con foto': 'camera' };
+  var CAT_IC = { todas: 'list', seg: 'shield', doc: 'camera', esc: 'escalate', man: 'lock', pri: 'gauge', off: 'wifiOff', cie: 'stamp', com: 'users', con: 'tool' };
+  var OUTCOMES = CLOSE_REASONS; // motivo de cierre: [valor, ícono, corto, color]
   function tIc(k) { return TYPE_IC[k] || 'drop'; }
   function tShort(k) { return TYPE_SHORT[k] || k; }
   function ichip(ic, t, cls) { return '<span class="ichip ' + (cls || '') + '">' + icon(ic, 14) + esc(t) + '</span>'; }
@@ -112,7 +113,14 @@
   function actChip(a) { var m = ACT[a] || ['check', a]; return ichip(m[0], m[1], 'ok'); }
   function tagChip(t) { return ichip(TAG_IC[t] || 'info', t); }
   function outcomeOf(o) { return OUTCOMES.filter(function (x) { return x[0] === o; })[0] || [o, 'checkCircle', o, 'ok']; }
-  function outcomeChip(o) { var x = outcomeOf(o); return ichip(x[1], x[2], x[3] === 'ok' ? 'ok' : x[3] === 'red' ? 'red' : 'warn'); }
+  function outcomeChip(o) { var x = outcomeOf(o); return ichip(x[1], x[2], { ok: 'ok', amber: 'warn', blue: 'blue', red: 'red' }[x[3]] || ''); }
+  function svcChip(k) { var x = SERVICE_STATES.filter(function (y) { return y[0] === k; })[0]; return x ? ichip(x[1], x[2], x[3]) : ''; }
+  // Estado público que ve el vecino en MiAguas (Recibido · En evaluación · Asignado · En curso · Resuelto)
+  function publicState(p) { if (p.key === 'cerrada') return publicClose(p.result).state; if (p.key === 'asignada') return 'Asignado'; return 'En curso'; }
+  function miAguasCard(r, note) {
+    var pc = publicClose(r);
+    return '<div class="miag"><div class="mh"><span class="ml">' + icon('drop', 14) + '</span><b>MiAguas</b><span class="xs muted">· lo ve el vecino</span><span class="sp"></span><span class="pill ' + (pc.state === 'Resuelto' ? 'ok' : 'blue') + '">' + pc.state + '</span></div><div class="mt">' + esc(pc.text) + '</div>' + (note ? '<div class="mf">' + note + '</div>' : '') + '</div>';
+  }
   function reasonChips(rs) { return (rs || []).map(function (r) { return typeof r === 'string' ? ichip('alert', r, 'red') : ichip(r.ic, r.t, 'red'); }).join(''); }
   function pendingOut() { var n = 0; Object.keys(S.incidents).forEach(function (k) { S.incidents[k].events.forEach(function (e) { if (e.src === 'campo' && !e.synced) n++; }); }); return n; }
   function pendingIn() { var n = 0; Object.keys(S.incidents).forEach(function (k) { S.incidents[k].events.forEach(function (e) { if (e.src === 'central' && !e.synced) n++; }); }); return n; }
@@ -201,7 +209,7 @@
     if (!conds.length && !urgent) return null;
     var m = (d.text || '').match(/(\d+)\s*(vecinos|domicilios|casas)/i);
     var type = conds.indexOf('Agua en calzada') >= 0 && conds.indexOf('Reportes de baja presión') >= 0 ? 'Posible pérdida en red distribuidora' : inc.kind;
-    var r = { kind0: inc.kind, type: type, conditions: conds, homes: m ? m[1] : '', urgency: urgent ? 'Alta' : 'Media', actions: acts, photos: (d.photos || []).slice(), conditionsText: (d.text || '').trim(), offline: !S.online };
+    var r = { kind0: inc.kind, type: type, conditions: conds, homes: m ? m[1] : '', urgency: urgent ? 'Alta' : 'Normal', actions: acts, photos: (d.photos || []).slice(), conditionsText: (d.text || '').trim(), offline: !S.online };
     r.reasons = evalChange(r, inc); r.requiresEval = r.reasons.length > 0;
     r.difference = 'Orden: ' + tShort(inc.kind) + ' (' + inc.priority + '). En el lugar: ' + tShort(type) + ' (' + r.urgency + ').';
     return r;
@@ -228,7 +236,7 @@
   }
   function makeAlert(inc, ev) {
     if (ev.type === 'msg') S.alerts.unshift({ id: uid(), inc: inc.id, ev: ev.id, kind: ev.data.report ? 'change' : 'msg', title: '#' + inc.id + (ev.data.report ? ' · Cambio de escenario' : ' · Mensaje de C3'), body: ev.data.text, time: now(), read: false });
-    if (ev.type === 'result') S.alerts.unshift({ id: uid(), inc: inc.id, kind: 'result', title: '#' + inc.id + ' · Resultado para validar', body: ev.data.outcome + '. Pendiente de validación del cierre.', time: now(), read: false });
+    if (ev.type === 'result') S.alerts.unshift({ id: uid(), inc: inc.id, kind: 'result', title: '#' + inc.id + ' · Cierre para validar', body: ev.data.text || ev.data.outcome, time: now(), read: false });
   }
   function startSync() {
     if (!S.online) return;
@@ -267,7 +275,7 @@
     var cond = ch ? ch.conditions : [];
     var water = cond.indexOf('Agua en calzada') >= 0 || /calzada/.test(t);
     var lowp = cond.indexOf('Reportes de baja presion') >= 0 || cond.indexOf('Reportes de baja presión') >= 0 || /presion/.test(t);
-    var coinc = [{ t: 'Sector Norte', ic: 'pin', ok: true }, { t: 'Empezó en vereda', ic: 'clipboard', ok: true }, { t: 'Agua en calzada', ic: 'drop', ok: water }, { t: 'Baja presión', ic: 'gauge', ok: lowp }];
+    var coinc = [{ t: 'Distrito Norte', ic: 'pin', ok: true }, { t: 'Empezó en vereda', ic: 'clipboard', ok: true }, { t: 'Agua en calzada', ic: 'drop', ok: water }, { t: 'Baja presión', ic: 'gauge', ok: lowp }];
     var missing = [];
     if (!ch) missing.push({ ic: 'edit', t: 'Registrar el cambio (se envía por chat)' });
     if (!ch || !ch.homes) missing.push({ ic: 'home', t: 'Cuántos domicilios sin presión' });
@@ -306,16 +314,24 @@
   }
 
   /* ---------- Operaciones / Supervisión ---------- */
-  function ensureResultDraft() { if (!S.drafts.result) S.drafts.result = { done: [], outcome: '', text: '', restored: null, photos: [] }; }
+  function ensureResultDraft() { if (!S.drafts.result) S.drafts.result = { done: [], outcome: '', service: '', text: '', photos: [] }; }
+  // Cerrar la orden: foto del estado final, motivo, servicio y comentario. Lo valida Operaciones (CO-CIE-01)
   function sendResult() {
     ensureResultDraft();
-    var d = S.drafts.result;
-    if (!d.outcome) { S.formError = 'Elegí el resultado'; commit(); return false; }
+    var d = S.drafts.result, miss = [];
+    if (!(d.photos || []).length) miss.push('foto');
+    if (!d.outcome) miss.push('motivo');
+    if (!d.service) miss.push('servicio');
+    if (miss.length) { S.formError = 'Falta: ' + miss.join(', '); commit(); return false; }
     S.formError = null;
-    var inc = inc0248();
-    var ev = addEvent(inc, { type: 'result', src: 'campo', who: 'Cuadrilla 3 · R. Benítez', time: tick(77), synced: S.online, syncedAt: S.online ? now() : null, data: clone(d) });
+    var inc = inc0248(), data = clone(d);
+    data.restored = d.service !== 'no'; data.pub = publicClose(d); data.offline = !S.online;
+    if (!proj(inc, 'm').started) addEvent(inc, { type: 'started', src: 'campo', who: 'Cuadrilla 3 · R. Benítez', time: tick(1), synced: S.online, syncedAt: S.online ? now() : null, text: 'Intervención iniciada por el encargado.' });
+    var ev = addEvent(inc, { type: 'result', src: 'campo', who: 'Cuadrilla 3 · R. Benítez', time: tick(77), synced: S.online, syncedAt: S.online ? now() : null, data: data });
     if (S.online) { S.lastSync = now(); makeAlert(inc, ev); }
-    S.drafts.result = null; S.m = { name: 'cierre', id: inc.id }; commit(); return true;
+    S.drafts.result = null; S.m = { name: 'cierre', id: inc.id };
+    toast(S.online ? 'Orden cerrada · la valida Operaciones' : 'Cierre guardado · sale con señal', S.online ? 'checkCircle' : 'device');
+    commit(); return true;
   }
   function ensureValidDraft() { if (!S.drafts.valid) S.drafts.valid = { checks: [], lesson: '' }; }
   function validate() {
@@ -324,18 +340,18 @@
     if (d.checks.length < 3) { S.formError = 'Marcá los controles antes de validar'; commit(); return false; }
     S.formError = null;
     var by = S.deskRole === 'supervision' ? 'Supervisión · C. Duarte' : 'Operaciones · L. Ferreyra';
-    addEvent(inc, { type: 'validated', src: 'central', who: by, time: tick(15), synced: S.online, syncedAt: S.online ? now() : null, data: { by: by, checks: clone(d.checks), lesson: d.lesson } });
+    addEvent(inc, { type: 'validated', src: 'central', who: by, time: tick(15), synced: S.online, syncedAt: S.online ? now() : null, data: { by: by, checks: clone(d.checks), lesson: d.lesson, pub: publicClose(p.result) } });
     S.alerts.forEach(function (a) { if (a.inc === inc.id) a.read = true; });
     var ch = p.change || {}, up = p.update || {}, rs = p.result || {};
     S.history = S.history.filter(function (h) { return h.id !== '0248'; });
     S.history.unshift({
       id: '0248', short: 'Pérdida "menor" → rotura de red', title: 'Pérdida informada como menor que resultó ser una rotura en red', type: ch.type || inc.kind, sector: inc.sector, address: inc.address,
       date: todayStr(), status: 'resuelto', validatedBy: by, isNew: true,
-      tags: ['Agua en calzada', 'Baja presión', 'Registrado sin conexión', 'Escalado'],
-      initial: 'Reclamo por pérdida de agua en vereda. Prioridad media.',
+      tags: ['Agua en calzada', 'Baja presión', 'Registrado sin conexión', 'Escalado', 'Cerrada con foto'],
+      initial: 'Reclamo ' + (inc.caso ? inc.caso + ' ' : '') + 'por pérdida de agua en vereda. Prioridad P3 · normal.',
       found: (ch.conditionsText || '') + (ch.difference ? ' ' + ch.difference : ''),
-      decisions: ['La cuadrilla contó el cambio por chat sin señal y consultó al asistente (antecedente #0176).', 'Al sincronizar, Operaciones respondió por chat y elevó la prioridad a ' + (up.priority || 'alta').toLowerCase() + '.'].concat((up.authorized || []).slice(2, 4).map(function (x) { return 'Autorizado: ' + x.charAt(0).toLowerCase() + x.slice(1) + '.'; })),
-      result: rs.text || rs.outcome || '', lesson: d.lesson || '—', criteria: ['CO-DOC-01', 'CO-OFF-01', 'CO-ESC-01', 'CO-MAN-01', 'CO-CIE-01']
+      decisions: [ch.type ? 'La cuadrilla contó el cambio por chat' + (ch.offline ? ' sin señal' : '') + (p.ai.length ? ' y consultó al asistente (antecedente #0176).' : '.') : 'La cuadrilla trabajó con la orden original.'].concat(p.update ? ['Operaciones respondió por chat con prioridad ' + PCODE[up.priority] + ' · ' + up.priority.toLowerCase() + '.'].concat((up.authorized || []).slice(2, 4).map(function (x) { return 'Autorizado: ' + x.charAt(0).toLowerCase() + x.slice(1) + '.'; })) : []).concat(['Cierre con foto: ' + (rs.outcome || '').toLowerCase() + ', servicio ' + ((SERVICE_STATES.filter(function (x) { return x[0] === rs.service; })[0] || [0, 0, '—'])[2]).toLowerCase() + '.']),
+      result: (rs.outcome ? rs.outcome + '. ' : '') + (rs.text || ''), photos: (rs.photos || []).slice(), close: { outcome: rs.outcome, service: rs.service }, lesson: d.lesson || '—', criteria: ['CO-DOC-01', 'CO-OFF-01', 'CO-ESC-01', 'CO-MAN-01', 'CO-CIE-01', 'CO-COM-01']
     });
     S.newCase = '0248'; S.drafts.valid = null;
     S.d = { name: 'cierre', id: inc.id };
@@ -348,7 +364,7 @@
     if (kind === 'chat') S.drafts.cmsg = clone(DEMO_CHAT);
     if (kind === 'change') S.drafts.change = clone(DEMO_CHANGE);
     if (kind === 'opschat') S.drafts.omsg = { text: DEMO_UPDATE.message, priority: DEMO_UPDATE.priority, authorized: clone(DEMO_UPDATE.authorized), auth: true };
-    if (kind === 'result') { var p = proj(inc0248(), 'm'); S.drafts.result = { done: clone((p.update && p.update.authorized) || []), outcome: DEMO_RESULT.outcome, text: DEMO_RESULT.text, restored: true, photos: clone(DEMO_RESULT.photos) }; }
+    if (kind === 'result') { var p = proj(inc0248(), 'm'); S.drafts.result = { done: clone((p.update && p.update.authorized) || []), outcome: DEMO_RESULT.outcome, service: DEMO_RESULT.service, text: DEMO_RESULT.text, photos: clone(DEMO_RESULT.photos) }; }
     if (kind === 'valid') S.drafts.valid = { checks: clone(DEMO_VALIDATION.checks), lesson: DEMO_VALIDATION.lesson };
     S.formError = null; commit();
   }
@@ -433,7 +449,7 @@
   function mobileApp() {
     var r = S.m.name, pend = pendingOut(), unread = unreadM();
     var top = ['inicio', 'incidencia', 'asistente', 'historial', 'criterios'].indexOf(r) >= 0; // el chat lleva flecha para volver a Inicio
-    var titles = { inicio: '', incidencia: 'Orden #0248', chat: 'Chat · Operaciones', asistente: 'Asistente', historial: 'Historial', criterios: 'Criterios', caso: 'Caso #' + (S.m.id || ''), resultado: 'Resultado', cierre: 'Cierre #0248', cambio: 'Registrar cambio', orden2: 'Orden #' + (S.m.id || '') };
+    var titles = { inicio: '', incidencia: 'Orden #0248', chat: 'Chat · Operaciones', asistente: 'Asistente', historial: 'Historial', criterios: 'Criterios', caso: 'Caso #' + (S.m.id || ''), resultado: 'Cerrar orden #0248', cierre: 'Cierre #0248', cambio: 'Registrar cambio', orden2: 'Orden #' + (S.m.id || '') };
     var h = '<div class="mapp">';
     h += '<div class="statusbar"><span class="clk">' + now() + '</span><span class="notch" aria-hidden="true"></span><span class="r"><button class="sigbtn" data-a="toggleNet" title="' + (S.online ? 'Cortar la señal' : 'Recuperar la señal') + '" aria-label="' + (S.online ? 'Cortar la señal' : 'Recuperar la señal') + '">' + (S.online ? icon('wifi', 15) : icon('wifiOff', 15)) + '</button><span class="batt"></span></span></div>';
     h += '<div class="mhead"><div class="row">';
@@ -510,7 +526,7 @@
     h += routeStops().map(function (x) {
       if (x.o.id === '0248' && x.st === 'now') {
         var c = '<div class="rstop now"><span class="rail"><i></i></span><div class="rbody"><div class="when">Ahora</div><div class="order hl" data-k="order-0248"><div class="row between"><span class="id">#0248</span>' + statusPill(p) + '</div><div class="row" style="gap:10px;margin-top:8px"><span class="tic">' + icon(tIc(inc.kind), 22) + '</span><div style="min-width:0"><div class="tt">' + esc(tShort(inc.kind)) + '</div><div class="small muted row" style="gap:4px">' + icon('pin', 14) + esc(inc.short) + '</div></div></div><div class="row" style="margin-top:10px;gap:14px">' + prioMeter(p.priority) + '<span class="xs muted row" style="gap:4px">' + icon('clock', 13) + x.o.time + '</span></div>';
-        c += p.started ? (!p.result ? (!p.update ? '<button class="btn warn block cardmain" data-a="mgo" data-v="cambio" data-id="0248">' + icon('edit', 17) + 'Registrar cambio</button>' : '<button class="btn primary block cardmain" data-a="mgo" data-v="resultado" data-id="0248">' + icon('checkCircle', 17) + 'Registrar resultado</button>') : '') + '<div class="grid3 cardacts"><button class="btn secondary" data-a="mgo" data-v="incidencia" data-id="0248">' + icon('clipboard', 16) + 'Orden</button><button class="btn secondary chatbtn" data-a="mgo" data-v="chat">' + icon('chat', 16) + 'Chat' + (unread ? '<span class="nb">' + unread + '</span>' : '') + '</button><button class="btn secondary" style="color:var(--indigo)" data-a="mgo" data-v="asistente">' + icon('spark', 16) + 'IA</button></div>' : '<div class="grid2" style="margin-top:12px"><button class="btn secondary" data-a="mgo" data-v="incidencia" data-id="0248">' + icon('eye', 16) + 'Ver</button><button class="btn primary" data-a="start" data-id="0248">' + icon('play', 16) + 'Iniciar</button></div>';
+        c += p.started ? (!p.result ? (!p.update ? '<button class="btn warn block cardmain" data-a="mgo" data-v="cambio" data-id="0248">' + icon('edit', 17) + 'Registrar cambio</button>' : '<button class="btn ok block cardmain" data-a="mgo" data-v="resultado" data-id="0248">' + icon('checkCircle', 17) + 'Cerrar orden</button>') : '') + '<div class="grid3 cardacts"><button class="btn secondary" data-a="mgo" data-v="incidencia" data-id="0248">' + icon('clipboard', 16) + 'Orden</button><button class="btn secondary chatbtn" data-a="mgo" data-v="chat">' + icon('chat', 16) + 'Chat' + (unread ? '<span class="nb">' + unread + '</span>' : '') + '</button><button class="btn secondary" style="color:var(--indigo)" data-a="mgo" data-v="asistente">' + icon('spark', 16) + 'IA</button></div>' : '<div class="grid2" style="margin-top:12px"><button class="btn secondary" data-a="mgo" data-v="incidencia" data-id="0248">' + icon('eye', 16) + 'Ver</button><button class="btn primary" data-a="start" data-id="0248">' + icon('play', 16) + 'Iniciar</button></div>';
         return c + '</div></div></div>';
       }
       var to = x.o.id === '0248' ? 'data-v="cierre" data-id="0248"' : 'data-v="orden2" data-id="' + x.o.id + '"';
@@ -518,19 +534,20 @@
     }).join('');
     h += '</div></div>';
     var stops = routeStops();
-    h += '<div class="sec"><div class="sec-t">Mapa de hoy<span class="xs muted row" style="gap:4px;letter-spacing:0;text-transform:none;font-weight:600">' + icon('pin', 12) + 'Sector Norte</span></div><button class="mapcard" data-a="mgo" data-v="incidencia" data-id="0248" aria-label="Abrir la orden actual"><div class="rmap">' + routeMapSVG({ alert: !!p.change && !p.update && !p.result, started: p.started && !p.result, states: stops.map(function (x) { return x.st; }), labels: ['#0248', '#0251 · 14:00', '#0253 · 16:00'] }) + '</div><div class="maplg"><span><i class="dotlg"></i>Orden</span><span><i class="dotlg me"></i>Tu ubicación</span>' + (p.change && !p.update && !p.result ? '<span><i class="dotlg red"></i>Zona afectada</span>' : '') + '</div></button></div>';
+    h += '<div class="sec"><div class="sec-t">Mapa de hoy<span class="xs muted row" style="gap:4px;letter-spacing:0;text-transform:none;font-weight:600">' + icon('pin', 12) + 'Distrito Norte</span></div><button class="mapcard" data-a="mgo" data-v="incidencia" data-id="0248" aria-label="Abrir la orden actual"><div class="rmap">' + routeMapSVG({ alert: !!p.change && !p.update && !p.result, started: p.started && !p.result, states: stops.map(function (x) { return x.st; }), labels: ['#0248', '#0251 · 14:00', '#0253 · 16:00'] }) + '</div><div class="maplg"><span><i class="dotlg"></i>Orden</span><span><i class="dotlg me"></i>Tu ubicación</span>' + (p.change && !p.update && !p.result ? '<span><i class="dotlg red"></i>Zona afectada</span>' : '') + '</div></button></div>';
     return h;
   }
   function mOrder2() {
     var inc = S.incidents[S.m.id] || S.incidents['0251'], o = ROUTE.filter(function (x) { return x.id === inc.id; })[0] || { time: '—' }, p = proj(inc, 'm');
     var h = '<div class="card"><div class="row between"><span class="id" style="font-weight:800;color:var(--blue-700)">#' + inc.id + '</span>' + statusPill(p) + '</div><div class="row" style="gap:10px;margin:8px 0 2px"><span class="tic">' + icon(tIc(inc.kind), 22) + '</span><div><div class="h2">' + esc(tShort(inc.kind)) + '</div><div class="small muted row" style="gap:4px">' + icon('pin', 14) + esc(inc.address) + '</div></div></div>';
-    h += '<div class="facts">' + fact('Hora', icon('clock', 14) + o.time) + fact('Prioridad', prioMeter(p.priority)) + fact('Sector', icon('pin', 14) + inc.sector) + '</div></div>';
-    h += '<div class="statusrow gray">' + icon('hourglass', 18) + '<b>Programada</b><span class="sp"></span><span class="wait">' + icon('clipboard', 15) + 'Después de #0248</span></div>';
-    h += '<button class="btn secondary big" style="margin-top:12px" data-a="mgo" data-v="incidencia" data-id="0248">' + icon('arrowLeft', 17) + 'Volver a la orden actual</button>';
+    h += '<div class="facts">' + fact('Hora', icon('clock', 14) + o.time) + fact('Prioridad', prioMeter(p.priority)) + fact('Distrito', icon('pin', 14) + inc.sector) + '</div></div>';
+    var prevDone = !!proj(inc0248(), 'm').result && inc.id === ROUTE[1].id;
+    h += prevDone ? '<div class="statusrow blue">' + icon('arrowRight', 18) + '<b>Es tu próxima orden</b><span class="sp"></span><span class="wait">' + icon('checkCircle', 15) + '#0248 cerrada</span></div>' : '<div class="statusrow gray">' + icon('hourglass', 18) + '<b>Programada</b><span class="sp"></span><span class="wait">' + icon('clipboard', 15) + 'Después de #0248</span></div>';
+    h += prevDone ? '<button class="btn secondary big" style="margin-top:12px" data-a="mgo" data-v="inicio">' + icon('home', 17) + 'Ir al inicio</button>' : '<button class="btn secondary big" style="margin-top:12px" data-a="mgo" data-v="incidencia" data-id="0248">' + icon('arrowLeft', 17) + 'Volver a la orden actual</button>';
     return h;
   }
   var EV_IC = { created: 'plus', assigned: 'users', started: 'play', change: 'edit', ai: 'spark', update: 'bell', result: 'checkCircle', validated: 'stamp', msg: 'chat' };
-  var EV_T = { created: 'Orden creada', assigned: 'Asignada', started: 'Iniciada', change: 'Cambio registrado', ai: 'Consulta IA', update: 'Orden actualizada', result: 'Resultado', validated: 'Validada', msg: 'Mensaje' };
+  var EV_T = { created: 'Orden creada', assigned: 'Asignada', started: 'Iniciada', change: 'Cambio registrado', ai: 'Consulta IA', update: 'Orden actualizada', result: 'Cierre con foto', validated: 'Cierre validado', msg: 'Mensaje' };
   function evTitle(e) { if (e.type !== 'msg') return EV_T[e.type]; if (e.src === 'campo') return e.data.report ? 'Cambio por chat' : 'Mensaje a Operaciones'; return e.data.priority ? 'Indicaciones por chat' : 'Mensaje de Operaciones'; }
   function tlKey() { return '<div class="tlkey"><span><i style="background:var(--blue-600)"></i>Cuadrilla</span><span><i style="background:var(--navy)"></i>Central</span><span><i style="background:var(--indigo)"></i>IA</span></div>'; }
   function timeline(inc, side, limit) {
@@ -566,7 +583,7 @@
   function mIncident() {
     var inc = inc0248(), p = proj(inc, 'm');
     var h = '<div class="card"><div class="row between"><span class="id" style="font-weight:800;color:var(--blue-700)">#0248</span>' + statusPill(p) + '</div><div class="row" style="gap:10px;margin:8px 0 2px"><span class="tic">' + icon(tIc(inc.kind), 22) + '</span><div><div class="h2">' + esc(tShort(inc.kind)) + '</div><div class="small muted row" style="gap:4px">' + icon('pin', 14) + esc(inc.short) + '</div></div></div>';
-    h += '<div class="facts">' + fact('Prioridad', prioMeter(p.priority)) + (p.change ? fact('En campo', prioMeter(p.change.urgency)) : fact('Reclamo', icon('phone', 14) + inc.reportedAt)) + fact('Sector', icon('pin', 14) + inc.sector) + '</div>';
+    h += '<div class="facts">' + fact('Prioridad', prioMeter(p.priority)) + (p.change ? fact('En campo', prioMeter(p.change.urgency)) : fact('Reclamo', icon('phone', 14) + inc.reportedAt)) + fact('Distrito', icon('pin', 14) + inc.sector) + '</div>';
     h += '<div class="ichips" style="margin-top:10px">' + (inc.cues || []).map(function (c) { return ichip(c[0], c[1]); }).join('') + '</div></div>';
     if (!p.started) h += '<button class="btn primary big" style="margin-top:12px" data-a="start" data-id="0248">' + icon('play', 18) + 'Iniciar intervención</button>';
     if (p.started) h += '<div style="margin-top:12px">' + chatPreview('m', 'data-a="mgo" data-v="chat"') + '</div>';
@@ -582,11 +599,11 @@
     }
     if (p.started && !p.result) {
       h += '<div class="stack" style="margin-top:12px">';
-      if (p.update) h += '<button class="btn primary big" data-a="mgo" data-v="resultado" data-id="0248">' + icon('checkCircle', 18) + 'Registrar resultado</button>';
-      else h += '<button class="btn warn big" data-a="mgo" data-v="cambio" data-id="0248">' + icon('edit', 18) + 'Registrar cambio</button>';
+      if (p.update) h += '<button class="btn ok big" data-a="mgo" data-v="resultado" data-id="0248">' + icon('checkCircle', 18) + 'Cerrar orden</button>';
+      else h += '<button class="btn warn big" data-a="mgo" data-v="cambio" data-id="0248">' + icon('edit', 18) + 'Registrar cambio</button><button class="btn secondary big closebtn" data-a="mgo" data-v="resultado" data-id="0248">' + icon('checkCircle', 18) + 'Cerrar orden</button>';
       h += '</div>';
     }
-    if (p.result) h += '<button class="btn secondary big" style="margin-top:12px" data-a="mgo" data-v="cierre" data-id="0248">' + icon('stamp', 18) + (p.validation ? 'Ver cierre' : 'Ver estado del cierre') + '</button>';
+    if (p.result) h += '<button class="btn secondary big" style="margin-top:12px" data-a="mgo" data-v="cierre" data-id="0248">' + icon('stamp', 18) + (p.validation ? 'Ver cierre' : 'Ver cierre enviado') + '</button>';
     h += '<div class="sec"><div class="card reg">' + regBox(inc, 'm') + '</div></div>';
     return h;
   }
@@ -601,7 +618,7 @@
     p.events.forEach(function (e) {
       if (e.type === 'assigned') h += '<div class="sysnote">' + icon('users', 13) + 'Orden asignada a C3 · ' + e.time + '</div>';
       else if (e.type === 'started') h += '<div class="sysnote">' + icon('play', 13) + 'Intervención iniciada · ' + e.time + '</div>';
-      else if (e.type === 'result') h += '<div class="sysnote">' + icon('checkCircle', 13) + 'Resultado enviado a validar · ' + e.time + '</div>';
+      else if (e.type === 'result') h += '<div class="sysnote ok">' + icon('camera', 13) + 'Orden cerrada con foto · a validar · ' + e.time + '</div>';
       else if (e.type === 'validated') h += '<div class="sysnote ok">' + icon('stamp', 13) + 'Cierre validado · ' + e.time + '</div>';
       else if (e.type === 'msg') {
         var mine = e.src === me, d = e.data;
@@ -714,27 +731,50 @@
     if (!S.chatPending) h += '<div class="sugg">' + (S.chat.length ? sug.slice(1) : sug.slice(0, 3)).map(function (s) { return '<button data-a="askv" data-v="' + esc(s[2]) + '">' + icon(s[0], 15) + esc(s[1]) + '</button>'; }).join('') + '</div>';
     return h;
   }
+  // Fotos del cierre: la primera es la del estado final (obligatoria), hasta 3
+  function closeShots(list) {
+    list = list || [];
+    if (!list.length) return '<button class="shot-empty" data-a="addPhoto" data-f="result.photos">' + icon('camera', 30) + '<b>Sacar foto del cierre</b><small>Cómo quedó el lugar</small></button>';
+    var h = '<figure class="shot-main"><div class="photo">' + photoSVG(list[0]) + '<span class="okb" aria-hidden="true">' + icon('check', 16) + '</span><button class="rm" data-a="rmPhoto" data-f="result.photos" data-v="0" aria-label="Quitar foto">' + icon('x', 13) + '</button></div><figcaption>' + icon('camera', 13) + 'Foto del cierre<span class="gps">' + icon('gps', 12) + 'GPS</span></figcaption></figure>';
+    h += '<div class="shot-more">' + list.slice(1).map(function (k, i) { return '<div class="photo">' + photoSVG(k) + '<button class="rm" data-a="rmPhoto" data-f="result.photos" data-v="' + (i + 1) + '" aria-label="Quitar foto">' + icon('x', 12) + '</button></div>'; }).join('') + (list.length < 3 ? '<button class="photo-add sm" data-a="addPhoto" data-f="result.photos" aria-label="Agregar foto">' + icon('camera', 18) + '<span>+</span></button>' : '') + '</div>';
+    return h;
+  }
   function mResultForm() {
     ensureResultDraft();
     var d = S.drafts.result, p = proj(inc0248(), 'm'), auth = (p.update && p.update.authorized) || [];
-    var h = '<div class="row between"><span class="small muted row" style="gap:5px">' + icon('shield', 15) + 'Autorizado ' + (p.updateEv ? p.updateEv.time : '') + ' · ' + prioMeter(p.priority) + '</span>' + demoBtn('result') + '</div>';
-    h += '<div class="field"><span>Hecho</span><div class="checklist">' + auth.map(function (a) { return ckItem('result.done', a, d.done.indexOf(a) >= 0, ITEM_IC[a]); }).join('') + '</div></div>';
-    h += '<div class="field"><span>Resultado <em>*</em></span><div class="opts3">' + OUTCOMES.map(function (o) { return '<button class="opt ' + o[3] + (d.outcome === o[0] ? ' on' : '') + '" data-a="set" data-f="result.outcome" data-v="' + esc(o[0]) + '" title="' + esc(o[0]) + '">' + icon(o[1], 24) + '<span>' + o[2] + '</span></button>'; }).join('') + '</div></div>';
-    h += '<div class="field"><span>¿Hay servicio?</span><div class="segc" style="grid-template-columns:1fr 1fr"><button class="' + (d.restored === true ? 'on' : '') + '" data-a="setb" data-f="result.restored" data-v="1">' + icon('tap', 17) + ' Sí</button><button class="' + (d.restored === false ? 'on' : '') + '" data-a="setb" data-f="result.restored" data-v="0">' + icon('xCircle', 17) + ' No</button></div></div>';
-    h += '<div class="field"><span>Fotos</span>' + photosField('result.photos', d.photos) + '</div>';
-    h += '<label class="field"><span>Nota <i>opcional</i></span><textarea class="textarea sm" data-f="result.text" placeholder="¿Qué se hizo?">' + esc(d.text) + '</textarea></label>';
+    var h = '<div class="row between"><span class="small muted row" style="gap:5px">' + icon('stamp', 15) + 'Lo valida Operaciones</span>' + demoBtn('result') + '</div>';
+    if (p.change && !p.update) h += '<div class="statusrow amber" style="margin-top:8px">' + icon('hourglass', 18) + '<b>Operaciones no respondió el cambio</b></div>';
+    h += '<div class="field"><span>Foto del trabajo terminado <em>*</em></span>' + closeShots(d.photos) + '</div>';
+    h += '<div class="field"><span>Motivo de cierre <em>*</em></span><div class="opts3">' + OUTCOMES.map(function (o) { return '<button class="opt ' + o[3] + (d.outcome === o[0] ? ' on' : '') + '" data-a="set" data-f="result.outcome" data-v="' + esc(o[0]) + '" title="' + esc(o[0]) + '">' + icon(o[1], 22) + '<span>' + o[2] + '</span></button>'; }).join('') + '</div></div>';
+    h += '<div class="field"><span>¿Cómo queda el servicio? <em>*</em></span><div class="svc">' + SERVICE_STATES.map(function (x) { return '<button class="' + x[3] + (d.service === x[0] ? ' on' : '') + '" data-a="set" data-f="result.service" data-v="' + x[0] + '">' + icon(x[1], 18) + '<span>' + x[2] + '</span></button>'; }).join('') + '</div></div>';
+    if (auth.length) h += '<div class="field"><span>Lo autorizado · hecho</span><div class="checklist">' + auth.map(function (a) { return ckItem('result.done', a, d.done.indexOf(a) >= 0, ITEM_IC[a]); }).join('') + '</div></div>';
+    h += '<label class="field"><span>Comentarios</span><textarea class="textarea sm" data-f="result.text" placeholder="¿Qué se hizo? Lo lee Operaciones">' + esc(d.text) + '</textarea></label>';
+    if (d.outcome && d.service) h += '<div class="field"><span>Lo que verá el vecino</span>' + miAguasCard(d, icon('stamp', 12) + 'Se publica cuando Operaciones valide') + '</div>';
     if (S.formError) h += '<div class="statusrow red">' + icon('alert', 18) + '<b>' + esc(S.formError) + '</b></div>';
-    h += '<button class="btn primary big" style="margin-top:16px" data-a="sendResult">' + icon('send', 18) + 'Enviar a validar</button>';
+    h += '<button class="btn ok big" style="margin-top:16px" data-a="sendResult">' + icon(S.online ? 'checkCircle' : 'device', 18) + (S.online ? 'Cerrar orden' : 'Guardar cierre · sale con señal') + '</button>';
+    h += '<button class="btn ghost block" style="margin-top:6px" data-a="mback">Cancelar</button>';
     return h;
+  }
+  // Imagen del cierre: la foto del lugar con el sello verde encima
+  function donePic(r, validated) {
+    var ph = (r.photos || [])[0];
+    return '<div class="donepic' + (validated ? ' val' : '') + '">' + (ph ? '<div class="photo">' + photoSVG(ph) + '</div>' : '<div class="photo empty">' + icon('camera', 28) + '</div>') + '<span class="donebadge">' + icon(validated ? 'stamp' : 'check', validated ? 26 : 30) + '</span></div>';
   }
   function ckItem(path, v, on, ic) { return '<button type="button" class="ck ' + (on ? 'on' : '') + '" data-a="toggle" data-f="' + path + '" data-v="' + esc(v) + '"><span class="box">' + (on ? icon('check', 14) : '') + '</span>' + (ic ? '<span class="cki">' + icon(ic, 17) + '</span>' : '') + '<span>' + esc(v) + '</span></button>'; }
   function mClosure() {
     var inc = inc0248(), p = proj(inc, 'm');
     if (!p.result) return mIncident();
-    var h = '<div class="card hero">';
-    if (p.validation) h += '<div class="bigic">' + icon('checkCircle', 34) + '</div><div class="h2">Caso cerrado</div><div class="small muted row" style="justify-content:center;gap:5px;margin-top:4px">' + icon('stamp', 14) + esc(p.validation.by) + ' · ' + p.validEv.time + '</div>' + hop([['send', 'Enviado', 'done'], ['stamp', 'Validado', 'done'], ['history', 'Historial', 'done']]) + '<button class="btn primary big" style="margin-top:14px" data-a="casego" data-v="0248">' + icon('history', 18) + 'Ver en el historial</button>';
-    else h += '<div class="bigic amber">' + icon('stamp', 32) + '</div><div class="h2">Enviado a validar</div>' + hop([['send', 'Enviado', p.resultEv.synced ? 'done' : 'pend'], ['stamp', 'Validación', 'pend'], ['history', 'Historial', 'todo']]);
-    h += '</div><div class="card" style="margin-top:12px"><div class="ichips">' + outcomeChip(p.result.outcome) + ichip(p.result.restored ? 'tap' : 'xCircle', p.result.restored ? 'Con servicio' : 'Sin servicio', p.result.restored ? 'ok' : 'red') + '</div>' + (p.result.photos && p.result.photos.length ? '<div class="photos" style="margin-top:10px">' + p.result.photos.map(function (k) { return '<div class="photo">' + photoSVG(k) + '</div>'; }).join('') + '</div>' : '') + '</div>';
+    var r = p.result, val = !!p.validation, sent = p.resultEv.synced, n = (r.photos || []).length;
+    var h = '<div class="card hero closed">' + donePic(r, val);
+    h += '<div class="h2">' + (val ? 'Orden cerrada' : sent ? 'Cierre enviado' : 'Cierre guardado') + '</div>';
+    h += '<div class="small muted row" style="justify-content:center;gap:5px;margin-top:4px">' + (val ? icon('stamp', 14) + esc(p.validation.by) + ' · ' + p.validEv.time : sent ? icon('cloudCheck', 14) + 'Operaciones lo está validando' : icon('wifiOff', 14) + 'Sale cuando vuelva la señal') + '</div>';
+    h += hop([['camera', 'Foto', 'done'], ['send', 'Enviado', sent ? 'done' : 'pend'], ['stamp', 'Validado', val ? 'done' : (sent ? 'pend' : 'todo')], ['drop', 'MiAguas', val ? 'done' : 'todo']]);
+    h += '</div>';
+    h += '<div class="card" style="margin-top:12px"><div class="ichips">' + outcomeChip(r.outcome) + svcChip(r.service) + ichip('camera', n + (n === 1 ? ' foto' : ' fotos')) + '</div>' + (r.text ? '<div class="note" style="margin-top:8px">«' + esc(r.text) + '»</div>' : '') + '</div>';
+    h += '<div class="sec">' + miAguasCard(r, val ? icon('cloudCheck', 12) + 'Publicado ' + p.validEv.time : icon('stamp', 12) + 'Se publica cuando Operaciones valide') + '</div>';
+    var nx = ROUTE[1];
+    h += '<button class="btn primary big" style="margin-top:14px" data-a="mgo" data-v="orden2" data-id="' + nx.id + '">' + icon('arrowRight', 18) + 'Próxima orden · #' + nx.id + ' · ' + nx.time + '</button>';
+    if (val) h += '<button class="btn secondary big" style="margin-top:8px" data-a="casego" data-v="0248">' + icon('history', 18) + 'Ver en el historial</button>';
     h += '<div class="sec"><div class="card reg">' + regBox(inc, 'm') + '</div></div>';
     return h;
   }
@@ -750,7 +790,7 @@
       return true;
     });
     var h = '<div class="searchbox">' + icon('search', 18) + '<input data-k="hist-q-' + side + '" data-a-input="histq" placeholder="Buscar #, calle o condición" value="' + esc(f.q) + '"></div>';
-    h += '<div class="row wrap" style="margin-top:10px">' + [['todos', 'list', 'Todos'], ['resueltos', 'checkCircle', 'Resueltos'], ['pendientes', 'hourglass', 'Pendientes']].map(function (x) { return '<button class="chip ' + (f.status === x[0] ? 'on' : '') + '" data-a="histst" data-v="' + x[0] + '">' + icon(x[1], 15) + x[2] + '</button>'; }).join('') + '<select class="select" style="width:auto;padding:7px 10px;font-size:13px;border-radius:999px" data-a-change="histsec">' + ['Todos', 'Norte', 'Sur', 'Este', 'Oeste', 'Centro'].map(function (s) { return '<option value="' + s + '"' + (f.sector === s ? ' selected' : '') + '>' + (s === 'Todos' ? 'Sector' : s) + '</option>'; }).join('') + '</select></div>';
+    h += '<div class="row wrap" style="margin-top:10px">' + [['todos', 'list', 'Todos'], ['resueltos', 'checkCircle', 'Resueltos'], ['pendientes', 'hourglass', 'Pendientes']].map(function (x) { return '<button class="chip ' + (f.status === x[0] ? 'on' : '') + '" data-a="histst" data-v="' + x[0] + '">' + icon(x[1], 15) + x[2] + '</button>'; }).join('') + '<select class="select" style="width:auto;padding:7px 10px;font-size:13px;border-radius:999px" data-a-change="histsec">' + ['Todos', 'Norte', 'Centro', 'Litoral', 'Oeste', 'Sur', 'Metropolitana'].map(function (s) { return '<option value="' + s + '"' + (f.sector === s ? ' selected' : '') + '>' + (s === 'Todos' ? 'Distrito' : s) + '</option>'; }).join('') + '</select></div>';
     h += '<div class="row between" style="margin:10px 2px"><span class="xs muted">' + list.length + ' casos</span>' + (side === 'm' ? ichip('device', 'En el celular', 'ok') : '') + '</div>';
     if (!list.length) h += '<div class="empty">' + icon('search', 22) + '<div style="margin-top:6px">Sin resultados</div></div>';
     var grid = side === 'd';
@@ -771,7 +811,7 @@
     h += '<div class="card"><div class="ab"><div><small>' + icon('phone', 12) + 'Reclamo</small>' + esc(c.initial) + '</div><div><small>' + icon('eye', 12) + 'Se encontró</small>' + esc(c.found) + '</div></div></div>';
     h += '<div class="card"><div class="sec-t">Decisiones</div><ol class="steps2">' + c.decisions.map(function (d) { return '<li>' + esc(d) + '</li>'; }).join('') + '</ol></div>';
     h += '</div><div>';
-    h += '<div class="card"><div class="row" style="gap:10px;align-items:flex-start"><span style="color:' + (c.status === 'resuelto' ? 'var(--green)' : 'var(--amber)') + '">' + icon(c.status === 'resuelto' ? 'checkCircle' : 'hourglass', 22) + '</span><div class="small">' + esc(c.result) + '</div></div></div>';
+    h += '<div class="card"><div class="row" style="gap:10px;align-items:flex-start"><span style="color:' + (c.status === 'resuelto' ? 'var(--green)' : 'var(--amber)') + '">' + icon(c.status === 'resuelto' ? 'checkCircle' : 'hourglass', 22) + '</span><div class="small">' + esc(c.result) + '</div></div>' + (c.photos && c.photos.length ? '<div class="photos" style="margin-top:10px">' + c.photos.map(function (k, i) { return '<figure class="ev"><div class="photo">' + photoSVG(k) + '</div><figcaption class="' + (i ? '' : 'ok') + '">' + icon(i ? 'camera' : 'checkCircle', 13) + (i ? 'Foto ' + (i + 1) : 'Foto del cierre') + '</figcaption></figure>'; }).join('') + '</div>' : '') + (c.close ? '<div style="margin-top:10px">' + miAguasCard(c.close, '') + '</div>' : '') + '</div>';
     if (c.lesson && c.lesson !== '—') h += '<div class="lesson" style="margin-top:12px">' + icon('bulb', 22) + '<span>' + esc(c.lesson) + '</span></div>';
     h += '<div class="card"><div class="sec-t">Criterios</div><div class="chips">' + c.criteria.map(function (k) { var x = CRITERIA.filter(function (y) { return y.id === k; })[0]; return '<button class="chip static" data-a="critgo" data-v="' + k + '">' + icon(CAT_IC[x ? x.cat : 'todas'], 13) + k + '</button>'; }).join('') + '</div></div></div></div>';
     return h;
@@ -835,13 +875,13 @@
       var kind = k === '0248' && p.change ? p.change.type : inc.kind;
       return '<tr class="click ' + (alert ? 'hl' : '') + '" data-a="dinc" data-v="' + k + '"><td class="nw"><b style="color:var(--blue-700)">#' + k + '</b>' + (alert ? ' <span class="newdot" title="Novedad sin revisar"></span>' : '') + '</td><td class="nw"><span class="row" style="gap:8px">' + icon(tIc(kind), 17) + esc(tShort(kind)) + '</span></td>' + (compact ? '' : '<td>' + inc.sector + '</td>') + '<td>' + prioMeter(p.priority) + '</td><td>' + statusPill(p) + '</td>' + (compact ? '' : '<td>C' + inc.crew.slice(-1) + '</td>') + '<td class="small"><span class="row" style="gap:5px;color:var(--g500)">' + (p.last ? icon(p.last.src === 'campo' ? 'device' : 'grid', 14) + '<b style="color:var(--g700)">' + p.last.time + '</b>' : '') + '</span></td></tr>';
     }).join('');
-    return '<div class="tblwrap"><table class="tbl"><thead><tr><th>N.º</th><th>Tipo</th>' + (compact ? '' : '<th>Sector</th>') + '<th>Prioridad</th><th>Estado</th>' + (compact ? '' : '<th>Cuadrilla</th>') + '<th>' + (compact ? 'Hora' : 'Último dato') + '</th></tr></thead><tbody>' + rows + '</tbody></table></div>';
+    return '<div class="tblwrap"><table class="tbl"><thead><tr><th>N.º</th><th>Tipo</th>' + (compact ? '' : '<th>Distrito</th>') + '<th>Prioridad</th><th>Estado</th>' + (compact ? '' : '<th>Cuadrilla</th>') + '<th>' + (compact ? 'Hora' : 'Último dato') + '</th></tr></thead><tbody>' + rows + '</tbody></table></div>';
   }
   function alertRow(a) {
     var inc = S.incidents[a.inc], p = proj(inc, 'd'), body = '';
     if (a.kind === 'change' && p.change) body = (p.change.conditions || []).map(function (c) { return condChip(c); }).join('') + (p.change.homes ? ichip('home', p.change.homes, 'warn') : '') + '<span class="ichip warn">' + prioMeter(p.change.urgency) + '</span>' + (p.change.offline ? ichip('wifiOff', 'Sin señal ' + p.changeEv.time) : '');
-    if (a.kind === 'result' && p.result) body = outcomeChip(p.result.outcome) + ichip('hourglass', 'A validar');
-    var snip = (a.kind === 'change' || a.kind === 'msg') && a.body ? '<div class="small muted ellipsis" style="margin-top:4px">' + icon('chat', 13) + ' «' + esc(a.body) + '»</div>' : '';
+    if (a.kind === 'result' && p.result) body = outcomeChip(p.result.outcome) + svcChip(p.result.service) + ichip('camera', (p.result.photos || []).length + ' fotos') + ichip('hourglass', 'A validar');
+    var snip = (a.kind === 'change' || a.kind === 'msg' || a.kind === 'result') && a.body ? '<div class="small muted ellipsis" style="margin-top:4px">' + icon('chat', 13) + ' «' + esc(a.body) + '»</div>' : '';
     return '<div class="alertrow ' + (a.read ? 'read' : '') + '"><div class="ico">' + icon(a.kind === 'result' ? 'stamp' : a.kind === 'msg' ? 'chat' : 'alert', 20) + '</div><div style="flex:1;min-width:0"><div class="row between"><b>' + esc(a.title) + '</b><span class="xs muted">' + a.time + '</span></div>' + snip + (body ? '<div class="ichips" style="margin-top:7px">' + body + '</div>' : '') + '</div><button class="btn ' + (a.read ? 'secondary' : 'primary') + ' sm" data-a="openAlert" data-v="' + a.id + '">' + (a.read ? 'Ver' : 'Revisar') + '</button></div>';
   }
   function kpi(ic, n, l, cls) { return '<div class="kpi ' + (cls || '') + '"><span class="i">' + icon(ic, 22) + '</span><div><div class="n">' + n + '</div><div class="l">' + l + '</div></div></div>'; }
@@ -864,17 +904,17 @@
   }
   function dValidations() {
     var list = Object.keys(S.incidents).filter(function (k) { return proj(S.incidents[k], 'd').key === 'resuelta'; });
-    var h = '<div class="row wrap" style="gap:8px"><span class="small muted row" style="gap:5px">' + icon('stamp', 16) + 'Se valida:</span>' + ichip('camera', 'Evidencia', 'blue') + ichip('shield', 'Lo autorizado', 'blue') + ichip('tap', 'Servicio', 'blue') + ichip('book', 'CO-CIE-01') + '</div>';
+    var h = '<div class="row wrap" style="gap:8px"><span class="small muted row" style="gap:5px">' + icon('stamp', 16) + 'Se valida:</span>' + ichip('camera', 'Foto final', 'blue') + ichip('shield', 'Lo autorizado', 'blue') + ichip('gauge', 'Presión en HIDRA', 'blue') + ichip('users', 'Mensaje al vecino', 'blue') + ichip('book', 'CO-CIE-01') + '</div>';
     h += fric('sindueno', 'Hay cierres pendientes sin una persona asignada para validarlos: mientras nadie los toma, no se incorporan al historial.') + '<div class="dsec">';
     if (!list.length) h += '<div class="empty" style="margin-bottom:10px">' + icon('checkCircle', 22) + '<div style="margin-top:6px">Nada del día por validar</div></div>';
-    h += list.map(function (k) { var inc = S.incidents[k], p = proj(inc, 'd'); return '<div class="alertrow"><div class="ico">' + icon('stamp', 20) + '</div><div style="flex:1"><div class="row between"><b>#' + k + ' · ' + esc(tShort(p.change ? p.change.type : inc.kind)) + '</b><span class="xs muted">' + p.resultEv.time + '</span></div><div class="ichips" style="margin-top:7px">' + outcomeChip(p.result.outcome) + ichip(p.result.restored ? 'tap' : 'xCircle', p.result.restored ? 'Con servicio' : 'Sin servicio', p.result.restored ? 'ok' : 'red') + ichip('camera', (p.result.photos || []).length + ((p.result.photos || []).length === 1 ? ' foto' : ' fotos')) + '</div></div><button class="btn primary sm" data-a="dinc" data-v="' + k + '">Revisar y validar</button></div>'; }).join('');
+    h += list.map(function (k) { var inc = S.incidents[k], p = proj(inc, 'd'); return '<div class="alertrow"><div class="ico">' + icon('stamp', 20) + '</div><div style="flex:1"><div class="row between"><b>#' + k + ' · ' + esc(tShort(p.change ? p.change.type : inc.kind)) + '</b><span class="xs muted">' + p.resultEv.time + '</span></div><div class="ichips" style="margin-top:7px">' + outcomeChip(p.result.outcome) + svcChip(p.result.service) + ichip('camera', (p.result.photos || []).length + ((p.result.photos || []).length === 1 ? ' foto' : ' fotos')) + '</div></div>' + ((p.result.photos || []).length ? '<div class="photo vthumb">' + photoSVG(p.result.photos[0]) + '</div>' : '') + '<button class="btn primary sm" data-a="dinc" data-v="' + k + '">Revisar y validar</button></div>'; }).join('');
     h += S.history.filter(function (c) { return c.status === 'pendiente' && c.pendingLabel === 'Pendiente de validación'; }).map(function (c) { return '<div class="alertrow read" style="margin-top:8px"><div class="ico">' + icon('stamp', 20) + '</div><div style="flex:1"><b>#' + c.id + ' · ' + esc(c.short || c.title) + '</b><div class="ichips" style="margin-top:6px">' + ichip('clock', c.date) + ichip('pin', c.sector) + '</div></div><button class="btn secondary sm" data-a="casego" data-v="' + c.id + '">Ver caso</button></div>'; }).join('');
     return h + '</div>';
   }
   function dIncident() {
     var inc = S.incidents[S.d.id] || inc0248(), p = proj(inc, 'd');
     var kind = p.change ? p.change.type : inc.kind;
-    var h = '<div class="row between wrap"><div class="row wrap"><button class="btn ghost sm" data-a="dgo" data-v="incidencias">' + icon('arrowLeft', 15) + 'Incidencias</button><span class="tic">' + icon(tIc(kind), 20) + '</span><span class="h2">#' + inc.id + ' · ' + esc(tShort(kind)) + '</span>' + statusPill(p) + prioMeter(p.priority) + '</div><span class="ichips">' + ichip('pin', (inc.short || inc.address) + ' · ' + inc.sector) + ichip('users', inc.crew) + '</span></div>';
+    var h = '<div class="row between wrap"><div class="row wrap"><button class="btn ghost sm" data-a="dgo" data-v="incidencias">' + icon('arrowLeft', 15) + 'Incidencias</button><span class="tic">' + icon(tIc(kind), 20) + '</span><span class="h2">#' + inc.id + ' · ' + esc(tShort(kind)) + '</span>' + statusPill(p) + prioMeter(p.priority) + '</div><span class="ichips">' + ichip('pin', (inc.short || inc.address) + ' · ' + inc.sector) + ichip('users', inc.crew) + (inc.caso ? '<span class="ichip miagchip" title="Lo que ve el vecino en MiAguas · caso ' + inc.caso + '">' + icon('drop', 14) + 'MiAguas · <b>' + publicState(p) + '</b></span>' : '') + '</span></div>';
     if (inc.id !== '0248') return h + '<div class="dgrid" style="margin-top:14px"><div class="card"><div class="small muted">' + esc(inc.description) + '</div><div class="divider"></div>' + timeline(inc, 'd') + '</div><div>' + (CHAT_INCS.indexOf(inc.id) >= 0 ? dChat(inc, p) : '') + '</div></div>';
     if (!p.change) h += '<div class="statusrow gray">' + icon(S.online ? 'info' : 'wifiOff', 20) + '<b>Solo la orden original</b><span class="sp"></span><span class="wait">' + icon('clock', 15) + 'Último dato C3 ' + lastCrewContact() + '</span></div>' + fric('handoff', 'Lo que la cuadrilla registró en campo todavía no llegó a la central: depende de que vuelva la señal y se sincronice, y puede llegar tarde.');
     h += '<div class="dgrid" style="margin-top:14px"><div>';
@@ -904,7 +944,7 @@
     if (p.change && !p.update) h += fric('sobrecarga', 'Leer el chat, decidir la prioridad y autorizar acciones recae en la misma persona que atiende al resto de las cuadrillas.');
     h += '<div class="thread dthread" data-sk="d-chat">' + chatThread('d', inc.id) + '</div>';
     if (!p.result) {
-      h += '<div class="dcomp"><div class="row wrap" style="gap:6px"><span class="xs muted b">Prioridad</span>' + ['Media', 'Alta', 'Crítica'].map(function (x) { return '<button class="chip pchip u' + PLV[x] + (d.priority === x ? ' on' : '') + '" data-a="setx" data-f="omsg.priority" data-v="' + x + '">' + prioMeter(x, true) + x + '</button>'; }).join('') + '<span class="sp"></span><button class="chip ' + (d.auth ? 'on' : '') + '" data-a="setb" data-f="omsg.auth" data-v="' + (d.auth ? '0' : '1') + '">' + icon('shield', 15) + 'Autorizar' + (d.authorized.length ? ' · ' + d.authorized.length : '') + '</button></div>';
+      h += '<div class="dcomp"><div class="row wrap" style="gap:6px"><span class="xs muted b">Prioridad</span>' + ['Normal', 'Alta', 'Emergencia'].map(function (x) { return '<button class="chip pchip u' + PLV[x] + (d.priority === x ? ' on' : '') + '" data-a="setx" data-f="omsg.priority" data-v="' + x + '">' + prioMeter(x, true) + x + '</button>'; }).join('') + '<span class="sp"></span><button class="chip ' + (d.auth ? 'on' : '') + '" data-a="setb" data-f="omsg.auth" data-v="' + (d.auth ? '0' : '1') + '">' + icon('shield', 15) + 'Autorizar' + (d.authorized.length ? ' · ' + d.authorized.length : '') + '</button></div>';
       if (d.auth) h += '<div class="checklist authl">' + DEMO_UPDATE.authorized.map(function (a) { return ckItem('omsg.authorized', a, d.authorized.indexOf(a) >= 0, ITEM_IC[a]); }).join('') + '</div>';
       h += '<div class="crow"><textarea data-f="omsg.text" rows="2" placeholder="Escribile a la cuadrilla…">' + esc(d.text) + '</textarea><button class="snd" data-a="sendOpsMsg" data-id="' + inc.id + '" aria-label="Enviar">' + icon('send', 19) + '</button></div></div>';
     }
@@ -921,14 +961,16 @@
     return '<div class="chatpage"><div class="card convs"><div class="sec-t">Conversaciones</div>' + list + '</div><div>' + dChat(inc, proj(inc, 'd'), true) + '</div></div>';
   }
   function dActionCard(inc, p) {
-    var h = '<div class="card">';
+    var h = '<div class="card">', r = p.result;
     var byChip = '<div class="ichips" style="margin-top:10px">' + ichip('user', S.deskRole === 'supervision' ? 'Supervisión · C. Duarte' : 'Operaciones · L. Ferreyra') + '</div>';
+    var shots = '<div class="vshots">' + (r.photos || []).map(function (k, i) { return '<figure class="ev' + (i ? '' : ' main') + '"><div class="photo">' + photoSVG(k) + (i ? '' : '<span class="okb">' + icon('check', 14) + '</span>') + '</div><figcaption class="' + (i ? '' : 'ok') + '">' + icon(i ? 'camera' : 'checkCircle', 13) + (i ? 'Foto ' + (i + 1) : 'Foto del cierre · ' + p.resultEv.time) + (i === 0 && r.offline ? ' · ' + icon('wifiOff', 12) + 'sin señal' : '') + '</figcaption></figure>'; }).join('') + '</div>';
     if (p.validation) {
-      h += '<div class="sec-t">Cierre</div><div class="statusrow green" style="margin-top:0">' + icon('checkCircle', 20) + '<b>Cerrada · ' + p.validEv.time + '</b></div><button class="btn primary block" style="margin-top:10px" data-a="dgo" data-v="cierre" data-id="0248">Ver cierre</button>';
-    } else if (p.result) {
+      h += '<div class="sec-t">Cierre</div><div class="statusrow green" style="margin-top:0">' + icon('checkCircle', 20) + '<b>Cerrada · ' + p.validEv.time + '</b></div>' + shots + '<div style="margin-top:10px">' + miAguasCard(r, icon('cloudCheck', 12) + 'Publicado ' + p.validEv.time) + '</div><button class="btn primary block" style="margin-top:10px" data-a="dgo" data-v="cierre" data-id="0248">Ver cierre</button>';
+    } else if (r) {
       ensureValidDraft(); var d = S.drafts.valid;
-      h += '<div class="sec-t">Validar cierre' + demoBtn('valid') + '</div><div class="ichips">' + outcomeChip(p.result.outcome) + ichip(p.result.restored ? 'tap' : 'xCircle', p.result.restored ? 'Con servicio' : 'Sin servicio', p.result.restored ? 'ok' : 'red') + '</div>' + (p.result.text ? '<div class="note" style="margin-top:8px">«' + esc(p.result.text) + '»</div>' : '');
-      h += '<div class="checklist" style="margin-top:10px">' + DEMO_VALIDATION.checks.map(function (c) { return ckItem('valid.checks', c, d.checks.indexOf(c) >= 0, ITEM_IC[c]); }).join('') + '</div><label class="field"><span>' + icon('bulb', 14) + ' Aprendizaje <i>opcional</i></span><textarea class="textarea sm" data-f="valid.lesson" placeholder="¿Qué conviene recordar?">' + esc(d.lesson) + '</textarea></label>' + byChip + (S.formError ? '<div class="statusrow red">' + icon('alert', 16) + '<b>' + esc(S.formError) + '</b></div>' : '') + '<button class="btn ok block" style="margin-top:12px" data-a="validate">' + icon('stamp', 18) + 'Validar cierre</button>';
+      h += '<div class="sec-t">Validar cierre' + demoBtn('valid') + '</div>' + shots + '<div class="ichips" style="margin-top:10px">' + outcomeChip(r.outcome) + svcChip(r.service) + '</div>' + (r.text ? '<div class="note" style="margin-top:8px">«' + esc(r.text) + '»</div>' : '');
+      h += '<div style="margin-top:10px">' + miAguasCard(r, icon('stamp', 12) + 'Se publica al validar') + '</div>';
+      h += '<div class="checklist" style="margin-top:10px">' + DEMO_VALIDATION.checks.map(function (c) { return ckItem('valid.checks', c, d.checks.indexOf(c) >= 0, ITEM_IC[c]); }).join('') + '</div><label class="field"><span>' + icon('bulb', 14) + ' Aprendizaje <i>opcional</i></span><textarea class="textarea sm" data-f="valid.lesson" placeholder="¿Qué conviene recordar?">' + esc(d.lesson) + '</textarea></label>' + byChip + (S.formError ? '<div class="statusrow red">' + icon('alert', 16) + '<b>' + esc(S.formError) + '</b></div>' : '') + '<button class="btn ok block" style="margin-top:12px" data-a="validate">' + icon('stamp', 18) + 'Validar y publicar</button>';
     }
     return h + '</div>';
   }
@@ -937,8 +979,9 @@
     if (!p.validation) return dIncident();
     var t = function (type) { var e = inc.events.filter(function (x) { return x.type === type; })[0]; return e ? e.time : '—'; };
     var ce = p.changeEv;
-    var steps = [[t('assigned'), 'users', 'Asignada', 'central'], [t('started'), 'play', 'Iniciada', 'campo'], [ce ? ce.time : '—', 'chat', 'Cambio por chat' + (p.change && p.change.offline ? ' sin señal' : ''), 'campo'], [p.ai.length ? p.ai[0].time : '—', 'spark', 'Consulta IA · #0176', 'ia'], [ce ? ce.syncedAt : '—', 'sync', 'Sincronizado', 'central'], [p.updateEv ? p.updateEv.time : '—', 'chat', 'Indicaciones por chat · ' + (p.update ? p.update.priority : ''), 'central'], [t('result'), 'checkCircle', 'Resultado', 'campo'], [p.validEv.time, 'stamp', 'Validada', 'central']];
-    var h = '<div class="dgrid even"><div class="card hero"><div class="bigic">' + icon('checkCircle', 34) + '</div><div class="h1">#0248 cerrada</div><div class="small muted row" style="justify-content:center;gap:5px;margin-top:6px">' + icon('stamp', 14) + esc(p.validation.by) + ' · ' + p.validEv.time + '</div>' + hop([['send', 'Resultado', 'done'], ['stamp', 'Validado', 'done'], ['history', 'Historial', 'done']]) + '<div class="row" style="justify-content:center;margin-top:16px;gap:10px"><button class="btn primary" data-a="casego" data-v="0248">' + icon('history', 18) + 'Ver en el historial</button><button class="btn secondary" data-a="dgo" data-v="panel">Panel</button></div></div>';
+    var steps = [[t('assigned'), 'users', 'Asignada', 'central'], [t('started'), 'play', 'Iniciada', 'campo'], [ce ? ce.time : '—', 'chat', 'Cambio por chat' + (p.change && p.change.offline ? ' sin señal' : ''), 'campo'], [p.ai.length ? p.ai[0].time : '—', 'spark', 'Consulta IA · #0176', 'ia'], [ce ? ce.syncedAt : '—', 'sync', 'Sincronizado', 'central'], [p.updateEv ? p.updateEv.time : '—', 'chat', 'Indicaciones por chat · ' + (p.update ? p.update.priority : ''), 'central'], [t('result'), 'camera', 'Cierre con foto · ' + outcomeOf(p.result.outcome)[2], 'campo'], [p.validEv.time, 'stamp', 'Validada', 'central'], [p.validEv.time, 'drop', 'MiAguas · ' + publicClose(p.result).state, 'central']];
+    steps = steps.filter(function (s) { return s[0] && s[0] !== '—' && !/· $/.test(s[2]); });
+    var h = '<div class="dgrid even"><div class="card hero closed">' + donePic(p.result, true) + '<div class="h1">#0248 cerrada</div><div class="small muted row" style="justify-content:center;gap:5px;margin-top:6px">' + icon('stamp', 14) + esc(p.validation.by) + ' · ' + p.validEv.time + '</div>' + hop([['camera', 'Foto', 'done'], ['stamp', 'Validado', 'done'], ['drop', 'MiAguas', 'done'], ['history', 'Historial', 'done']]) + '<div style="margin-top:14px;text-align:left">' + miAguasCard(p.result, icon('cloudCheck', 12) + 'Publicado ' + p.validEv.time) + '</div><div class="row" style="justify-content:center;margin-top:16px;gap:10px"><button class="btn primary" data-a="casego" data-v="0248">' + icon('history', 18) + 'Ver en el historial</button><button class="btn secondary" data-a="dgo" data-v="panel">Panel</button></div></div>';
     h += '<div class="card"><div class="sec-t">Recorrido</div>' + tlKey() + '<ul class="tl2">' + steps.map(function (s) { return '<li class="' + s[3] + '"><span class="ic2">' + icon(s[1], 15) + '</span><span class="t">' + esc(s[2]) + '</span><span class="tm">' + s[0] + '</span></li>'; }).join('') + '</ul>' + (p.validation.lesson ? '<div class="lesson" style="margin-top:12px">' + icon('bulb', 22) + '<span>' + esc(p.validation.lesson) + '</span></div>' : '') + '</div></div>';
     return h;
   }
@@ -955,7 +998,7 @@
       { n: 'Escena 3 · Sin conexión', p: 'Cortá la señal (interruptor de arriba o el ícono de wifi del celular) antes de enviar el cambio: queda en el chat del celular y Operaciones no lo ve.', done: S.wentOffline && !!(rp && rp.data.report.offline), go: [['Ver vista dividida', 'dividida']] },
       { n: 'Escena 4 · Consulta a la IA', p: 'Abrí el Asistente sin conexión y enviá la consulta sugerida. Revisá el antecedente #0176, los criterios y los límites.', done: has('ai'), go: [['Abrir asistente', 'cuadrilla', 'm', 'asistente']] },
       { n: 'Escena 5 · Reconexión', p: 'Volvé a «Conectada» y pulsá «Sincronizar ahora». En Operaciones, abrí la alerta y respondé por el chat con la prioridad y lo que autorizás.', done: upd, go: [['Ir a Cuadrilla', 'cuadrilla', 'm', 'inicio'], ['Ir a Operaciones', 'operaciones', 'd', 'panel']] },
-      { n: 'Escena 6 · Resolución', p: 'En Cuadrilla, «Registrar resultado». En Operaciones o Supervisión, validá el cierre y buscá #0248 en el historial.', done: has('validated'), go: [['Resultado (Cuadrilla)', 'cuadrilla', 'm', 'resultado', '0248'], ['Validar (Supervisión)', 'supervision', 'd', 'incidente', '0248']] }
+      { n: 'Escena 6 · Cierre', p: 'En Cuadrilla, «Cerrar orden»: foto del trabajo terminado, motivo, servicio y comentario. En Operaciones o Supervisión, validá el cierre: el vecino ve «Resuelto» en MiAguas y #0248 pasa al historial.', done: has('validated'), go: [['Cerrar orden (Cuadrilla)', 'cuadrilla', 'm', 'resultado', '0248'], ['Validar (Supervisión)', 'supervision', 'd', 'incidente', '0248']] }
     ];
   }
   var FRIC_GUIDE = [
@@ -992,7 +1035,7 @@
   function guide() {
     var open = S.guide === null ? (window.innerWidth > 1240 && S.role === 'cuadrilla') : S.guide;
     var steps = guideSteps(), cur = steps.findIndex(function (s) { return !s.done; });
-    var h = '<aside class="guide ' + (open ? 'open' : '') + '"><div class="gh"><div><div class="h3">Recorrido de demostración</div><div class="xs muted">Caso #0248 · Calle 12, Sector Norte</div></div><button class="btn ghost sm" data-a="guide" aria-label="Cerrar">' + icon('x', 18) + '</button></div><div class="gb">';
+    var h = '<aside class="guide ' + (open ? 'open' : '') + '"><div class="gh"><div><div class="h3">Recorrido de demostración</div><div class="xs muted">Orden #0248 · Calle 12, Distrito Norte</div></div><button class="btn ghost sm" data-a="guide" aria-label="Cerrar">' + icon('x', 18) + '</button></div><div class="gb">';
     h += steps.map(function (s, i) { return '<div class="gstep ' + (s.done ? 'done' : (i === cur ? 'cur' : '')) + '"><div class="n">' + (s.done ? icon('checkCircle', 14) : '') + s.n + '</div><p>' + s.p + '</p><div class="row wrap">' + s.go.map(function (g) { return '<button class="btn secondary sm" data-a="gstep" data-v="' + g.join('|') + '">' + g[0] + '</button>'; }).join('') + '</div></div>'; }).join('');
     h += '<div class="notice blue" style="margin-top:6px">' + icon('split', 18) + '<div>Usá «Vista dividida» para mostrar al mismo tiempo lo que sabe la Cuadrilla y lo que sabe Operaciones.</div></div>';
     h += '<div class="h3" style="margin:18px 0 4px">Fricciones operativas · Clase 29</div><p class="small muted" style="margin:0 0 10px">Posibles problemas identificados al analizar el recorrido. No están comprobados ni resueltos.</p>';
@@ -1016,6 +1059,7 @@
     if (el.getAttribute('data-a') === 'closeModal' && ev.target.closest('[data-stop]') && el.classList.contains('modal-bg')) return;
     var a = el.getAttribute('data-a'), v = el.getAttribute('data-v'), id = el.getAttribute('data-id'), f = el.getAttribute('data-f');
     var paneEl = el.closest('[data-pane]'), side = paneEl ? paneEl.getAttribute('data-pane') : null;
+    if (['set', 'toggle', 'setb', 'setx', 'step', 'addPhoto', 'rmPhoto'].indexOf(a) >= 0) S.formError = null; // el aviso de faltantes se va al completar
     switch (a) {
       case 'role': setRole(v); break;
       case 'deskrole': S.deskRole = v; if (S.role !== 'dividida' && !PRES) S.role = v; if (v === 'supervision' && S.d.name === 'panel') S.d = { name: 'validaciones' }; commit(); break;
@@ -1043,7 +1087,7 @@
       case 'set': setPath(f, v); if (f === 'change.type' && S.drafts.change) S.drafts.change.actions = (S.drafts.change.actions || []).filter(function (x) { return actionsFor(v).indexOf(x) >= 0; }); commit(); break;
       case 'setb': setPath(f, v === '1'); commit(); break;
       case 'step': var nn = (parseInt(getPath(f) || '0', 10) || 0) + parseInt(v, 10); setPath(f, nn > 0 ? String(nn) : ''); commit(); break;
-      case 'addPhoto': var ph = getPath(f) || []; var kinds = f.indexOf('result') === 0 ? ['reparacion', 'calzada', 'vereda'] : ['calzada', 'vereda', 'reparacion']; ph.push(kinds[ph.length % 3]); setPath(f, ph); commit(); break;
+      case 'addPhoto': var ph = getPath(f) || []; var kinds = f.indexOf('result') === 0 ? ['cierre', 'reparacion', 'vereda'] : ['calzada', 'vereda', 'reparacion']; ph.push(kinds[ph.length % 3]); setPath(f, ph); commit(); break;
       case 'demoFill': demoFill(v); break;
       case 'sync': doSync(); break;
       case 'closeSync': S.syncUI = null; commit(); break;

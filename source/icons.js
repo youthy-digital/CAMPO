@@ -90,6 +90,15 @@ function photoSVG(kind) {
       '<path d="M120 90c20-10 60-8 80 6s30 40 10 60-70 22-96 6-14-62 6-72z" fill="#6f9fc8" opacity=".8"/>' +
       '<path d="M150 112l12 10 8-6 14 14" stroke="#3f4a55" stroke-width="3" fill="none"/>' +
       '<path d="M168 125c10 14 30 30 60 40s70 12 92 10" stroke="#6f9fc8" stroke-width="10" fill="none" opacity=".7"/>';
+  } else if (kind === 'cierre') {
+    /* Vereda reparada: baldosas nuevas sobre la zanja, tapa de la llave y la zona seca y limpia */
+    body = '<rect width="320" height="220" fill="#c9d6e2"/><rect x="18" y="6" width="74" height="58" fill="#e9eef3"/><rect x="108" y="0" width="92" height="64" fill="#dfe6ed"/><rect x="216" y="12" width="84" height="52" fill="#e9eef3"/>' +
+      '<g fill="#b9cbdc"><rect x="30" y="18" width="16" height="14"/><rect x="58" y="18" width="16" height="14"/><rect x="124" y="14" width="18" height="16"/><rect x="164" y="14" width="18" height="16"/><rect x="232" y="24" width="16" height="14"/><rect x="266" y="24" width="16" height="14"/></g>' +
+      '<rect y="64" width="320" height="104" fill="#c4b9a7"/><path d="M0 98h320M0 133h320M64 64v104M128 64v104M192 64v104M256 64v104" stroke="#ad9f8a" stroke-width="2.5"/>' +
+      '<rect x="96" y="80" width="128" height="72" rx="3" fill="#ddd6c9" stroke="#b8ac98" stroke-width="2"/><path d="M96 116h128M138 80v72M182 80v72" stroke="#c6bcab" stroke-width="2"/>' +
+      '<rect x="146" y="104" width="28" height="22" rx="3" fill="#5f6b77"/><path d="M151 110h18M151 115h18M151 120h18" stroke="#84909c" stroke-width="2"/>' +
+      '<rect y="168" width="320" height="8" fill="#9aa3ab"/><rect y="176" width="320" height="44" fill="#6b737c"/><path d="M0 204h320" stroke="#e8e2c8" stroke-width="3" stroke-dasharray="24 18"/>' +
+      '<path d="M268 166l9-24 9 24z" fill="#f08a24"/><rect x="266" y="164" width="22" height="4" fill="#333"/><path d="M272 155h10" stroke="#fff" stroke-width="3"/>';
   } else {
     body = '<rect width="320" height="220" fill="#7a6a55"/><rect x="0" y="0" width="320" height="60" fill="#5d6873"/>' +
       '<path d="M40 60h240l-20 140H60z" fill="#8a7860"/><rect x="40" y="120" width="240" height="26" rx="13" fill="#3e6fa3"/>' +
@@ -100,7 +109,7 @@ function photoSVG(kind) {
 }
 
 function mapSVG(expanded) {
-  /* Plano esquemático del Sector Norte con la ubicación de #0248 */
+  /* Plano esquemático del Distrito Norte con la ubicación de #0248 */
   const streets = '<g stroke="#ffffff" stroke-width="14" stroke-linecap="square">' +
     '<path d="M0 60h400M0 150h400M0 240h400"/><path d="M70 0v300M190 0v300M310 0v300"/></g>' +
     '<g font-family="Inter,system-ui,sans-serif" font-size="11" fill="#6b7a8c" font-weight="600">' +
@@ -120,17 +129,18 @@ function mapSVG(expanded) {
     streets + pipe + area + homes + pin + '</svg>';
 }
 
-/* Mapa de la ciudad con sectores, cuadrillas e incidencias (tablero de Operaciones) */
+/* Mapa de la ciudad con distritos, cuadrillas e incidencias (tablero de Operaciones) */
 function crewMapSVG(o) {
   o = o || {};
   var W = 320, H = 200, i, j, blocks = '';
   for (i = 0; i < 13; i++) for (j = 0; j < 10; j++) blocks += '<rect x="' + (3 + i * 25) + '" y="' + (3 + j * 20) + '" width="21" height="16" rx="2.5" fill="#e3e6de"/>';
   var park = '<rect x="128" y="86" width="44" height="34" rx="7" fill="#cfe6c3"/><g fill="#a9d29a"><circle cx="139" cy="97" r="4"/><circle cx="152" cy="108" r="5"/><circle cx="163" cy="95" r="3.5"/><circle cx="141" cy="112" r="3"/></g>';
-  var river = '<path d="M-8 128 C 22 140, 34 170, 70 178 S 118 196, 132 210" stroke="#bcd8ef" stroke-width="15" fill="none" stroke-linecap="round"/><path d="M-8 128 C 22 140, 34 170, 70 178 S 118 196, 132 210" stroke="#d3e6f6" stroke-width="5" fill="none"/>';
+  var rp = 'M330 -8 C 304 36, 324 74, 310 116 S 312 176, 336 212';
+  var river = '<path d="' + rp + '" stroke="#bcd8ef" stroke-width="15" fill="none" stroke-linecap="round"/><path d="' + rp + '" stroke="#d3e6f6" stroke-width="5" fill="none"/>';
   var roads = '<g stroke="#fff" stroke-linecap="round"><path d="M0 63H320M0 133H320M103 0V200M219 0V200" stroke-width="5.5"/><path d="M0 23H320M0 103H320M0 163H320M53 0V200M163 0V200M273 0V200" stroke-width="2.5"/></g><path d="M0 12 L320 188" stroke="#f2d98c" stroke-width="4.5"/><path d="M0 12 L320 188" stroke="#fbeec4" stroke-width="1.6"/>';
   var sectors = '<g fill="none" stroke="#6f86a3" stroke-width="1.3" stroke-dasharray="5 4" opacity=".75"><path d="M0 66H320M0 136H320M100 66V136M222 66V136"/></g>';
   var lab = function (x, y, t, anchor) { return '<text x="' + x + '" y="' + y + '" text-anchor="' + (anchor || 'start') + '">' + t + '</text>'; };
-  var labels = '<g font-size="8.5" font-weight="800" fill="#5b6b80" letter-spacing=".12em" stroke="#eef0ea" stroke-width="3" paint-order="stroke">' + lab(8, 14, 'NORTE') + lab(8, 78, 'OESTE') + lab(108, 78, 'CENTRO') + lab(230, 78, 'ESTE') + lab(150, 196, 'SUR') + '</g>';
+  var labels = '<g font-size="8.5" font-weight="800" fill="#5b6b80" letter-spacing=".12em" stroke="#eef0ea" stroke-width="3" paint-order="stroke">' + lab(8, 14, 'NORTE') + lab(8, 78, 'OESTE') + lab(108, 78, 'CENTRO') + lab(230, 78, 'LITORAL') + lab(150, 196, 'SUR') + '</g>';
   var streetNames = '<g font-size="6.5" font-weight="700" fill="#8592a3" stroke="#fff" stroke-width="2.4" paint-order="stroke">' + lab(248, 61, 'Calle 12') + lab(248, 131, 'Calle 30') + '<text transform="translate(101 196) rotate(-90)">Av. 7</text><text transform="translate(217 196) rotate(-90)">Av. 22</text></g>';
   var inc = function (x, y, c, big) { return '<circle cx="' + x + '" cy="' + y + '" r="' + (big ? 12 : 8) + '" fill="' + c + '" opacity=".2">' + (big ? '<animate attributeName="r" values="8;14;8" dur="1.8s" repeatCount="indefinite"/>' : '') + '</circle><circle cx="' + x + '" cy="' + y + '" r="4.5" fill="' + c + '" stroke="#fff" stroke-width="1.6"/>'; };
   var pin = function (x, y, t, on) { return '<g transform="translate(' + x + ' ' + y + ')"><path d="M0 0c-7-9-11-13-11-19a11 11 0 0 1 22 0c0 6-4 10-11 19z" fill="' + (on ? '#1b7f50' : '#8d99a8') + '" stroke="#fff" stroke-width="2"/><text y="-15.5" text-anchor="middle" font-size="8.5" font-weight="800" fill="#fff">' + t + '</text></g>'; };

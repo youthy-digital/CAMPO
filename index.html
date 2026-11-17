@@ -852,6 +852,57 @@ figure.ev figcaption.ok,figure.ev figcaption.ok .ic{color:var(--green)}
 .dchat.page .dthread{max-height:none;height:420px}
 @container (max-width:1060px){.chatpage{grid-template-columns:1fr}.side nav .navic .rdot{top:-4px;right:-5px}}
 
+/* ===== v4 · cierre con foto, motivo y comentario · MiAguas ===== */
+.closebtn{color:var(--green);border-color:#a9dcc0}
+.closebtn .ic{color:var(--green)}
+.closebtn:hover{background:var(--green-bg)}
+.shot-empty{width:100%;height:150px;border:2px dashed #8fc9a9;border-radius:14px;background:#f3faf6;color:var(--green);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;font-size:15px}
+.shot-empty small{font-size:12px;font-weight:600;color:var(--g500)}
+.shot-empty:hover{background:var(--green-bg)}
+figure.shot-main{margin:0}
+.shot-main .photo{width:100%;height:178px;border-radius:14px;border:0;box-shadow:0 0 0 2px var(--green)}
+.shot-main figcaption{display:flex;align-items:center;gap:6px;margin-top:6px;font-size:12px;font-weight:700;color:var(--green)}
+.shot-main figcaption .gps{margin-left:auto}
+.photo .okb{position:absolute;right:10px;bottom:10px;width:32px;height:32px;border-radius:50%;background:var(--green);color:#fff;display:grid;place-items:center;box-shadow:0 0 0 3px #fff,0 4px 10px rgba(0,0,0,.25)}
+.photo .rm{position:absolute;top:6px;right:6px;width:24px;height:24px;border-radius:50%;border:0;background:rgba(16,36,63,.72);color:#fff;display:grid;place-items:center;padding:0;cursor:pointer}
+.shot-more{display:flex;gap:8px;margin-top:8px}
+.shot-more .photo{width:74px;height:54px}
+.shot-more .photo .rm{width:18px;height:18px;top:3px;right:3px}
+.photo-add.sm{width:74px;height:54px}
+.svc{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.svc button{border:1.5px solid var(--g300);background:#fff;border-radius:11px;padding:9px 4px 8px;display:flex;flex-direction:column;align-items:center;gap:4px;font-size:12px;font-weight:700;color:var(--g700);line-height:1.15;text-align:center}
+.svc button.ok .ic{color:var(--green)}.svc button.warn .ic{color:var(--amber)}.svc button.red .ic{color:var(--red)}
+.svc button.ok.on{border-color:var(--green);background:var(--green-bg);color:#14583a;box-shadow:0 0 0 2px #cdebd9}
+.svc button.warn.on{border-color:var(--amber);background:var(--amber-bg);color:#6b3a07;box-shadow:0 0 0 2px #f7e1b7}
+.svc button.red.on{border-color:var(--red);background:var(--red-bg);color:var(--red);box-shadow:0 0 0 2px #f6d0d0}
+.opt.blue>.ic{color:var(--blue-600)}
+/* tarjeta MiAguas: lo que ve la persona usuaria */
+.miag{border:1px solid var(--blue-200);background:linear-gradient(180deg,#f5f9ff,#fff);border-radius:13px;padding:10px 12px}
+.miag .mh{display:flex;align-items:center;gap:6px;font-size:13px}
+.miag .mh .ml{width:24px;height:24px;border-radius:7px;background:var(--blue-600);color:#fff;display:grid;place-items:center;flex:none}
+.miag .mh .sp{flex:1}
+.miag .mh .pill{padding:3px 9px;font-size:11.5px}
+.miag .mt{font-size:13.5px;line-height:1.4;margin-top:7px;color:var(--g800,#1f2a37)}
+.miag .mf{display:flex;align-items:center;gap:5px;margin-top:7px;font-size:11.5px;font-weight:700;color:var(--g500)}
+.miagchip{background:var(--blue-50);color:var(--blue-800);border:1px solid var(--blue-200)}
+.miagchip b{font-weight:800;margin-left:2px}
+/* imagen de cierre: foto del lugar con sello verde */
+.hero.closed{padding-top:16px}
+.donepic{position:relative;width:min(100%,300px);margin:0 auto 26px}
+.donepic .photo{width:100%;height:150px;border-radius:14px;border:0;box-shadow:0 0 0 3px var(--green)}
+.donepic .photo.empty{display:grid;place-items:center;background:var(--g50);color:var(--g400)}
+.donebadge{position:absolute;left:50%;bottom:-24px;transform:translateX(-50%);width:56px;height:56px;border-radius:50%;background:var(--green);color:#fff;display:grid;place-items:center;box-shadow:0 0 0 5px #fff,0 6px 16px rgba(27,127,80,.35);animation:popin .5s cubic-bezier(.2,1.4,.4,1) both}
+.donebadge::after{content:"";position:absolute;inset:-5px;border-radius:50%;border:3px solid var(--green);opacity:0;animation:ring 1.6s ease-out .4s 2}
+@keyframes popin{from{transform:translateX(-50%) scale(.3);opacity:0}to{transform:translateX(-50%) scale(1);opacity:1}}
+@keyframes ring{from{transform:scale(1);opacity:.7}to{transform:scale(1.7);opacity:0}}
+.dclos .donepic{width:min(100%,340px)}
+/* validación en Operaciones */
+.vshots{display:flex;flex-wrap:wrap;gap:8px}
+.vshots figure.ev.main{flex:1 1 100%}
+.vshots figure.ev.main .photo{width:100%;height:170px;border-radius:12px;box-shadow:0 0 0 2px var(--green);border:0}
+.vshots figure.ev:not(.main) .photo{width:110px;height:78px}
+.photo.vthumb{width:72px;height:52px;flex:none}
+
 </style>
 </head>
 <body>
@@ -875,46 +926,61 @@ const CRITERIA_CATEGORIES = [
   { id: 'man', name: 'Maniobras y restricciones' },
   { id: 'pri', name: 'Prioridades' },
   { id: 'off', name: 'Sin conexión' },
-  { id: 'cie', name: 'Cierre y validación' }
+  { id: 'cie', name: 'Cierre y validación' },
+  { id: 'com', name: 'Comunicación al usuario' },
+  { id: 'con', name: 'Contratistas' }
 ];
 
+/* Criterios operativos. Se apoyan en el caso base de Aguas del Este (piezas AE-03, AE-08, AE-10, AE-13, AE-14, AE-15 y AE-17) */
 const CRITERIA = [
   { id: 'CO-SEG-01', cat: 'seg', title: 'Priorizar la seguridad en el lugar',
     summary: 'Antes de cualquier tarea, señalizar y delimitar la zona afectada.',
     rule: 'Si hay agua en calzada, señalizar para vehículos y peatones y delimitar el paso. Ninguna tarea continúa si el entorno no es seguro.',
     who: 'Encargado de cuadrilla', version: 'v2.1', validated: '03/03/2026' },
-  { id: 'CO-SEG-02', cat: 'seg', title: 'Distancia de trabajo en calzada',
+  { id: 'CO-SEG-02', cat: 'seg', title: 'Trabajo en calzada',
     summary: 'Trabajar en calzada solo con corte o desvío de tránsito coordinado.',
-    rule: 'Las tareas en calzada requieren conos, cartelería y, si corresponde, desvío coordinado por Operaciones con el municipio.',
-    who: 'Operaciones', version: 'v1.4', validated: '03/03/2026' },
+    rule: 'Las tareas en calzada requieren conos, cartelería y, si corresponde, desvío coordinado por el centro operativo con el municipio. Algunos trabajos necesitan permisos o coordinación con terceros.',
+    who: 'Centro operativo', version: 'v1.4', validated: '03/03/2026' },
   { id: 'CO-DOC-01', cat: 'doc', title: 'Documentar todo cambio de escenario',
-    summary: 'Registrar diferencias respecto de la orden apenas se detectan.',
-    rule: 'Registrar ubicación, condiciones observadas, diferencia con lo previsto, urgencia preliminar, acciones realizadas y evidencia fotográfica, con hora.',
+    summary: 'Una incidencia puede cambiar de clasificación después de la primera inspección: registrarlo apenas se detecta.',
+    rule: 'Registrar ubicación, condiciones observadas, diferencia con lo previsto (por ejemplo, de «pérdida visible» a «rotura de conexión»), urgencia preliminar, acciones realizadas y fotos, con hora. Lo que para la cuadrilla es una pausa dentro del mismo trabajo puede ser información nueva para Atención.',
     who: 'Encargado de cuadrilla', version: 'v1.8', validated: '12/01/2026' },
   { id: 'CO-DOC-02', cat: 'doc', title: 'Comparar con antecedentes',
-    summary: 'Consultar casos similares del historial antes de proponer acciones.',
-    rule: 'Revisar antecedentes del mismo sector o con condiciones parecidas y dejar constancia de cuáles se consideraron.',
-    who: 'Cuadrilla y Operaciones', version: 'v1.2', validated: '12/01/2026' },
+    summary: 'Consultar casos parecidos del historial antes de proponer acciones.',
+    rule: 'Revisar antecedentes del mismo distrito o con condiciones parecidas y dejar constancia de cuáles se consideraron. Un mismo evento de red puede generar varios reclamos.',
+    who: 'Cuadrilla y centro operativo', version: 'v1.2', validated: '12/01/2026' },
   { id: 'CO-ESC-01', cat: 'esc', title: 'Escalar cuando el caso excede el alcance',
     summary: 'Agua en calzada + baja presión en varios domicilios indica posible falla de red.',
-    rule: 'Si se observan agua en calzada, baja presión en más de un domicilio o indicios de afectación de la red distribuidora, el caso se escala a Operaciones para su evaluación.',
+    rule: 'Si se observan agua en calzada, baja presión en más de un domicilio o indicios de afectación de la red distribuidora, el caso se escala al centro operativo para que evalúe, repriorice y vincule otros reclamos de la zona.',
     who: 'Encargado de cuadrilla → Operaciones', version: 'v2.0', validated: '20/02/2026' },
   { id: 'CO-MAN-01', cat: 'man', title: 'Evitar maniobras no autorizadas',
     summary: 'No operar válvulas de red ni cortar el suministro sin autorización.',
-    rule: 'El cierre de válvulas de sector, los cortes de suministro y las excavaciones en calzada requieren autorización expresa de Operaciones.',
+    rule: 'El cierre de válvulas de sector, los cortes de suministro y las excavaciones en calzada requieren autorización expresa del centro operativo.',
     who: 'Solo Operaciones autoriza', version: 'v2.3', validated: '20/02/2026' },
-  { id: 'CO-PRI-01', cat: 'pri', title: 'Criterios de prioridad alta',
-    summary: 'Afectación a varios usuarios, riesgo en vía pública o pérdida continua en red.',
-    rule: 'Se eleva a prioridad alta si hay afectación de servicio a más de un domicilio, riesgo para tránsito o peatones, o pérdida continua en red distribuidora.',
-    who: 'Operaciones', version: 'v1.6', validated: '05/02/2026' },
+  { id: 'CO-PRI-01', cat: 'pri', title: 'Prioridades P1 a P4 (OPS-PRIO-11)',
+    summary: 'La prioridad ordena la atención. No es una promesa de hora de resolución.',
+    rule: 'P1 Emergencia: riesgo sanitario, establecimiento de salud afectado, inundación con riesgo o falla principal; puede desplazar órdenes en curso. P2 Alta: desborde activo, interrupción amplia o pérdida significativa. P3 Normal: pérdida sin riesgo, conexión individual o baja presión localizada. P4 Programable: medidores y mantenimiento no urgente. El centro territorial puede repriorizar cuando aparece información nueva.',
+    who: 'Centro territorial', version: 'v1.6', validated: '05/02/2026' },
   { id: 'CO-OFF-01', cat: 'off', title: 'Trabajo sin conexión',
-    summary: 'Registrar localmente y reintentar el contacto por canal alternativo.',
-    rule: 'Sin conexión, los registros se guardan en el dispositivo y se sincronizan al volver la señal. Reintentar contacto por radio o teléfono. La falta de conexión no habilita maniobras no autorizadas.',
+    summary: 'Registrar en el celular y reintentar el contacto por otro canal.',
+    rule: 'La señal no es estable en todo el territorio: en Norte y Sur, cerca de 1 de cada 5 rutas pasa por zonas sin señal estable. Sin conexión, los registros quedan en el celular y se envían al volver la señal. Reintentar el contacto por radio o teléfono. La falta de conexión no habilita maniobras no autorizadas.',
     who: 'Encargado de cuadrilla', version: 'v1.1', validated: '05/02/2026' },
-  { id: 'CO-CIE-01', cat: 'cie', title: 'Validación del cierre',
-    summary: 'El cierre lo valida Operaciones o Supervisión antes de pasar al historial.',
-    rule: 'Un caso se incorpora al historial solo después de validar evidencia, acciones realizadas dentro de lo autorizado y restablecimiento del servicio.',
-    who: 'Operaciones o Supervisión', version: 'v1.3', validated: '05/02/2026' }
+  { id: 'CO-CIE-01', cat: 'cie', title: 'Cierre con motivo, foto y validación',
+    summary: 'Todo cierre lleva motivo, foto del estado final y comentario. Lo valida Operaciones o Supervisión.',
+    rule: 'Al cerrar se indica el motivo (reparación terminada, maniobra realizada, causa descartada, unida a otra incidencia, derivada a otro equipo o visita sin nueva acción), cómo queda el servicio y una foto del estado final. La foto final es obligatoria, también para contratistas. El caso pasa al historial y a MiAguas recién cuando se valida.',
+    who: 'Cuadrilla cierra · Operaciones o Supervisión valida', version: 'v2.0', validated: '05/02/2026' },
+  { id: 'CO-COM-01', cat: 'com', title: '«Resuelto» solo si el problema terminó',
+    summary: 'El vecino ve el estado de MiAguas y el fundamento del cierre.',
+    rule: 'MiAguas muestra cinco estados: Recibido, En evaluación, Asignado, En curso y Resuelto. Al cerrar se informa el fundamento general. Si el servicio vuelve de a poco, se dice («la presión puede tardar hasta 2 h»). Si el servicio sigue sin normalizarse, el caso no se muestra como «Resuelto».',
+    who: 'Cuadrilla, Operaciones y Atención', version: 'v1.0', validated: '30/06/2026' },
+  { id: 'CO-COM-02', cat: 'com', title: 'Sin hora confiable, informar lo que sigue',
+    summary: 'No convertir una estimación operativa en una promesa.',
+    rule: 'Los tiempos máximos del reglamento no se comunican como estimación individual. Si no hay una hora confiable, se informa la próxima decisión (por ejemplo, «probar presión a las 17»). Cada cambio material en la condición del servicio se actualiza.',
+    who: 'Operaciones y Atención', version: 'v1.0', validated: '30/06/2026' },
+  { id: 'CO-CON-01', cat: 'con', title: 'Órdenes con Reparaciones Delta',
+    summary: 'Aceptar en 90 min e informar inicio, permisos, finalización y foto final.',
+    rule: 'El contratista acepta o rechaza la orden dentro de los 90 minutos, informa el inicio efectivo, la necesidad de permiso o material especial y la finalización, y carga la evidencia fotográfica. Sus estados se sincronizan cada 60 minutos; los comentarios y las fotos, una vez por día.',
+    who: 'Contratista → centro territorial', version: 'v1.2', validated: '15/04/2026' }
 ];
 
 const HISTORY_SEED = [
@@ -922,18 +988,58 @@ const HISTORY_SEED = [
     type: 'Pérdida en red distribuidora', sector: 'Norte', address: 'Calle 9 entre Av. 3 y Av. 5',
     date: '14/08/2026', status: 'resuelto', validatedBy: 'Supervisión · C. Duarte',
     tags: ['Agua en calzada', 'Baja presión', 'Escalado', 'Inicio como pérdida domiciliaria'],
-    initial: 'Reclamo por pérdida menor en vereda, frente a un domicilio. Prioridad media.',
+    initial: 'Reclamo por pérdida menor en vereda, frente a un domicilio. Prioridad P3 · normal.',
     found: 'Agua en calzada y baja presión en 6 domicilios de la cuadra. La pérdida provenía de un caño de 75 mm de la red.',
-    decisions: ['La cuadrilla documentó el cambio y escaló a Operaciones.', 'Operaciones elevó la prioridad a alta y envió al equipo de red.', 'Corte de sector autorizado por Operaciones durante 40 minutos.'],
+    decisions: ['La cuadrilla documentó el cambio y escaló a Operaciones.', 'Operaciones subió la prioridad a P2 · alta y envió al equipo de red.', 'Corte de sector autorizado por Operaciones durante 40 minutos.'],
     result: 'Caño de 75 mm reparado. Servicio restablecido en 3 h 20 min. 38 usuarios avisados del corte.',
     lesson: 'Agua en calzada + baja presión en varios domicilios es indicio de falla en red: documentar y escalar temprano.',
     criteria: ['CO-DOC-01', 'CO-ESC-01', 'CO-MAN-01', 'CO-PRI-01'] },
-  { id: '0189', short: 'Baja presión por válvula cerrada', title: 'Baja presión por válvula parcialmente cerrada', type: 'Baja presión', sector: 'Este',
+  { id: '26-039774', short: 'La ventana del contratista no llegó al vecino', title: 'Pérdida en vía pública: la información existía, pero el usuario no la recibió',
+    type: 'Pérdida en red distribuidora', sector: 'Litoral', address: 'Tres domicilios de la misma cuadra',
+    date: '18/05/2026', status: 'resuelto', validatedBy: 'Centro territorial Litoral',
+    tags: ['Contratista', 'Reclamos unidos', 'Recontacto'],
+    initial: 'Tres domicilios reportan agua junto a la vereda. Se unen en una sola incidencia.',
+    found: 'Posible rotura de conexión principal: requiere cierre parcial y equipo de excavación.',
+    decisions: ['El centro territorial pidió disponibilidad al contratista.', 'El contratista confirmó una ventana para el martes de 08:00 a 12:00.', 'MiAguas mostró «En curso» todo el lunes; Atención no veía la ventana desde su pantalla.'],
+    result: 'Reparación terminada el martes a las 12:10. MiAguas pasó a «Resuelto» a las 12:38.',
+    lesson: 'Si ya hay una ventana confirmada, tiene que llegar a Atención y al vecino: «En curso» no responde «¿tengo que dejar libre la entrada?».',
+    criteria: ['CO-CON-01', 'CO-COM-02', 'CO-DOC-01'] },
+  { id: 'INC-7821', short: 'Baja presión en 4 barrios · bombeo B-17', title: 'Cada área conocía una parte: baja presión en cuatro barrios',
+    type: 'Baja presión', sector: 'Oeste', address: 'Cuatro barrios · estación de bombeo B-17',
+    date: '03/06/2026', status: 'resuelto', validatedBy: 'Control de Red',
+    tags: ['Evento de red', 'Reclamos unidos', 'Reabierto'],
+    initial: '42 reclamos individuales por baja presión durante la mañana.',
+    found: 'Bomba 2 fuera de servicio en B-17. La bomba 3 entró en servicio parcial y la presión se recuperó de a poco.',
+    decisions: ['El centro territorial unió 31 de los 42 reclamos con la incidencia de red; 11 siguieron como casos sueltos.', 'Atención dio respuestas distintas según qué pantalla consultaba.', 'La incidencia de red se cerró cuando el sensor troncal volvió al rango normal.'],
+    result: 'Presión normal a las 14:20. A las 16:30, cuatro usuarios volvieron a reclamar: había problemas locales en dos cuadras.',
+    lesson: 'Cerrar la incidencia de red no cierra los problemas locales: verificar en el lugar antes de mostrar «Resuelto».',
+    criteria: ['CO-CIE-01', 'CO-COM-01', 'CO-DOC-02'] },
+  { id: '26-042911', short: 'Desborde: la estimación cambió 3 veces', title: 'Desborde cloacal con una estimación que cambió tres veces',
+    type: 'Desborde cloacal', sector: 'Norte', address: 'Cámara externa de un domicilio',
+    date: '09/06/2026', status: 'resuelto', validatedBy: 'Operaciones · L. Ferreyra',
+    tags: ['Repriorizado', 'Hidrojet', 'Estimación cambiada'],
+    initial: 'Desborde en cámara externa. Orden urgente con llegada estimada de 14:30 a 15:30.',
+    found: 'Obstrucción a mayor profundidad: hizo falta un hidrojet de más potencia.',
+    decisions: ['La primera cuadrilla se derivó a un desborde frente a un centro de salud (P1).', 'Nueva estimación de 16:00 a 17:00; el pedido de hidrojet no se informó al usuario.', 'El equipo se liberó antes y llegó a las 18:12.'],
+    result: 'Obstrucción resuelta a las 19:03.',
+    lesson: 'La emergencia puede desplazar la orden, pero cada cambio de estimación se tiene que avisar.',
+    criteria: ['CO-PRI-01', 'CO-COM-02'] },
+  { id: '26-041183', short: 'Medidor reemplazado sin llamadas', title: 'Reemplazo de medidor: el usuario sabía qué iba a pasar',
+    type: 'Medidor sin lectura', sector: 'Centro', address: 'Medidor con acceso desde la vereda',
+    date: '22/04/2026', status: 'resuelto', validatedBy: 'Cierre en ORBE',
+    tags: ['Programable', 'Sin recontacto'],
+    initial: 'Visor del medidor apagado, reportado desde MiAguas con foto.',
+    found: 'Modelo elegible y con stock: la orden se generó sola.',
+    decisions: ['MiAguas avisó: reemplazo dentro de 48 h, sin necesidad de estar en casa.', 'La cuadrilla escaneó el medidor nuevo al día siguiente.'],
+    result: 'Medidor reemplazado. Encuesta 10/10 y ningún contacto adicional.',
+    lesson: 'Cuando la persona sabe qué va a pasar y si tiene que estar, no llama.',
+    criteria: ['CO-COM-01', 'CO-CIE-01'] },
+  { id: '0189', short: 'Baja presión por válvula cerrada', title: 'Baja presión por válvula parcialmente cerrada', type: 'Baja presión', sector: 'Litoral',
     address: 'Av. 20 y Calle 31', date: '02/09/2026', status: 'resuelto', validatedBy: 'Operaciones · L. Ferreyra',
     tags: ['Baja presión', 'Sin pérdida visible'],
     initial: 'Varios reclamos por baja presión en una manzana.', found: 'Válvula de sector parcialmente cerrada tras una obra anterior.',
     decisions: ['Operaciones autorizó la apertura de la válvula.', 'La cuadrilla verificó presión en tres domicilios.'],
-    result: 'Presión normalizada en 1 h 10 min.', lesson: 'Antes de buscar pérdidas, revisar maniobras recientes en el sector.',
+    result: 'Presión normalizada en 1 h 10 min.', lesson: 'Antes de buscar pérdidas, revisar maniobras recientes en el distrito.',
     criteria: ['CO-MAN-01', 'CO-DOC-02'] },
   { id: '0203', short: 'Rotura de conexión domiciliaria', title: 'Rotura de conexión domiciliaria', type: 'Pérdida en conexión domiciliaria', sector: 'Sur',
     address: 'Calle 44 N.º 812', date: '19/09/2026', status: 'resuelto', validatedBy: 'Operaciones · L. Ferreyra',
@@ -942,12 +1048,6 @@ const HISTORY_SEED = [
     decisions: ['Reparación realizada por la cuadrilla dentro de su alcance.'],
     result: 'Reparado en 1 h 40 min.', lesson: 'Caso típico de pérdida menor: no requirió escalamiento.',
     criteria: ['CO-DOC-01', 'CO-SEG-01'] },
-  { id: '0212', short: 'Pérdida en medidor', title: 'Pérdida en medidor con caudal continuo', type: 'Pérdida en medidor', sector: 'Norte',
-    address: 'Calle 14 N.º 1720', date: '27/09/2026', status: 'resuelto', validatedBy: 'Supervisión · C. Duarte',
-    tags: ['Medidor', 'Caudal continuo'],
-    initial: 'Reclamo por agua en nicho de medidor.', found: 'Junta del medidor dañada.',
-    decisions: ['Cambio de junta por la cuadrilla.'], result: 'Resuelto en 50 min.',
-    lesson: 'Revisar nicho y llave de paso antes de abrir vereda.', criteria: ['CO-DOC-01'] },
   { id: '0221', short: 'Hundimiento de vereda', title: 'Hundimiento de vereda por pérdida prolongada', type: 'Hundimiento', sector: 'Centro',
     address: 'Av. 7 y Calle 50', date: '08/10/2026', status: 'resuelto', validatedBy: 'Supervisión · C. Duarte',
     tags: ['Riesgo peatonal', 'Escalado', 'Municipio'],
@@ -961,18 +1061,12 @@ const HISTORY_SEED = [
     initial: 'Agua en cámara de válvula.', found: 'Empaquetadura de válvula con pérdida.',
     decisions: ['Operaciones autorizó el cambio de empaquetadura.'], result: 'Reparación informada por la cuadrilla, falta validar.',
     lesson: '—', criteria: ['CO-MAN-01', 'CO-CIE-01'] },
-  { id: '0239', short: 'Agua turbia', title: 'Agua turbia reportada por usuarios', type: 'Calidad de agua', sector: 'Norte',
-    address: 'Calle 16 y Av. 9', date: '29/10/2026', status: 'pendiente', pendingLabel: 'En seguimiento',
-    tags: ['Calidad', 'Seguimiento'],
-    initial: 'Tres reclamos por agua turbia.', found: 'Turbiedad tras maniobra en la red.',
-    decisions: ['Purga autorizada por Operaciones.', 'Toma de muestras en curso.'], result: 'Pendiente de resultados de laboratorio.',
-    lesson: '—', criteria: ['CO-MAN-01'] },
-  { id: '0244', short: 'Rotura por obra de terceros', title: 'Rotura por obra de terceros', type: 'Rotura de caño', sector: 'Este',
+  { id: '0244', short: 'Rotura por obra de terceros', title: 'Rotura por obra de terceros', type: 'Rotura de caño', sector: 'Litoral',
     address: 'Calle 33 y Av. 18', date: '03/11/2026', status: 'pendiente', pendingLabel: 'Pendiente de validación',
-    tags: ['Terceros', 'Escalado'],
+    tags: ['Terceros', 'Contratista', 'Escalado'],
     initial: 'Rotura de caño durante obra privada.', found: 'Caño de 63 mm dañado por excavadora.',
-    decisions: ['Operaciones autorizó corte de sector.', 'Se labró acta a la empresa contratista.'], result: 'Reparación informada, falta validar.',
-    lesson: '—', criteria: ['CO-MAN-01', 'CO-ESC-01'] }
+    decisions: ['Operaciones autorizó corte de sector.', 'Reparaciones Delta hizo la excavación.', 'Se labró acta a la empresa de la obra.'], result: 'Reparación informada por el contratista; la foto final llega con la sincronización diaria.',
+    lesson: '—', criteria: ['CO-MAN-01', 'CO-CON-01', 'CO-CIE-01'] }
 ];
 
 function seedIncidents() {
@@ -981,16 +1075,16 @@ function seedIncidents() {
       id: '0248', kind: 'Pérdida de agua en vereda', address: 'Calle 12 entre Av. 5 y Av. 7', short: 'Calle 12 · Av. 5 y 7', sector: 'Norte',
       cues: [['flow', 'Caudal bajo'], ['car', 'Sin afectar tránsito']],
       ref: 'Frente al N.º 1450', description: 'Vecino reporta pérdida de agua en vereda. Caudal aparentemente bajo, sin afectación al tránsito.',
-      reportedBy: 'Reclamo telefónico · Centro de atención', reportedAt: '08:52', crew: 'Cuadrilla 3', priority: 'Media',
+      caso: '26-043517', reportedBy: 'Reclamo telefónico · Centro de atención', reportedAt: '08:52', crew: 'Cuadrilla 3', priority: 'Normal',
       events: [
         { id: 'e1', type: 'created', src: 'central', who: 'Operaciones · L. Ferreyra', time: '08:58', synced: true, text: 'Orden #0248 creada a partir de un reclamo telefónico.' },
-        { id: 'e2', type: 'assigned', src: 'central', who: 'Operaciones · L. Ferreyra', time: '09:00', synced: true, text: 'Asignada a Cuadrilla 3 con prioridad media.' },
+        { id: 'e2', type: 'assigned', src: 'central', who: 'Operaciones · L. Ferreyra', time: '09:00', synced: true, text: 'Asignada a Cuadrilla 3 con prioridad P3 · normal.' },
         { id: 'e3', type: 'msg', src: 'central', who: 'Operaciones · L. Ferreyra', time: '09:01', synced: true, syncedAt: '09:01', data: { text: 'Hola Raúl, te asigné la #0248: pérdida en vereda, caudal bajo. Cualquier novedad, avisame por acá.', tags: [], photos: [], authorized: [] } }
       ]
     },
     '0249': {
-      id: '0249', kind: 'Baja presión', address: 'Av. 22 y Calle 35', sector: 'Este', ref: 'Manzana completa',
-      description: 'Reclamos por baja presión en una manzana.', reportedBy: 'Web', reportedAt: '07:40', crew: 'Cuadrilla 1', priority: 'Media',
+      id: '0249', kind: 'Baja presión', address: 'Av. 22 y Calle 35', sector: 'Litoral', ref: 'Manzana completa',
+      description: 'Reclamos por baja presión en una manzana.', caso: '26-043488', reportedBy: 'MiAguas · web', reportedAt: '07:40', crew: 'Cuadrilla 1', priority: 'Normal',
       events: [
         { id: 'a1', type: 'created', src: 'central', who: 'Operaciones', time: '07:45', synced: true, text: 'Orden creada.' },
         { id: 'a2', type: 'assigned', src: 'central', who: 'Operaciones', time: '07:50', synced: true, text: 'Asignada a Cuadrilla 1.' },
@@ -1001,7 +1095,7 @@ function seedIncidents() {
     },
     '0250': {
       id: '0250', kind: 'Pérdida en medidor', address: 'Calle 47 N.º 1033', sector: 'Sur', ref: 'Nicho de medidor',
-      description: 'Agua en nicho de medidor.', reportedBy: 'Teléfono', reportedAt: '08:30', crew: 'Cuadrilla 2', priority: 'Baja',
+      description: 'Agua en nicho de medidor.', caso: '26-043502', reportedBy: 'Centro telefónico', reportedAt: '08:30', crew: 'Cuadrilla 2', priority: 'Programable',
       events: [
         { id: 'b1', type: 'created', src: 'central', who: 'Operaciones', time: '08:35', synced: true, text: 'Orden creada.' },
         { id: 'b2', type: 'assigned', src: 'central', who: 'Operaciones', time: '08:40', synced: true, text: 'Asignada a Cuadrilla 2.' },
@@ -1011,7 +1105,7 @@ function seedIncidents() {
     },
     '0251': {
       id: '0251', kind: 'Revisión de conexión', address: 'Calle 10 N.º 1215', short: 'Calle 10 N.º 1215', sector: 'Norte', ref: 'Programada 14:00',
-      description: 'Revisión programada de conexión domiciliaria.', reportedBy: 'Programada', reportedAt: '—', crew: 'Cuadrilla 3', priority: 'Baja',
+      description: 'Revisión programada de conexión domiciliaria.', reportedBy: 'Programada', reportedAt: '—', crew: 'Cuadrilla 3', priority: 'Programable',
       events: [
         { id: 'c1', type: 'created', src: 'central', who: 'Operaciones', time: '08:10', synced: true, text: 'Orden programada.' },
         { id: 'c2', type: 'assigned', src: 'central', who: 'Operaciones', time: '08:10', synced: true, text: 'Asignada a Cuadrilla 3 para las 14:00.' }
@@ -1019,20 +1113,20 @@ function seedIncidents() {
     },
     '0253': {
       id: '0253', kind: 'Pérdida en medidor', address: 'Calle 16 N.º 980', short: 'Calle 16 N.º 980', sector: 'Norte', ref: 'Programada 16:00',
-      description: 'Agua en nicho de medidor, reclamo de la mañana.', reportedBy: 'Teléfono', reportedAt: '08:15', crew: 'Cuadrilla 3', priority: 'Baja',
+      description: 'Agua en nicho de medidor, reclamo de la mañana.', caso: '26-043470', reportedBy: 'MiAguas · app', reportedAt: '08:15', crew: 'Cuadrilla 3', priority: 'Programable',
       events: [
         { id: 'f1', type: 'created', src: 'central', who: 'Operaciones', time: '08:20', synced: true, text: 'Orden creada.' },
         { id: 'f2', type: 'assigned', src: 'central', who: 'Operaciones', time: '08:20', synced: true, text: 'Asignada a Cuadrilla 3 para las 16:00.' }
       ]
     },
     '0246': {
-      id: '0246', kind: 'Reparación de vereda', address: 'Calle 2 y Av. 13', sector: 'Oeste', ref: 'Esquina',
-      description: 'Reposición de vereda tras reparación.', reportedBy: 'Interno', reportedAt: 'Ayer', crew: 'Cuadrilla 4', priority: 'Baja',
+      id: '0246', kind: 'Tapa de cámara dañada', address: 'Calle 2 y Av. 13', sector: 'Oeste', ref: 'Esquina',
+      description: 'Tapa de cámara de válvula rota en la esquina.', caso: '26-043391', reportedBy: 'Oficina comercial', reportedAt: 'Ayer', crew: 'Cuadrilla 4', priority: 'Normal',
       events: [
         { id: 'd1', type: 'created', src: 'central', who: 'Operaciones', time: '07:00', synced: true, text: 'Orden creada.' },
         { id: 'd2', type: 'assigned', src: 'central', who: 'Operaciones', time: '07:05', synced: true, text: 'Asignada a Cuadrilla 4.' },
         { id: 'd3', type: 'started', src: 'campo', who: 'Cuadrilla 4', time: '07:30', synced: true, text: 'Intervención iniciada.' },
-        { id: 'd4', type: 'msg', src: 'campo', who: 'Cuadrilla 4', time: '07:40', synced: true, syncedAt: '07:40', data: { text: 'Arrancamos con la reposición de vereda, termina antes del mediodía.', tags: [], photos: [] } }
+        { id: 'd4', type: 'msg', src: 'campo', who: 'Cuadrilla 4', time: '07:40', synced: true, syncedAt: '07:40', data: { text: 'Estamos cambiando la tapa de la cámara, terminamos antes del mediodía.', tags: [], photos: [] } }
       ]
     }
   };
@@ -1079,28 +1173,28 @@ const DEMO_UPDATE = {
     'Avisar a los vecinos del corte'
   ],
   pending: [
-    'Confirmar baja presión con telemetría',
+    'Confirmar la presión en HIDRA',
     'Avisar al municipio'
   ],
   message: 'Prioridad alta. Mantengan la zona señalizada. No operar válvulas: el corte lo hace el equipo de red.'
 };
 
 const DEMO_RESULT = {
-  outcome: 'Pérdida reparada y servicio restablecido',
-  text: 'Caño de 75 mm reparado con el equipo de red. Presión normal en los 4 domicilios.',
-  restored: true,
-  photos: ['reparacion']
+  outcome: 'Reparación terminada',
+  service: 'gradual',
+  text: 'Caño de 75 mm reparado con el equipo de red. Zanja tapada y vereda limpia. La presión vuelve en los 4 domicilios.',
+  photos: ['cierre', 'reparacion']
 };
 
 const DEMO_VALIDATION = {
-  checks: ['Evidencia completa', 'Acciones dentro de lo autorizado', 'Servicio restablecido', 'Usuarios informados'],
+  checks: ['Foto del cierre', 'Acciones dentro de lo autorizado', 'Presión verificada en HIDRA', 'Mensaje para el vecino'],
   lesson: 'Pérdida "menor" que resultó rotura de red (75 mm), igual que #0176. Registrar sin señal y escalar al reconectar.'
 };
 
 const CHANGE_OPTIONS = {
   types: ['Pérdida de agua en vereda', 'Pérdida en conexión domiciliaria', 'Posible pérdida en red distribuidora', 'Rotura de caño', 'Baja presión', 'Otro'],
   conditions: ['Agua en calzada', 'Reportes de baja presión', 'Caudal continuo', 'Hundimiento', 'Afecta el tránsito', 'Agua turbia'],
-  urgency: ['Baja', 'Media', 'Alta', 'Crítica'],
+  urgency: ['Programable', 'Normal', 'Alta', 'Emergencia'],
   actions: ['Señalización de la zona', 'Delimitación del paso peatonal', 'Registro fotográfico', 'Consulta a vecinos', 'Cierre de llave de paso domiciliaria']
 };
 
@@ -1115,6 +1209,36 @@ const ACTIONS_BY_TYPE = {
 };
 /* Tipos en los que la cuadrilla no puede maniobrar la red sin autorización */
 const NO_MANEUVER_TYPES = ['Posible pérdida en red distribuidora', 'Rotura de caño'];
+
+/* Cierre de la orden: motivos (lo que hoy puede significar «Resuelto» en MiAguas, pieza AE-03) y estado del servicio */
+const CLOSE_REASONS = [
+  ['Reparación terminada', 'tool', 'Reparada', 'ok'],
+  ['Maniobra realizada', 'tap', 'Maniobra', 'ok'],
+  ['Causa descartada', 'eye', 'Descartada', 'blue'],
+  ['Unida a otra incidencia', 'link', 'Unida a otra', 'blue'],
+  ['Derivada a otro equipo', 'escalate', 'Derivada', 'amber'],
+  ['Visita sin nueva acción', 'home', 'Sin acción', 'blue']
+];
+const SERVICE_STATES = [
+  ['ok', 'tap', 'Normal', 'ok'],
+  ['gradual', 'hourglass', 'Vuelve de a poco', 'warn'],
+  ['no', 'xCircle', 'Sin servicio', 'red']
+];
+/* Lo que lee el vecino en MiAguas cuando se valida el cierre (estado público + fundamento) */
+function publicClose(r) {
+  r = r || {};
+  var base = {
+    'Reparación terminada': 'La reparación terminó.',
+    'Maniobra realizada': 'Hicimos una maniobra en la red para resolver el problema.',
+    'Causa descartada': 'Revisamos el lugar y no encontramos una falla en la red.',
+    'Unida a otra incidencia': 'Tu reclamo se unió a otro por el mismo problema, que sigue en curso.',
+    'Derivada a otro equipo': 'Tu reclamo pasó a un equipo especializado, que sigue con el trabajo.',
+    'Visita sin nueva acción': 'Visitamos el lugar y no hizo falta otra intervención.'
+  }[r.outcome] || 'Cerramos la intervención.';
+  var svc = { ok: ' El servicio ya está normal.', gradual: ' El servicio vuelve de a poco: la presión puede tardar hasta 2 h en normalizarse.', no: ' El servicio todavía no está normal: te vamos a avisar cuando vuelva.' }[r.service] || '';
+  var open = r.service === 'no' || r.outcome === 'Unida a otra incidencia' || r.outcome === 'Derivada a otro equipo';
+  return { state: open ? 'En curso' : 'Resuelto', text: base + (r.outcome === 'Unida a otra incidencia' || r.outcome === 'Derivada a otro equipo' ? '' : svc) };
+}
 
 /* Íconos de trazo simple (24×24) dibujados para el prototipo */
 const ICON_PATHS = {
@@ -1208,6 +1332,15 @@ function photoSVG(kind) {
       '<path d="M120 90c20-10 60-8 80 6s30 40 10 60-70 22-96 6-14-62 6-72z" fill="#6f9fc8" opacity=".8"/>' +
       '<path d="M150 112l12 10 8-6 14 14" stroke="#3f4a55" stroke-width="3" fill="none"/>' +
       '<path d="M168 125c10 14 30 30 60 40s70 12 92 10" stroke="#6f9fc8" stroke-width="10" fill="none" opacity=".7"/>';
+  } else if (kind === 'cierre') {
+    /* Vereda reparada: baldosas nuevas sobre la zanja, tapa de la llave y la zona seca y limpia */
+    body = '<rect width="320" height="220" fill="#c9d6e2"/><rect x="18" y="6" width="74" height="58" fill="#e9eef3"/><rect x="108" y="0" width="92" height="64" fill="#dfe6ed"/><rect x="216" y="12" width="84" height="52" fill="#e9eef3"/>' +
+      '<g fill="#b9cbdc"><rect x="30" y="18" width="16" height="14"/><rect x="58" y="18" width="16" height="14"/><rect x="124" y="14" width="18" height="16"/><rect x="164" y="14" width="18" height="16"/><rect x="232" y="24" width="16" height="14"/><rect x="266" y="24" width="16" height="14"/></g>' +
+      '<rect y="64" width="320" height="104" fill="#c4b9a7"/><path d="M0 98h320M0 133h320M64 64v104M128 64v104M192 64v104M256 64v104" stroke="#ad9f8a" stroke-width="2.5"/>' +
+      '<rect x="96" y="80" width="128" height="72" rx="3" fill="#ddd6c9" stroke="#b8ac98" stroke-width="2"/><path d="M96 116h128M138 80v72M182 80v72" stroke="#c6bcab" stroke-width="2"/>' +
+      '<rect x="146" y="104" width="28" height="22" rx="3" fill="#5f6b77"/><path d="M151 110h18M151 115h18M151 120h18" stroke="#84909c" stroke-width="2"/>' +
+      '<rect y="168" width="320" height="8" fill="#9aa3ab"/><rect y="176" width="320" height="44" fill="#6b737c"/><path d="M0 204h320" stroke="#e8e2c8" stroke-width="3" stroke-dasharray="24 18"/>' +
+      '<path d="M268 166l9-24 9 24z" fill="#f08a24"/><rect x="266" y="164" width="22" height="4" fill="#333"/><path d="M272 155h10" stroke="#fff" stroke-width="3"/>';
   } else {
     body = '<rect width="320" height="220" fill="#7a6a55"/><rect x="0" y="0" width="320" height="60" fill="#5d6873"/>' +
       '<path d="M40 60h240l-20 140H60z" fill="#8a7860"/><rect x="40" y="120" width="240" height="26" rx="13" fill="#3e6fa3"/>' +
@@ -1218,7 +1351,7 @@ function photoSVG(kind) {
 }
 
 function mapSVG(expanded) {
-  /* Plano esquemático del Sector Norte con la ubicación de #0248 */
+  /* Plano esquemático del Distrito Norte con la ubicación de #0248 */
   const streets = '<g stroke="#ffffff" stroke-width="14" stroke-linecap="square">' +
     '<path d="M0 60h400M0 150h400M0 240h400"/><path d="M70 0v300M190 0v300M310 0v300"/></g>' +
     '<g font-family="Inter,system-ui,sans-serif" font-size="11" fill="#6b7a8c" font-weight="600">' +
@@ -1238,17 +1371,18 @@ function mapSVG(expanded) {
     streets + pipe + area + homes + pin + '</svg>';
 }
 
-/* Mapa de la ciudad con sectores, cuadrillas e incidencias (tablero de Operaciones) */
+/* Mapa de la ciudad con distritos, cuadrillas e incidencias (tablero de Operaciones) */
 function crewMapSVG(o) {
   o = o || {};
   var W = 320, H = 200, i, j, blocks = '';
   for (i = 0; i < 13; i++) for (j = 0; j < 10; j++) blocks += '<rect x="' + (3 + i * 25) + '" y="' + (3 + j * 20) + '" width="21" height="16" rx="2.5" fill="#e3e6de"/>';
   var park = '<rect x="128" y="86" width="44" height="34" rx="7" fill="#cfe6c3"/><g fill="#a9d29a"><circle cx="139" cy="97" r="4"/><circle cx="152" cy="108" r="5"/><circle cx="163" cy="95" r="3.5"/><circle cx="141" cy="112" r="3"/></g>';
-  var river = '<path d="M-8 128 C 22 140, 34 170, 70 178 S 118 196, 132 210" stroke="#bcd8ef" stroke-width="15" fill="none" stroke-linecap="round"/><path d="M-8 128 C 22 140, 34 170, 70 178 S 118 196, 132 210" stroke="#d3e6f6" stroke-width="5" fill="none"/>';
+  var rp = 'M330 -8 C 304 36, 324 74, 310 116 S 312 176, 336 212';
+  var river = '<path d="' + rp + '" stroke="#bcd8ef" stroke-width="15" fill="none" stroke-linecap="round"/><path d="' + rp + '" stroke="#d3e6f6" stroke-width="5" fill="none"/>';
   var roads = '<g stroke="#fff" stroke-linecap="round"><path d="M0 63H320M0 133H320M103 0V200M219 0V200" stroke-width="5.5"/><path d="M0 23H320M0 103H320M0 163H320M53 0V200M163 0V200M273 0V200" stroke-width="2.5"/></g><path d="M0 12 L320 188" stroke="#f2d98c" stroke-width="4.5"/><path d="M0 12 L320 188" stroke="#fbeec4" stroke-width="1.6"/>';
   var sectors = '<g fill="none" stroke="#6f86a3" stroke-width="1.3" stroke-dasharray="5 4" opacity=".75"><path d="M0 66H320M0 136H320M100 66V136M222 66V136"/></g>';
   var lab = function (x, y, t, anchor) { return '<text x="' + x + '" y="' + y + '" text-anchor="' + (anchor || 'start') + '">' + t + '</text>'; };
-  var labels = '<g font-size="8.5" font-weight="800" fill="#5b6b80" letter-spacing=".12em" stroke="#eef0ea" stroke-width="3" paint-order="stroke">' + lab(8, 14, 'NORTE') + lab(8, 78, 'OESTE') + lab(108, 78, 'CENTRO') + lab(230, 78, 'ESTE') + lab(150, 196, 'SUR') + '</g>';
+  var labels = '<g font-size="8.5" font-weight="800" fill="#5b6b80" letter-spacing=".12em" stroke="#eef0ea" stroke-width="3" paint-order="stroke">' + lab(8, 14, 'NORTE') + lab(8, 78, 'OESTE') + lab(108, 78, 'CENTRO') + lab(230, 78, 'LITORAL') + lab(150, 196, 'SUR') + '</g>';
   var streetNames = '<g font-size="6.5" font-weight="700" fill="#8592a3" stroke="#fff" stroke-width="2.4" paint-order="stroke">' + lab(248, 61, 'Calle 12') + lab(248, 131, 'Calle 30') + '<text transform="translate(101 196) rotate(-90)">Av. 7</text><text transform="translate(217 196) rotate(-90)">Av. 22</text></g>';
   var inc = function (x, y, c, big) { return '<circle cx="' + x + '" cy="' + y + '" r="' + (big ? 12 : 8) + '" fill="' + c + '" opacity=".2">' + (big ? '<animate attributeName="r" values="8;14;8" dur="1.8s" repeatCount="indefinite"/>' : '') + '</circle><circle cx="' + x + '" cy="' + y + '" r="4.5" fill="' + c + '" stroke="#fff" stroke-width="1.6"/>'; };
   var pin = function (x, y, t, on) { return '<g transform="translate(' + x + ' ' + y + ')"><path d="M0 0c-7-9-11-13-11-19a11 11 0 0 1 22 0c0 6-4 10-11 19z" fill="' + (on ? '#1b7f50' : '#8d99a8') + '" stroke="#fff" stroke-width="2"/><text y="-15.5" text-anchor="middle" font-size="8.5" font-weight="800" fill="#fff">' + t + '</text></g>'; };
@@ -1300,7 +1434,7 @@ function routeMapSVG(o) {
   function getPath(p) { var parts = p.split('.'), o = S.drafts; for (var i = 0; i < parts.length; i++) { if (o == null) return undefined; o = o[parts[i]]; } return o; }
   function setPath(p, v) { var parts = p.split('.'), o = S.drafts; for (var i = 0; i < parts.length - 1; i++) { if (o[parts[i]] == null) o[parts[i]] = {}; o = o[parts[i]]; } o[parts[parts.length - 1]] = v; }
   function todayStr() { var d = new Date(); return ('0' + d.getDate()).slice(-2) + '/' + ('0' + (d.getMonth() + 1)).slice(-2) + '/' + d.getFullYear(); }
-  var URG = { 'Baja': 0, 'Media': 1, 'Alta': 2, 'Crítica': 3 };
+  var URG = { 'Programable': 0, 'Normal': 1, 'Alta': 2, 'Emergencia': 3 }; // OPS-PRIO-11: P4 a P1
 
   /* ---------- fricciones operativas (Clase 29 · Actividad 3) ---------- */
   var FRIC = {
@@ -1373,19 +1507,20 @@ function routeMapSVG(o) {
     return '<span class="pill ' + cls + '">' + icon(ic, 13) + esc(p.status) + '</span>';
   }
   /* ---------- vocabulario visual: íconos en lugar de texto ---------- */
-  var PLV = { 'Baja': 1, 'Media': 2, 'Alta': 3, 'Crítica': 4 };
-  function prioMeter(pr, noLabel) { var l = PLV[pr] || 0; return '<span class="pm l' + l + '" title="Prioridad ' + esc(pr) + '"><i class="pd"></i>' + (noLabel ? '' : '<b>' + esc(pr) + '</b>') + '</span>'; }
+  var PLV = { 'Programable': 1, 'Normal': 2, 'Alta': 3, 'Emergencia': 4 };
+  var PCODE = { 'Programable': 'P4', 'Normal': 'P3', 'Alta': 'P2', 'Emergencia': 'P1' };
+  function prioMeter(pr, noLabel) { var l = PLV[pr] || 0; return '<span class="pm l' + l + '" title="Prioridad ' + (PCODE[pr] ? PCODE[pr] + ' · ' : '') + esc(pr) + '"><i class="pd"></i>' + (noLabel ? '' : '<b>' + esc(pr) + '</b>') + '</span>'; }
   function prioTxt(pr) { return prioMeter(pr); }
-  var TYPE_IC = { 'Pérdida de agua en vereda': 'drop', 'Pérdida en conexión domiciliaria': 'home', 'Posible pérdida en red distribuidora': 'network', 'Rotura de caño': 'pipe', 'Baja presión': 'gauge', 'Pérdida en medidor': 'gauge', 'Revisión de conexión': 'home', 'Reparación de vereda': 'tool', 'Otro': 'plus' };
+  var TYPE_IC = { 'Pérdida de agua en vereda': 'drop', 'Pérdida en conexión domiciliaria': 'home', 'Posible pérdida en red distribuidora': 'network', 'Rotura de caño': 'pipe', 'Baja presión': 'gauge', 'Pérdida en medidor': 'gauge', 'Revisión de conexión': 'home', 'Tapa de cámara dañada': 'hole', 'Pérdida en red distribuidora': 'network', 'Medidor sin lectura': 'gauge', 'Desborde cloacal': 'turbid', 'Hundimiento': 'hole', 'Otro': 'plus' };
   var TYPE_SHORT = { 'Pérdida de agua en vereda': 'Pérdida en vereda', 'Pérdida en conexión domiciliaria': 'Conexión domiciliaria', 'Posible pérdida en red distribuidora': 'Posible falla de red' };
   var TYPE_TILE = { 'Pérdida de agua en vereda': 'Vereda', 'Pérdida en conexión domiciliaria': 'Conexión', 'Posible pérdida en red distribuidora': 'Falla de red', 'Rotura de caño': 'Rotura', 'Baja presión': 'Presión', 'Otro': 'Otro' };
   var COND = { 'Agua en calzada': ['drop', 'Agua en calzada'], 'Reportes de baja presión': ['gauge', 'Baja presión'], 'Caudal continuo': ['flow', 'Caudal continuo'], 'Hundimiento': ['hole', 'Hundimiento'], 'Afecta el tránsito': ['car', 'Tránsito'], 'Agua turbia': ['turbid', 'Agua turbia'] };
   var ACT = { 'Señalización de la zona': ['cone', 'Señalizado'], 'Delimitación del paso peatonal': ['users', 'Paso peatonal'], 'Registro fotográfico': ['camera', 'Fotos'], 'Consulta a vecinos': ['home', 'Vecinos'], 'Cierre de llave de paso domiciliaria': ['tap', 'Llave de paso'], 'Aviso al usuario': ['phone', 'Usuario avisado'], 'Revisión del medidor': ['gauge', 'Medidor revisado'], 'Desvío del tránsito': ['car', 'Tránsito desviado'], 'Relevamiento de domicilios sin presión': ['home', 'Domicilios relevados'], 'Contención del agua': ['drop', 'Agua contenida'], 'Aviso a vecinos del sector': ['users', 'Vecinos avisados'], 'Medición de presión': ['gauge', 'Presión medida'] };
   function actionsFor(type) { return ACTIONS_BY_TYPE[type] || CHANGE_OPTIONS.actions; }
-  var ITEM_IC = { 'Mantener la zona señalizada': 'cone', 'Esperar al equipo de red · 10:35': 'clock', 'Excavar solo con el equipo de red': 'tool', 'Corte V-N12 · 10:40 a 11:15 (equipo de red)': 'tap', 'Avisar a los vecinos del corte': 'users', 'Confirmar baja presión con telemetría': 'gauge', 'Avisar al municipio': 'bell', 'Evidencia completa': 'camera', 'Acciones dentro de lo autorizado': 'shield', 'Servicio restablecido': 'tap', 'Usuarios informados': 'users' };
-  var TAG_IC = { 'Agua en calzada': 'drop', 'Baja presión': 'gauge', 'Escalado': 'escalate', 'Inicio como pérdida domiciliaria': 'home', 'Sin pérdida visible': 'eye', 'Dentro del alcance de la cuadrilla': 'check', 'Medidor': 'gauge', 'Caudal continuo': 'flow', 'Riesgo peatonal': 'users', 'Municipio': 'grid', 'Cámara de válvula': 'tap', 'Calidad': 'turbid', 'Seguimiento': 'clock', 'Terceros': 'tool', 'Registrado sin conexión': 'wifiOff' };
-  var CAT_IC = { todas: 'list', seg: 'shield', doc: 'camera', esc: 'escalate', man: 'lock', pri: 'gauge', off: 'wifiOff', cie: 'stamp' };
-  var OUTCOMES = [['Pérdida reparada y servicio restablecido', 'checkCircle', 'Reparada', 'ok'], ['Pérdida controlada · requiere seguimiento', 'clock', 'Controlada', 'amber'], ['No resuelta · requiere otro equipo', 'xCircle', 'No resuelta', 'red']];
+  var ITEM_IC = { 'Mantener la zona señalizada': 'cone', 'Esperar al equipo de red · 10:35': 'clock', 'Excavar solo con el equipo de red': 'tool', 'Corte V-N12 · 10:40 a 11:15 (equipo de red)': 'tap', 'Avisar a los vecinos del corte': 'users', 'Confirmar la presión en HIDRA': 'gauge', 'Avisar al municipio': 'bell', 'Foto del cierre': 'camera', 'Acciones dentro de lo autorizado': 'shield', 'Presión verificada en HIDRA': 'gauge', 'Mensaje para el vecino': 'users' };
+  var TAG_IC = { 'Agua en calzada': 'drop', 'Baja presión': 'gauge', 'Escalado': 'escalate', 'Inicio como pérdida domiciliaria': 'home', 'Sin pérdida visible': 'eye', 'Dentro del alcance de la cuadrilla': 'check', 'Medidor': 'gauge', 'Caudal continuo': 'flow', 'Riesgo peatonal': 'users', 'Municipio': 'grid', 'Cámara de válvula': 'tap', 'Calidad': 'turbid', 'Seguimiento': 'clock', 'Terceros': 'tool', 'Registrado sin conexión': 'wifiOff', 'Contratista': 'tool', 'Reclamos unidos': 'link', 'Recontacto': 'phone', 'Evento de red': 'network', 'Reabierto': 'refresh', 'Repriorizado': 'escalate', 'Hidrojet': 'pipe', 'Estimación cambiada': 'clock', 'Programable': 'clock', 'Sin recontacto': 'checkCircle', 'Cerrada con foto': 'camera' };
+  var CAT_IC = { todas: 'list', seg: 'shield', doc: 'camera', esc: 'escalate', man: 'lock', pri: 'gauge', off: 'wifiOff', cie: 'stamp', com: 'users', con: 'tool' };
+  var OUTCOMES = CLOSE_REASONS; // motivo de cierre: [valor, ícono, corto, color]
   function tIc(k) { return TYPE_IC[k] || 'drop'; }
   function tShort(k) { return TYPE_SHORT[k] || k; }
   function ichip(ic, t, cls) { return '<span class="ichip ' + (cls || '') + '">' + icon(ic, 14) + esc(t) + '</span>'; }
@@ -1393,7 +1528,14 @@ function routeMapSVG(o) {
   function actChip(a) { var m = ACT[a] || ['check', a]; return ichip(m[0], m[1], 'ok'); }
   function tagChip(t) { return ichip(TAG_IC[t] || 'info', t); }
   function outcomeOf(o) { return OUTCOMES.filter(function (x) { return x[0] === o; })[0] || [o, 'checkCircle', o, 'ok']; }
-  function outcomeChip(o) { var x = outcomeOf(o); return ichip(x[1], x[2], x[3] === 'ok' ? 'ok' : x[3] === 'red' ? 'red' : 'warn'); }
+  function outcomeChip(o) { var x = outcomeOf(o); return ichip(x[1], x[2], { ok: 'ok', amber: 'warn', blue: 'blue', red: 'red' }[x[3]] || ''); }
+  function svcChip(k) { var x = SERVICE_STATES.filter(function (y) { return y[0] === k; })[0]; return x ? ichip(x[1], x[2], x[3]) : ''; }
+  // Estado público que ve el vecino en MiAguas (Recibido · En evaluación · Asignado · En curso · Resuelto)
+  function publicState(p) { if (p.key === 'cerrada') return publicClose(p.result).state; if (p.key === 'asignada') return 'Asignado'; return 'En curso'; }
+  function miAguasCard(r, note) {
+    var pc = publicClose(r);
+    return '<div class="miag"><div class="mh"><span class="ml">' + icon('drop', 14) + '</span><b>MiAguas</b><span class="xs muted">· lo ve el vecino</span><span class="sp"></span><span class="pill ' + (pc.state === 'Resuelto' ? 'ok' : 'blue') + '">' + pc.state + '</span></div><div class="mt">' + esc(pc.text) + '</div>' + (note ? '<div class="mf">' + note + '</div>' : '') + '</div>';
+  }
   function reasonChips(rs) { return (rs || []).map(function (r) { return typeof r === 'string' ? ichip('alert', r, 'red') : ichip(r.ic, r.t, 'red'); }).join(''); }
   function pendingOut() { var n = 0; Object.keys(S.incidents).forEach(function (k) { S.incidents[k].events.forEach(function (e) { if (e.src === 'campo' && !e.synced) n++; }); }); return n; }
   function pendingIn() { var n = 0; Object.keys(S.incidents).forEach(function (k) { S.incidents[k].events.forEach(function (e) { if (e.src === 'central' && !e.synced) n++; }); }); return n; }
@@ -1482,7 +1624,7 @@ function routeMapSVG(o) {
     if (!conds.length && !urgent) return null;
     var m = (d.text || '').match(/(\d+)\s*(vecinos|domicilios|casas)/i);
     var type = conds.indexOf('Agua en calzada') >= 0 && conds.indexOf('Reportes de baja presión') >= 0 ? 'Posible pérdida en red distribuidora' : inc.kind;
-    var r = { kind0: inc.kind, type: type, conditions: conds, homes: m ? m[1] : '', urgency: urgent ? 'Alta' : 'Media', actions: acts, photos: (d.photos || []).slice(), conditionsText: (d.text || '').trim(), offline: !S.online };
+    var r = { kind0: inc.kind, type: type, conditions: conds, homes: m ? m[1] : '', urgency: urgent ? 'Alta' : 'Normal', actions: acts, photos: (d.photos || []).slice(), conditionsText: (d.text || '').trim(), offline: !S.online };
     r.reasons = evalChange(r, inc); r.requiresEval = r.reasons.length > 0;
     r.difference = 'Orden: ' + tShort(inc.kind) + ' (' + inc.priority + '). En el lugar: ' + tShort(type) + ' (' + r.urgency + ').';
     return r;
@@ -1509,7 +1651,7 @@ function routeMapSVG(o) {
   }
   function makeAlert(inc, ev) {
     if (ev.type === 'msg') S.alerts.unshift({ id: uid(), inc: inc.id, ev: ev.id, kind: ev.data.report ? 'change' : 'msg', title: '#' + inc.id + (ev.data.report ? ' · Cambio de escenario' : ' · Mensaje de C3'), body: ev.data.text, time: now(), read: false });
-    if (ev.type === 'result') S.alerts.unshift({ id: uid(), inc: inc.id, kind: 'result', title: '#' + inc.id + ' · Resultado para validar', body: ev.data.outcome + '. Pendiente de validación del cierre.', time: now(), read: false });
+    if (ev.type === 'result') S.alerts.unshift({ id: uid(), inc: inc.id, kind: 'result', title: '#' + inc.id + ' · Cierre para validar', body: ev.data.text || ev.data.outcome, time: now(), read: false });
   }
   function startSync() {
     if (!S.online) return;
@@ -1548,7 +1690,7 @@ function routeMapSVG(o) {
     var cond = ch ? ch.conditions : [];
     var water = cond.indexOf('Agua en calzada') >= 0 || /calzada/.test(t);
     var lowp = cond.indexOf('Reportes de baja presion') >= 0 || cond.indexOf('Reportes de baja presión') >= 0 || /presion/.test(t);
-    var coinc = [{ t: 'Sector Norte', ic: 'pin', ok: true }, { t: 'Empezó en vereda', ic: 'clipboard', ok: true }, { t: 'Agua en calzada', ic: 'drop', ok: water }, { t: 'Baja presión', ic: 'gauge', ok: lowp }];
+    var coinc = [{ t: 'Distrito Norte', ic: 'pin', ok: true }, { t: 'Empezó en vereda', ic: 'clipboard', ok: true }, { t: 'Agua en calzada', ic: 'drop', ok: water }, { t: 'Baja presión', ic: 'gauge', ok: lowp }];
     var missing = [];
     if (!ch) missing.push({ ic: 'edit', t: 'Registrar el cambio (se envía por chat)' });
     if (!ch || !ch.homes) missing.push({ ic: 'home', t: 'Cuántos domicilios sin presión' });
@@ -1587,16 +1729,24 @@ function routeMapSVG(o) {
   }
 
   /* ---------- Operaciones / Supervisión ---------- */
-  function ensureResultDraft() { if (!S.drafts.result) S.drafts.result = { done: [], outcome: '', text: '', restored: null, photos: [] }; }
+  function ensureResultDraft() { if (!S.drafts.result) S.drafts.result = { done: [], outcome: '', service: '', text: '', photos: [] }; }
+  // Cerrar la orden: foto del estado final, motivo, servicio y comentario. Lo valida Operaciones (CO-CIE-01)
   function sendResult() {
     ensureResultDraft();
-    var d = S.drafts.result;
-    if (!d.outcome) { S.formError = 'Elegí el resultado'; commit(); return false; }
+    var d = S.drafts.result, miss = [];
+    if (!(d.photos || []).length) miss.push('foto');
+    if (!d.outcome) miss.push('motivo');
+    if (!d.service) miss.push('servicio');
+    if (miss.length) { S.formError = 'Falta: ' + miss.join(', '); commit(); return false; }
     S.formError = null;
-    var inc = inc0248();
-    var ev = addEvent(inc, { type: 'result', src: 'campo', who: 'Cuadrilla 3 · R. Benítez', time: tick(77), synced: S.online, syncedAt: S.online ? now() : null, data: clone(d) });
+    var inc = inc0248(), data = clone(d);
+    data.restored = d.service !== 'no'; data.pub = publicClose(d); data.offline = !S.online;
+    if (!proj(inc, 'm').started) addEvent(inc, { type: 'started', src: 'campo', who: 'Cuadrilla 3 · R. Benítez', time: tick(1), synced: S.online, syncedAt: S.online ? now() : null, text: 'Intervención iniciada por el encargado.' });
+    var ev = addEvent(inc, { type: 'result', src: 'campo', who: 'Cuadrilla 3 · R. Benítez', time: tick(77), synced: S.online, syncedAt: S.online ? now() : null, data: data });
     if (S.online) { S.lastSync = now(); makeAlert(inc, ev); }
-    S.drafts.result = null; S.m = { name: 'cierre', id: inc.id }; commit(); return true;
+    S.drafts.result = null; S.m = { name: 'cierre', id: inc.id };
+    toast(S.online ? 'Orden cerrada · la valida Operaciones' : 'Cierre guardado · sale con señal', S.online ? 'checkCircle' : 'device');
+    commit(); return true;
   }
   function ensureValidDraft() { if (!S.drafts.valid) S.drafts.valid = { checks: [], lesson: '' }; }
   function validate() {
@@ -1605,18 +1755,18 @@ function routeMapSVG(o) {
     if (d.checks.length < 3) { S.formError = 'Marcá los controles antes de validar'; commit(); return false; }
     S.formError = null;
     var by = S.deskRole === 'supervision' ? 'Supervisión · C. Duarte' : 'Operaciones · L. Ferreyra';
-    addEvent(inc, { type: 'validated', src: 'central', who: by, time: tick(15), synced: S.online, syncedAt: S.online ? now() : null, data: { by: by, checks: clone(d.checks), lesson: d.lesson } });
+    addEvent(inc, { type: 'validated', src: 'central', who: by, time: tick(15), synced: S.online, syncedAt: S.online ? now() : null, data: { by: by, checks: clone(d.checks), lesson: d.lesson, pub: publicClose(p.result) } });
     S.alerts.forEach(function (a) { if (a.inc === inc.id) a.read = true; });
     var ch = p.change || {}, up = p.update || {}, rs = p.result || {};
     S.history = S.history.filter(function (h) { return h.id !== '0248'; });
     S.history.unshift({
       id: '0248', short: 'Pérdida "menor" → rotura de red', title: 'Pérdida informada como menor que resultó ser una rotura en red', type: ch.type || inc.kind, sector: inc.sector, address: inc.address,
       date: todayStr(), status: 'resuelto', validatedBy: by, isNew: true,
-      tags: ['Agua en calzada', 'Baja presión', 'Registrado sin conexión', 'Escalado'],
-      initial: 'Reclamo por pérdida de agua en vereda. Prioridad media.',
+      tags: ['Agua en calzada', 'Baja presión', 'Registrado sin conexión', 'Escalado', 'Cerrada con foto'],
+      initial: 'Reclamo ' + (inc.caso ? inc.caso + ' ' : '') + 'por pérdida de agua en vereda. Prioridad P3 · normal.',
       found: (ch.conditionsText || '') + (ch.difference ? ' ' + ch.difference : ''),
-      decisions: ['La cuadrilla contó el cambio por chat sin señal y consultó al asistente (antecedente #0176).', 'Al sincronizar, Operaciones respondió por chat y elevó la prioridad a ' + (up.priority || 'alta').toLowerCase() + '.'].concat((up.authorized || []).slice(2, 4).map(function (x) { return 'Autorizado: ' + x.charAt(0).toLowerCase() + x.slice(1) + '.'; })),
-      result: rs.text || rs.outcome || '', lesson: d.lesson || '—', criteria: ['CO-DOC-01', 'CO-OFF-01', 'CO-ESC-01', 'CO-MAN-01', 'CO-CIE-01']
+      decisions: [ch.type ? 'La cuadrilla contó el cambio por chat' + (ch.offline ? ' sin señal' : '') + (p.ai.length ? ' y consultó al asistente (antecedente #0176).' : '.') : 'La cuadrilla trabajó con la orden original.'].concat(p.update ? ['Operaciones respondió por chat con prioridad ' + PCODE[up.priority] + ' · ' + up.priority.toLowerCase() + '.'].concat((up.authorized || []).slice(2, 4).map(function (x) { return 'Autorizado: ' + x.charAt(0).toLowerCase() + x.slice(1) + '.'; })) : []).concat(['Cierre con foto: ' + (rs.outcome || '').toLowerCase() + ', servicio ' + ((SERVICE_STATES.filter(function (x) { return x[0] === rs.service; })[0] || [0, 0, '—'])[2]).toLowerCase() + '.']),
+      result: (rs.outcome ? rs.outcome + '. ' : '') + (rs.text || ''), photos: (rs.photos || []).slice(), close: { outcome: rs.outcome, service: rs.service }, lesson: d.lesson || '—', criteria: ['CO-DOC-01', 'CO-OFF-01', 'CO-ESC-01', 'CO-MAN-01', 'CO-CIE-01', 'CO-COM-01']
     });
     S.newCase = '0248'; S.drafts.valid = null;
     S.d = { name: 'cierre', id: inc.id };
@@ -1629,7 +1779,7 @@ function routeMapSVG(o) {
     if (kind === 'chat') S.drafts.cmsg = clone(DEMO_CHAT);
     if (kind === 'change') S.drafts.change = clone(DEMO_CHANGE);
     if (kind === 'opschat') S.drafts.omsg = { text: DEMO_UPDATE.message, priority: DEMO_UPDATE.priority, authorized: clone(DEMO_UPDATE.authorized), auth: true };
-    if (kind === 'result') { var p = proj(inc0248(), 'm'); S.drafts.result = { done: clone((p.update && p.update.authorized) || []), outcome: DEMO_RESULT.outcome, text: DEMO_RESULT.text, restored: true, photos: clone(DEMO_RESULT.photos) }; }
+    if (kind === 'result') { var p = proj(inc0248(), 'm'); S.drafts.result = { done: clone((p.update && p.update.authorized) || []), outcome: DEMO_RESULT.outcome, service: DEMO_RESULT.service, text: DEMO_RESULT.text, photos: clone(DEMO_RESULT.photos) }; }
     if (kind === 'valid') S.drafts.valid = { checks: clone(DEMO_VALIDATION.checks), lesson: DEMO_VALIDATION.lesson };
     S.formError = null; commit();
   }
@@ -1714,7 +1864,7 @@ function routeMapSVG(o) {
   function mobileApp() {
     var r = S.m.name, pend = pendingOut(), unread = unreadM();
     var top = ['inicio', 'incidencia', 'asistente', 'historial', 'criterios'].indexOf(r) >= 0; // el chat lleva flecha para volver a Inicio
-    var titles = { inicio: '', incidencia: 'Orden #0248', chat: 'Chat · Operaciones', asistente: 'Asistente', historial: 'Historial', criterios: 'Criterios', caso: 'Caso #' + (S.m.id || ''), resultado: 'Resultado', cierre: 'Cierre #0248', cambio: 'Registrar cambio', orden2: 'Orden #' + (S.m.id || '') };
+    var titles = { inicio: '', incidencia: 'Orden #0248', chat: 'Chat · Operaciones', asistente: 'Asistente', historial: 'Historial', criterios: 'Criterios', caso: 'Caso #' + (S.m.id || ''), resultado: 'Cerrar orden #0248', cierre: 'Cierre #0248', cambio: 'Registrar cambio', orden2: 'Orden #' + (S.m.id || '') };
     var h = '<div class="mapp">';
     h += '<div class="statusbar"><span class="clk">' + now() + '</span><span class="notch" aria-hidden="true"></span><span class="r"><button class="sigbtn" data-a="toggleNet" title="' + (S.online ? 'Cortar la señal' : 'Recuperar la señal') + '" aria-label="' + (S.online ? 'Cortar la señal' : 'Recuperar la señal') + '">' + (S.online ? icon('wifi', 15) : icon('wifiOff', 15)) + '</button><span class="batt"></span></span></div>';
     h += '<div class="mhead"><div class="row">';
@@ -1791,7 +1941,7 @@ function routeMapSVG(o) {
     h += routeStops().map(function (x) {
       if (x.o.id === '0248' && x.st === 'now') {
         var c = '<div class="rstop now"><span class="rail"><i></i></span><div class="rbody"><div class="when">Ahora</div><div class="order hl" data-k="order-0248"><div class="row between"><span class="id">#0248</span>' + statusPill(p) + '</div><div class="row" style="gap:10px;margin-top:8px"><span class="tic">' + icon(tIc(inc.kind), 22) + '</span><div style="min-width:0"><div class="tt">' + esc(tShort(inc.kind)) + '</div><div class="small muted row" style="gap:4px">' + icon('pin', 14) + esc(inc.short) + '</div></div></div><div class="row" style="margin-top:10px;gap:14px">' + prioMeter(p.priority) + '<span class="xs muted row" style="gap:4px">' + icon('clock', 13) + x.o.time + '</span></div>';
-        c += p.started ? (!p.result ? (!p.update ? '<button class="btn warn block cardmain" data-a="mgo" data-v="cambio" data-id="0248">' + icon('edit', 17) + 'Registrar cambio</button>' : '<button class="btn primary block cardmain" data-a="mgo" data-v="resultado" data-id="0248">' + icon('checkCircle', 17) + 'Registrar resultado</button>') : '') + '<div class="grid3 cardacts"><button class="btn secondary" data-a="mgo" data-v="incidencia" data-id="0248">' + icon('clipboard', 16) + 'Orden</button><button class="btn secondary chatbtn" data-a="mgo" data-v="chat">' + icon('chat', 16) + 'Chat' + (unread ? '<span class="nb">' + unread + '</span>' : '') + '</button><button class="btn secondary" style="color:var(--indigo)" data-a="mgo" data-v="asistente">' + icon('spark', 16) + 'IA</button></div>' : '<div class="grid2" style="margin-top:12px"><button class="btn secondary" data-a="mgo" data-v="incidencia" data-id="0248">' + icon('eye', 16) + 'Ver</button><button class="btn primary" data-a="start" data-id="0248">' + icon('play', 16) + 'Iniciar</button></div>';
+        c += p.started ? (!p.result ? (!p.update ? '<button class="btn warn block cardmain" data-a="mgo" data-v="cambio" data-id="0248">' + icon('edit', 17) + 'Registrar cambio</button>' : '<button class="btn ok block cardmain" data-a="mgo" data-v="resultado" data-id="0248">' + icon('checkCircle', 17) + 'Cerrar orden</button>') : '') + '<div class="grid3 cardacts"><button class="btn secondary" data-a="mgo" data-v="incidencia" data-id="0248">' + icon('clipboard', 16) + 'Orden</button><button class="btn secondary chatbtn" data-a="mgo" data-v="chat">' + icon('chat', 16) + 'Chat' + (unread ? '<span class="nb">' + unread + '</span>' : '') + '</button><button class="btn secondary" style="color:var(--indigo)" data-a="mgo" data-v="asistente">' + icon('spark', 16) + 'IA</button></div>' : '<div class="grid2" style="margin-top:12px"><button class="btn secondary" data-a="mgo" data-v="incidencia" data-id="0248">' + icon('eye', 16) + 'Ver</button><button class="btn primary" data-a="start" data-id="0248">' + icon('play', 16) + 'Iniciar</button></div>';
         return c + '</div></div></div>';
       }
       var to = x.o.id === '0248' ? 'data-v="cierre" data-id="0248"' : 'data-v="orden2" data-id="' + x.o.id + '"';
@@ -1799,19 +1949,20 @@ function routeMapSVG(o) {
     }).join('');
     h += '</div></div>';
     var stops = routeStops();
-    h += '<div class="sec"><div class="sec-t">Mapa de hoy<span class="xs muted row" style="gap:4px;letter-spacing:0;text-transform:none;font-weight:600">' + icon('pin', 12) + 'Sector Norte</span></div><button class="mapcard" data-a="mgo" data-v="incidencia" data-id="0248" aria-label="Abrir la orden actual"><div class="rmap">' + routeMapSVG({ alert: !!p.change && !p.update && !p.result, started: p.started && !p.result, states: stops.map(function (x) { return x.st; }), labels: ['#0248', '#0251 · 14:00', '#0253 · 16:00'] }) + '</div><div class="maplg"><span><i class="dotlg"></i>Orden</span><span><i class="dotlg me"></i>Tu ubicación</span>' + (p.change && !p.update && !p.result ? '<span><i class="dotlg red"></i>Zona afectada</span>' : '') + '</div></button></div>';
+    h += '<div class="sec"><div class="sec-t">Mapa de hoy<span class="xs muted row" style="gap:4px;letter-spacing:0;text-transform:none;font-weight:600">' + icon('pin', 12) + 'Distrito Norte</span></div><button class="mapcard" data-a="mgo" data-v="incidencia" data-id="0248" aria-label="Abrir la orden actual"><div class="rmap">' + routeMapSVG({ alert: !!p.change && !p.update && !p.result, started: p.started && !p.result, states: stops.map(function (x) { return x.st; }), labels: ['#0248', '#0251 · 14:00', '#0253 · 16:00'] }) + '</div><div class="maplg"><span><i class="dotlg"></i>Orden</span><span><i class="dotlg me"></i>Tu ubicación</span>' + (p.change && !p.update && !p.result ? '<span><i class="dotlg red"></i>Zona afectada</span>' : '') + '</div></button></div>';
     return h;
   }
   function mOrder2() {
     var inc = S.incidents[S.m.id] || S.incidents['0251'], o = ROUTE.filter(function (x) { return x.id === inc.id; })[0] || { time: '—' }, p = proj(inc, 'm');
     var h = '<div class="card"><div class="row between"><span class="id" style="font-weight:800;color:var(--blue-700)">#' + inc.id + '</span>' + statusPill(p) + '</div><div class="row" style="gap:10px;margin:8px 0 2px"><span class="tic">' + icon(tIc(inc.kind), 22) + '</span><div><div class="h2">' + esc(tShort(inc.kind)) + '</div><div class="small muted row" style="gap:4px">' + icon('pin', 14) + esc(inc.address) + '</div></div></div>';
-    h += '<div class="facts">' + fact('Hora', icon('clock', 14) + o.time) + fact('Prioridad', prioMeter(p.priority)) + fact('Sector', icon('pin', 14) + inc.sector) + '</div></div>';
-    h += '<div class="statusrow gray">' + icon('hourglass', 18) + '<b>Programada</b><span class="sp"></span><span class="wait">' + icon('clipboard', 15) + 'Después de #0248</span></div>';
-    h += '<button class="btn secondary big" style="margin-top:12px" data-a="mgo" data-v="incidencia" data-id="0248">' + icon('arrowLeft', 17) + 'Volver a la orden actual</button>';
+    h += '<div class="facts">' + fact('Hora', icon('clock', 14) + o.time) + fact('Prioridad', prioMeter(p.priority)) + fact('Distrito', icon('pin', 14) + inc.sector) + '</div></div>';
+    var prevDone = !!proj(inc0248(), 'm').result && inc.id === ROUTE[1].id;
+    h += prevDone ? '<div class="statusrow blue">' + icon('arrowRight', 18) + '<b>Es tu próxima orden</b><span class="sp"></span><span class="wait">' + icon('checkCircle', 15) + '#0248 cerrada</span></div>' : '<div class="statusrow gray">' + icon('hourglass', 18) + '<b>Programada</b><span class="sp"></span><span class="wait">' + icon('clipboard', 15) + 'Después de #0248</span></div>';
+    h += prevDone ? '<button class="btn secondary big" style="margin-top:12px" data-a="mgo" data-v="inicio">' + icon('home', 17) + 'Ir al inicio</button>' : '<button class="btn secondary big" style="margin-top:12px" data-a="mgo" data-v="incidencia" data-id="0248">' + icon('arrowLeft', 17) + 'Volver a la orden actual</button>';
     return h;
   }
   var EV_IC = { created: 'plus', assigned: 'users', started: 'play', change: 'edit', ai: 'spark', update: 'bell', result: 'checkCircle', validated: 'stamp', msg: 'chat' };
-  var EV_T = { created: 'Orden creada', assigned: 'Asignada', started: 'Iniciada', change: 'Cambio registrado', ai: 'Consulta IA', update: 'Orden actualizada', result: 'Resultado', validated: 'Validada', msg: 'Mensaje' };
+  var EV_T = { created: 'Orden creada', assigned: 'Asignada', started: 'Iniciada', change: 'Cambio registrado', ai: 'Consulta IA', update: 'Orden actualizada', result: 'Cierre con foto', validated: 'Cierre validado', msg: 'Mensaje' };
   function evTitle(e) { if (e.type !== 'msg') return EV_T[e.type]; if (e.src === 'campo') return e.data.report ? 'Cambio por chat' : 'Mensaje a Operaciones'; return e.data.priority ? 'Indicaciones por chat' : 'Mensaje de Operaciones'; }
   function tlKey() { return '<div class="tlkey"><span><i style="background:var(--blue-600)"></i>Cuadrilla</span><span><i style="background:var(--navy)"></i>Central</span><span><i style="background:var(--indigo)"></i>IA</span></div>'; }
   function timeline(inc, side, limit) {
@@ -1847,7 +1998,7 @@ function routeMapSVG(o) {
   function mIncident() {
     var inc = inc0248(), p = proj(inc, 'm');
     var h = '<div class="card"><div class="row between"><span class="id" style="font-weight:800;color:var(--blue-700)">#0248</span>' + statusPill(p) + '</div><div class="row" style="gap:10px;margin:8px 0 2px"><span class="tic">' + icon(tIc(inc.kind), 22) + '</span><div><div class="h2">' + esc(tShort(inc.kind)) + '</div><div class="small muted row" style="gap:4px">' + icon('pin', 14) + esc(inc.short) + '</div></div></div>';
-    h += '<div class="facts">' + fact('Prioridad', prioMeter(p.priority)) + (p.change ? fact('En campo', prioMeter(p.change.urgency)) : fact('Reclamo', icon('phone', 14) + inc.reportedAt)) + fact('Sector', icon('pin', 14) + inc.sector) + '</div>';
+    h += '<div class="facts">' + fact('Prioridad', prioMeter(p.priority)) + (p.change ? fact('En campo', prioMeter(p.change.urgency)) : fact('Reclamo', icon('phone', 14) + inc.reportedAt)) + fact('Distrito', icon('pin', 14) + inc.sector) + '</div>';
     h += '<div class="ichips" style="margin-top:10px">' + (inc.cues || []).map(function (c) { return ichip(c[0], c[1]); }).join('') + '</div></div>';
     if (!p.started) h += '<button class="btn primary big" style="margin-top:12px" data-a="start" data-id="0248">' + icon('play', 18) + 'Iniciar intervención</button>';
     if (p.started) h += '<div style="margin-top:12px">' + chatPreview('m', 'data-a="mgo" data-v="chat"') + '</div>';
@@ -1863,11 +2014,11 @@ function routeMapSVG(o) {
     }
     if (p.started && !p.result) {
       h += '<div class="stack" style="margin-top:12px">';
-      if (p.update) h += '<button class="btn primary big" data-a="mgo" data-v="resultado" data-id="0248">' + icon('checkCircle', 18) + 'Registrar resultado</button>';
-      else h += '<button class="btn warn big" data-a="mgo" data-v="cambio" data-id="0248">' + icon('edit', 18) + 'Registrar cambio</button>';
+      if (p.update) h += '<button class="btn ok big" data-a="mgo" data-v="resultado" data-id="0248">' + icon('checkCircle', 18) + 'Cerrar orden</button>';
+      else h += '<button class="btn warn big" data-a="mgo" data-v="cambio" data-id="0248">' + icon('edit', 18) + 'Registrar cambio</button><button class="btn secondary big closebtn" data-a="mgo" data-v="resultado" data-id="0248">' + icon('checkCircle', 18) + 'Cerrar orden</button>';
       h += '</div>';
     }
-    if (p.result) h += '<button class="btn secondary big" style="margin-top:12px" data-a="mgo" data-v="cierre" data-id="0248">' + icon('stamp', 18) + (p.validation ? 'Ver cierre' : 'Ver estado del cierre') + '</button>';
+    if (p.result) h += '<button class="btn secondary big" style="margin-top:12px" data-a="mgo" data-v="cierre" data-id="0248">' + icon('stamp', 18) + (p.validation ? 'Ver cierre' : 'Ver cierre enviado') + '</button>';
     h += '<div class="sec"><div class="card reg">' + regBox(inc, 'm') + '</div></div>';
     return h;
   }
@@ -1882,7 +2033,7 @@ function routeMapSVG(o) {
     p.events.forEach(function (e) {
       if (e.type === 'assigned') h += '<div class="sysnote">' + icon('users', 13) + 'Orden asignada a C3 · ' + e.time + '</div>';
       else if (e.type === 'started') h += '<div class="sysnote">' + icon('play', 13) + 'Intervención iniciada · ' + e.time + '</div>';
-      else if (e.type === 'result') h += '<div class="sysnote">' + icon('checkCircle', 13) + 'Resultado enviado a validar · ' + e.time + '</div>';
+      else if (e.type === 'result') h += '<div class="sysnote ok">' + icon('camera', 13) + 'Orden cerrada con foto · a validar · ' + e.time + '</div>';
       else if (e.type === 'validated') h += '<div class="sysnote ok">' + icon('stamp', 13) + 'Cierre validado · ' + e.time + '</div>';
       else if (e.type === 'msg') {
         var mine = e.src === me, d = e.data;
@@ -1995,27 +2146,50 @@ function routeMapSVG(o) {
     if (!S.chatPending) h += '<div class="sugg">' + (S.chat.length ? sug.slice(1) : sug.slice(0, 3)).map(function (s) { return '<button data-a="askv" data-v="' + esc(s[2]) + '">' + icon(s[0], 15) + esc(s[1]) + '</button>'; }).join('') + '</div>';
     return h;
   }
+  // Fotos del cierre: la primera es la del estado final (obligatoria), hasta 3
+  function closeShots(list) {
+    list = list || [];
+    if (!list.length) return '<button class="shot-empty" data-a="addPhoto" data-f="result.photos">' + icon('camera', 30) + '<b>Sacar foto del cierre</b><small>Cómo quedó el lugar</small></button>';
+    var h = '<figure class="shot-main"><div class="photo">' + photoSVG(list[0]) + '<span class="okb" aria-hidden="true">' + icon('check', 16) + '</span><button class="rm" data-a="rmPhoto" data-f="result.photos" data-v="0" aria-label="Quitar foto">' + icon('x', 13) + '</button></div><figcaption>' + icon('camera', 13) + 'Foto del cierre<span class="gps">' + icon('gps', 12) + 'GPS</span></figcaption></figure>';
+    h += '<div class="shot-more">' + list.slice(1).map(function (k, i) { return '<div class="photo">' + photoSVG(k) + '<button class="rm" data-a="rmPhoto" data-f="result.photos" data-v="' + (i + 1) + '" aria-label="Quitar foto">' + icon('x', 12) + '</button></div>'; }).join('') + (list.length < 3 ? '<button class="photo-add sm" data-a="addPhoto" data-f="result.photos" aria-label="Agregar foto">' + icon('camera', 18) + '<span>+</span></button>' : '') + '</div>';
+    return h;
+  }
   function mResultForm() {
     ensureResultDraft();
     var d = S.drafts.result, p = proj(inc0248(), 'm'), auth = (p.update && p.update.authorized) || [];
-    var h = '<div class="row between"><span class="small muted row" style="gap:5px">' + icon('shield', 15) + 'Autorizado ' + (p.updateEv ? p.updateEv.time : '') + ' · ' + prioMeter(p.priority) + '</span>' + demoBtn('result') + '</div>';
-    h += '<div class="field"><span>Hecho</span><div class="checklist">' + auth.map(function (a) { return ckItem('result.done', a, d.done.indexOf(a) >= 0, ITEM_IC[a]); }).join('') + '</div></div>';
-    h += '<div class="field"><span>Resultado <em>*</em></span><div class="opts3">' + OUTCOMES.map(function (o) { return '<button class="opt ' + o[3] + (d.outcome === o[0] ? ' on' : '') + '" data-a="set" data-f="result.outcome" data-v="' + esc(o[0]) + '" title="' + esc(o[0]) + '">' + icon(o[1], 24) + '<span>' + o[2] + '</span></button>'; }).join('') + '</div></div>';
-    h += '<div class="field"><span>¿Hay servicio?</span><div class="segc" style="grid-template-columns:1fr 1fr"><button class="' + (d.restored === true ? 'on' : '') + '" data-a="setb" data-f="result.restored" data-v="1">' + icon('tap', 17) + ' Sí</button><button class="' + (d.restored === false ? 'on' : '') + '" data-a="setb" data-f="result.restored" data-v="0">' + icon('xCircle', 17) + ' No</button></div></div>';
-    h += '<div class="field"><span>Fotos</span>' + photosField('result.photos', d.photos) + '</div>';
-    h += '<label class="field"><span>Nota <i>opcional</i></span><textarea class="textarea sm" data-f="result.text" placeholder="¿Qué se hizo?">' + esc(d.text) + '</textarea></label>';
+    var h = '<div class="row between"><span class="small muted row" style="gap:5px">' + icon('stamp', 15) + 'Lo valida Operaciones</span>' + demoBtn('result') + '</div>';
+    if (p.change && !p.update) h += '<div class="statusrow amber" style="margin-top:8px">' + icon('hourglass', 18) + '<b>Operaciones no respondió el cambio</b></div>';
+    h += '<div class="field"><span>Foto del trabajo terminado <em>*</em></span>' + closeShots(d.photos) + '</div>';
+    h += '<div class="field"><span>Motivo de cierre <em>*</em></span><div class="opts3">' + OUTCOMES.map(function (o) { return '<button class="opt ' + o[3] + (d.outcome === o[0] ? ' on' : '') + '" data-a="set" data-f="result.outcome" data-v="' + esc(o[0]) + '" title="' + esc(o[0]) + '">' + icon(o[1], 22) + '<span>' + o[2] + '</span></button>'; }).join('') + '</div></div>';
+    h += '<div class="field"><span>¿Cómo queda el servicio? <em>*</em></span><div class="svc">' + SERVICE_STATES.map(function (x) { return '<button class="' + x[3] + (d.service === x[0] ? ' on' : '') + '" data-a="set" data-f="result.service" data-v="' + x[0] + '">' + icon(x[1], 18) + '<span>' + x[2] + '</span></button>'; }).join('') + '</div></div>';
+    if (auth.length) h += '<div class="field"><span>Lo autorizado · hecho</span><div class="checklist">' + auth.map(function (a) { return ckItem('result.done', a, d.done.indexOf(a) >= 0, ITEM_IC[a]); }).join('') + '</div></div>';
+    h += '<label class="field"><span>Comentarios</span><textarea class="textarea sm" data-f="result.text" placeholder="¿Qué se hizo? Lo lee Operaciones">' + esc(d.text) + '</textarea></label>';
+    if (d.outcome && d.service) h += '<div class="field"><span>Lo que verá el vecino</span>' + miAguasCard(d, icon('stamp', 12) + 'Se publica cuando Operaciones valide') + '</div>';
     if (S.formError) h += '<div class="statusrow red">' + icon('alert', 18) + '<b>' + esc(S.formError) + '</b></div>';
-    h += '<button class="btn primary big" style="margin-top:16px" data-a="sendResult">' + icon('send', 18) + 'Enviar a validar</button>';
+    h += '<button class="btn ok big" style="margin-top:16px" data-a="sendResult">' + icon(S.online ? 'checkCircle' : 'device', 18) + (S.online ? 'Cerrar orden' : 'Guardar cierre · sale con señal') + '</button>';
+    h += '<button class="btn ghost block" style="margin-top:6px" data-a="mback">Cancelar</button>';
     return h;
+  }
+  // Imagen del cierre: la foto del lugar con el sello verde encima
+  function donePic(r, validated) {
+    var ph = (r.photos || [])[0];
+    return '<div class="donepic' + (validated ? ' val' : '') + '">' + (ph ? '<div class="photo">' + photoSVG(ph) + '</div>' : '<div class="photo empty">' + icon('camera', 28) + '</div>') + '<span class="donebadge">' + icon(validated ? 'stamp' : 'check', validated ? 26 : 30) + '</span></div>';
   }
   function ckItem(path, v, on, ic) { return '<button type="button" class="ck ' + (on ? 'on' : '') + '" data-a="toggle" data-f="' + path + '" data-v="' + esc(v) + '"><span class="box">' + (on ? icon('check', 14) : '') + '</span>' + (ic ? '<span class="cki">' + icon(ic, 17) + '</span>' : '') + '<span>' + esc(v) + '</span></button>'; }
   function mClosure() {
     var inc = inc0248(), p = proj(inc, 'm');
     if (!p.result) return mIncident();
-    var h = '<div class="card hero">';
-    if (p.validation) h += '<div class="bigic">' + icon('checkCircle', 34) + '</div><div class="h2">Caso cerrado</div><div class="small muted row" style="justify-content:center;gap:5px;margin-top:4px">' + icon('stamp', 14) + esc(p.validation.by) + ' · ' + p.validEv.time + '</div>' + hop([['send', 'Enviado', 'done'], ['stamp', 'Validado', 'done'], ['history', 'Historial', 'done']]) + '<button class="btn primary big" style="margin-top:14px" data-a="casego" data-v="0248">' + icon('history', 18) + 'Ver en el historial</button>';
-    else h += '<div class="bigic amber">' + icon('stamp', 32) + '</div><div class="h2">Enviado a validar</div>' + hop([['send', 'Enviado', p.resultEv.synced ? 'done' : 'pend'], ['stamp', 'Validación', 'pend'], ['history', 'Historial', 'todo']]);
-    h += '</div><div class="card" style="margin-top:12px"><div class="ichips">' + outcomeChip(p.result.outcome) + ichip(p.result.restored ? 'tap' : 'xCircle', p.result.restored ? 'Con servicio' : 'Sin servicio', p.result.restored ? 'ok' : 'red') + '</div>' + (p.result.photos && p.result.photos.length ? '<div class="photos" style="margin-top:10px">' + p.result.photos.map(function (k) { return '<div class="photo">' + photoSVG(k) + '</div>'; }).join('') + '</div>' : '') + '</div>';
+    var r = p.result, val = !!p.validation, sent = p.resultEv.synced, n = (r.photos || []).length;
+    var h = '<div class="card hero closed">' + donePic(r, val);
+    h += '<div class="h2">' + (val ? 'Orden cerrada' : sent ? 'Cierre enviado' : 'Cierre guardado') + '</div>';
+    h += '<div class="small muted row" style="justify-content:center;gap:5px;margin-top:4px">' + (val ? icon('stamp', 14) + esc(p.validation.by) + ' · ' + p.validEv.time : sent ? icon('cloudCheck', 14) + 'Operaciones lo está validando' : icon('wifiOff', 14) + 'Sale cuando vuelva la señal') + '</div>';
+    h += hop([['camera', 'Foto', 'done'], ['send', 'Enviado', sent ? 'done' : 'pend'], ['stamp', 'Validado', val ? 'done' : (sent ? 'pend' : 'todo')], ['drop', 'MiAguas', val ? 'done' : 'todo']]);
+    h += '</div>';
+    h += '<div class="card" style="margin-top:12px"><div class="ichips">' + outcomeChip(r.outcome) + svcChip(r.service) + ichip('camera', n + (n === 1 ? ' foto' : ' fotos')) + '</div>' + (r.text ? '<div class="note" style="margin-top:8px">«' + esc(r.text) + '»</div>' : '') + '</div>';
+    h += '<div class="sec">' + miAguasCard(r, val ? icon('cloudCheck', 12) + 'Publicado ' + p.validEv.time : icon('stamp', 12) + 'Se publica cuando Operaciones valide') + '</div>';
+    var nx = ROUTE[1];
+    h += '<button class="btn primary big" style="margin-top:14px" data-a="mgo" data-v="orden2" data-id="' + nx.id + '">' + icon('arrowRight', 18) + 'Próxima orden · #' + nx.id + ' · ' + nx.time + '</button>';
+    if (val) h += '<button class="btn secondary big" style="margin-top:8px" data-a="casego" data-v="0248">' + icon('history', 18) + 'Ver en el historial</button>';
     h += '<div class="sec"><div class="card reg">' + regBox(inc, 'm') + '</div></div>';
     return h;
   }
@@ -2031,7 +2205,7 @@ function routeMapSVG(o) {
       return true;
     });
     var h = '<div class="searchbox">' + icon('search', 18) + '<input data-k="hist-q-' + side + '" data-a-input="histq" placeholder="Buscar #, calle o condición" value="' + esc(f.q) + '"></div>';
-    h += '<div class="row wrap" style="margin-top:10px">' + [['todos', 'list', 'Todos'], ['resueltos', 'checkCircle', 'Resueltos'], ['pendientes', 'hourglass', 'Pendientes']].map(function (x) { return '<button class="chip ' + (f.status === x[0] ? 'on' : '') + '" data-a="histst" data-v="' + x[0] + '">' + icon(x[1], 15) + x[2] + '</button>'; }).join('') + '<select class="select" style="width:auto;padding:7px 10px;font-size:13px;border-radius:999px" data-a-change="histsec">' + ['Todos', 'Norte', 'Sur', 'Este', 'Oeste', 'Centro'].map(function (s) { return '<option value="' + s + '"' + (f.sector === s ? ' selected' : '') + '>' + (s === 'Todos' ? 'Sector' : s) + '</option>'; }).join('') + '</select></div>';
+    h += '<div class="row wrap" style="margin-top:10px">' + [['todos', 'list', 'Todos'], ['resueltos', 'checkCircle', 'Resueltos'], ['pendientes', 'hourglass', 'Pendientes']].map(function (x) { return '<button class="chip ' + (f.status === x[0] ? 'on' : '') + '" data-a="histst" data-v="' + x[0] + '">' + icon(x[1], 15) + x[2] + '</button>'; }).join('') + '<select class="select" style="width:auto;padding:7px 10px;font-size:13px;border-radius:999px" data-a-change="histsec">' + ['Todos', 'Norte', 'Centro', 'Litoral', 'Oeste', 'Sur', 'Metropolitana'].map(function (s) { return '<option value="' + s + '"' + (f.sector === s ? ' selected' : '') + '>' + (s === 'Todos' ? 'Distrito' : s) + '</option>'; }).join('') + '</select></div>';
     h += '<div class="row between" style="margin:10px 2px"><span class="xs muted">' + list.length + ' casos</span>' + (side === 'm' ? ichip('device', 'En el celular', 'ok') : '') + '</div>';
     if (!list.length) h += '<div class="empty">' + icon('search', 22) + '<div style="margin-top:6px">Sin resultados</div></div>';
     var grid = side === 'd';
@@ -2052,7 +2226,7 @@ function routeMapSVG(o) {
     h += '<div class="card"><div class="ab"><div><small>' + icon('phone', 12) + 'Reclamo</small>' + esc(c.initial) + '</div><div><small>' + icon('eye', 12) + 'Se encontró</small>' + esc(c.found) + '</div></div></div>';
     h += '<div class="card"><div class="sec-t">Decisiones</div><ol class="steps2">' + c.decisions.map(function (d) { return '<li>' + esc(d) + '</li>'; }).join('') + '</ol></div>';
     h += '</div><div>';
-    h += '<div class="card"><div class="row" style="gap:10px;align-items:flex-start"><span style="color:' + (c.status === 'resuelto' ? 'var(--green)' : 'var(--amber)') + '">' + icon(c.status === 'resuelto' ? 'checkCircle' : 'hourglass', 22) + '</span><div class="small">' + esc(c.result) + '</div></div></div>';
+    h += '<div class="card"><div class="row" style="gap:10px;align-items:flex-start"><span style="color:' + (c.status === 'resuelto' ? 'var(--green)' : 'var(--amber)') + '">' + icon(c.status === 'resuelto' ? 'checkCircle' : 'hourglass', 22) + '</span><div class="small">' + esc(c.result) + '</div></div>' + (c.photos && c.photos.length ? '<div class="photos" style="margin-top:10px">' + c.photos.map(function (k, i) { return '<figure class="ev"><div class="photo">' + photoSVG(k) + '</div><figcaption class="' + (i ? '' : 'ok') + '">' + icon(i ? 'camera' : 'checkCircle', 13) + (i ? 'Foto ' + (i + 1) : 'Foto del cierre') + '</figcaption></figure>'; }).join('') + '</div>' : '') + (c.close ? '<div style="margin-top:10px">' + miAguasCard(c.close, '') + '</div>' : '') + '</div>';
     if (c.lesson && c.lesson !== '—') h += '<div class="lesson" style="margin-top:12px">' + icon('bulb', 22) + '<span>' + esc(c.lesson) + '</span></div>';
     h += '<div class="card"><div class="sec-t">Criterios</div><div class="chips">' + c.criteria.map(function (k) { var x = CRITERIA.filter(function (y) { return y.id === k; })[0]; return '<button class="chip static" data-a="critgo" data-v="' + k + '">' + icon(CAT_IC[x ? x.cat : 'todas'], 13) + k + '</button>'; }).join('') + '</div></div></div></div>';
     return h;
@@ -2116,13 +2290,13 @@ function routeMapSVG(o) {
       var kind = k === '0248' && p.change ? p.change.type : inc.kind;
       return '<tr class="click ' + (alert ? 'hl' : '') + '" data-a="dinc" data-v="' + k + '"><td class="nw"><b style="color:var(--blue-700)">#' + k + '</b>' + (alert ? ' <span class="newdot" title="Novedad sin revisar"></span>' : '') + '</td><td class="nw"><span class="row" style="gap:8px">' + icon(tIc(kind), 17) + esc(tShort(kind)) + '</span></td>' + (compact ? '' : '<td>' + inc.sector + '</td>') + '<td>' + prioMeter(p.priority) + '</td><td>' + statusPill(p) + '</td>' + (compact ? '' : '<td>C' + inc.crew.slice(-1) + '</td>') + '<td class="small"><span class="row" style="gap:5px;color:var(--g500)">' + (p.last ? icon(p.last.src === 'campo' ? 'device' : 'grid', 14) + '<b style="color:var(--g700)">' + p.last.time + '</b>' : '') + '</span></td></tr>';
     }).join('');
-    return '<div class="tblwrap"><table class="tbl"><thead><tr><th>N.º</th><th>Tipo</th>' + (compact ? '' : '<th>Sector</th>') + '<th>Prioridad</th><th>Estado</th>' + (compact ? '' : '<th>Cuadrilla</th>') + '<th>' + (compact ? 'Hora' : 'Último dato') + '</th></tr></thead><tbody>' + rows + '</tbody></table></div>';
+    return '<div class="tblwrap"><table class="tbl"><thead><tr><th>N.º</th><th>Tipo</th>' + (compact ? '' : '<th>Distrito</th>') + '<th>Prioridad</th><th>Estado</th>' + (compact ? '' : '<th>Cuadrilla</th>') + '<th>' + (compact ? 'Hora' : 'Último dato') + '</th></tr></thead><tbody>' + rows + '</tbody></table></div>';
   }
   function alertRow(a) {
     var inc = S.incidents[a.inc], p = proj(inc, 'd'), body = '';
     if (a.kind === 'change' && p.change) body = (p.change.conditions || []).map(function (c) { return condChip(c); }).join('') + (p.change.homes ? ichip('home', p.change.homes, 'warn') : '') + '<span class="ichip warn">' + prioMeter(p.change.urgency) + '</span>' + (p.change.offline ? ichip('wifiOff', 'Sin señal ' + p.changeEv.time) : '');
-    if (a.kind === 'result' && p.result) body = outcomeChip(p.result.outcome) + ichip('hourglass', 'A validar');
-    var snip = (a.kind === 'change' || a.kind === 'msg') && a.body ? '<div class="small muted ellipsis" style="margin-top:4px">' + icon('chat', 13) + ' «' + esc(a.body) + '»</div>' : '';
+    if (a.kind === 'result' && p.result) body = outcomeChip(p.result.outcome) + svcChip(p.result.service) + ichip('camera', (p.result.photos || []).length + ' fotos') + ichip('hourglass', 'A validar');
+    var snip = (a.kind === 'change' || a.kind === 'msg' || a.kind === 'result') && a.body ? '<div class="small muted ellipsis" style="margin-top:4px">' + icon('chat', 13) + ' «' + esc(a.body) + '»</div>' : '';
     return '<div class="alertrow ' + (a.read ? 'read' : '') + '"><div class="ico">' + icon(a.kind === 'result' ? 'stamp' : a.kind === 'msg' ? 'chat' : 'alert', 20) + '</div><div style="flex:1;min-width:0"><div class="row between"><b>' + esc(a.title) + '</b><span class="xs muted">' + a.time + '</span></div>' + snip + (body ? '<div class="ichips" style="margin-top:7px">' + body + '</div>' : '') + '</div><button class="btn ' + (a.read ? 'secondary' : 'primary') + ' sm" data-a="openAlert" data-v="' + a.id + '">' + (a.read ? 'Ver' : 'Revisar') + '</button></div>';
   }
   function kpi(ic, n, l, cls) { return '<div class="kpi ' + (cls || '') + '"><span class="i">' + icon(ic, 22) + '</span><div><div class="n">' + n + '</div><div class="l">' + l + '</div></div></div>'; }
@@ -2145,17 +2319,17 @@ function routeMapSVG(o) {
   }
   function dValidations() {
     var list = Object.keys(S.incidents).filter(function (k) { return proj(S.incidents[k], 'd').key === 'resuelta'; });
-    var h = '<div class="row wrap" style="gap:8px"><span class="small muted row" style="gap:5px">' + icon('stamp', 16) + 'Se valida:</span>' + ichip('camera', 'Evidencia', 'blue') + ichip('shield', 'Lo autorizado', 'blue') + ichip('tap', 'Servicio', 'blue') + ichip('book', 'CO-CIE-01') + '</div>';
+    var h = '<div class="row wrap" style="gap:8px"><span class="small muted row" style="gap:5px">' + icon('stamp', 16) + 'Se valida:</span>' + ichip('camera', 'Foto final', 'blue') + ichip('shield', 'Lo autorizado', 'blue') + ichip('gauge', 'Presión en HIDRA', 'blue') + ichip('users', 'Mensaje al vecino', 'blue') + ichip('book', 'CO-CIE-01') + '</div>';
     h += fric('sindueno', 'Hay cierres pendientes sin una persona asignada para validarlos: mientras nadie los toma, no se incorporan al historial.') + '<div class="dsec">';
     if (!list.length) h += '<div class="empty" style="margin-bottom:10px">' + icon('checkCircle', 22) + '<div style="margin-top:6px">Nada del día por validar</div></div>';
-    h += list.map(function (k) { var inc = S.incidents[k], p = proj(inc, 'd'); return '<div class="alertrow"><div class="ico">' + icon('stamp', 20) + '</div><div style="flex:1"><div class="row between"><b>#' + k + ' · ' + esc(tShort(p.change ? p.change.type : inc.kind)) + '</b><span class="xs muted">' + p.resultEv.time + '</span></div><div class="ichips" style="margin-top:7px">' + outcomeChip(p.result.outcome) + ichip(p.result.restored ? 'tap' : 'xCircle', p.result.restored ? 'Con servicio' : 'Sin servicio', p.result.restored ? 'ok' : 'red') + ichip('camera', (p.result.photos || []).length + ((p.result.photos || []).length === 1 ? ' foto' : ' fotos')) + '</div></div><button class="btn primary sm" data-a="dinc" data-v="' + k + '">Revisar y validar</button></div>'; }).join('');
+    h += list.map(function (k) { var inc = S.incidents[k], p = proj(inc, 'd'); return '<div class="alertrow"><div class="ico">' + icon('stamp', 20) + '</div><div style="flex:1"><div class="row between"><b>#' + k + ' · ' + esc(tShort(p.change ? p.change.type : inc.kind)) + '</b><span class="xs muted">' + p.resultEv.time + '</span></div><div class="ichips" style="margin-top:7px">' + outcomeChip(p.result.outcome) + svcChip(p.result.service) + ichip('camera', (p.result.photos || []).length + ((p.result.photos || []).length === 1 ? ' foto' : ' fotos')) + '</div></div>' + ((p.result.photos || []).length ? '<div class="photo vthumb">' + photoSVG(p.result.photos[0]) + '</div>' : '') + '<button class="btn primary sm" data-a="dinc" data-v="' + k + '">Revisar y validar</button></div>'; }).join('');
     h += S.history.filter(function (c) { return c.status === 'pendiente' && c.pendingLabel === 'Pendiente de validación'; }).map(function (c) { return '<div class="alertrow read" style="margin-top:8px"><div class="ico">' + icon('stamp', 20) + '</div><div style="flex:1"><b>#' + c.id + ' · ' + esc(c.short || c.title) + '</b><div class="ichips" style="margin-top:6px">' + ichip('clock', c.date) + ichip('pin', c.sector) + '</div></div><button class="btn secondary sm" data-a="casego" data-v="' + c.id + '">Ver caso</button></div>'; }).join('');
     return h + '</div>';
   }
   function dIncident() {
     var inc = S.incidents[S.d.id] || inc0248(), p = proj(inc, 'd');
     var kind = p.change ? p.change.type : inc.kind;
-    var h = '<div class="row between wrap"><div class="row wrap"><button class="btn ghost sm" data-a="dgo" data-v="incidencias">' + icon('arrowLeft', 15) + 'Incidencias</button><span class="tic">' + icon(tIc(kind), 20) + '</span><span class="h2">#' + inc.id + ' · ' + esc(tShort(kind)) + '</span>' + statusPill(p) + prioMeter(p.priority) + '</div><span class="ichips">' + ichip('pin', (inc.short || inc.address) + ' · ' + inc.sector) + ichip('users', inc.crew) + '</span></div>';
+    var h = '<div class="row between wrap"><div class="row wrap"><button class="btn ghost sm" data-a="dgo" data-v="incidencias">' + icon('arrowLeft', 15) + 'Incidencias</button><span class="tic">' + icon(tIc(kind), 20) + '</span><span class="h2">#' + inc.id + ' · ' + esc(tShort(kind)) + '</span>' + statusPill(p) + prioMeter(p.priority) + '</div><span class="ichips">' + ichip('pin', (inc.short || inc.address) + ' · ' + inc.sector) + ichip('users', inc.crew) + (inc.caso ? '<span class="ichip miagchip" title="Lo que ve el vecino en MiAguas · caso ' + inc.caso + '">' + icon('drop', 14) + 'MiAguas · <b>' + publicState(p) + '</b></span>' : '') + '</span></div>';
     if (inc.id !== '0248') return h + '<div class="dgrid" style="margin-top:14px"><div class="card"><div class="small muted">' + esc(inc.description) + '</div><div class="divider"></div>' + timeline(inc, 'd') + '</div><div>' + (CHAT_INCS.indexOf(inc.id) >= 0 ? dChat(inc, p) : '') + '</div></div>';
     if (!p.change) h += '<div class="statusrow gray">' + icon(S.online ? 'info' : 'wifiOff', 20) + '<b>Solo la orden original</b><span class="sp"></span><span class="wait">' + icon('clock', 15) + 'Último dato C3 ' + lastCrewContact() + '</span></div>' + fric('handoff', 'Lo que la cuadrilla registró en campo todavía no llegó a la central: depende de que vuelva la señal y se sincronice, y puede llegar tarde.');
     h += '<div class="dgrid" style="margin-top:14px"><div>';
@@ -2185,7 +2359,7 @@ function routeMapSVG(o) {
     if (p.change && !p.update) h += fric('sobrecarga', 'Leer el chat, decidir la prioridad y autorizar acciones recae en la misma persona que atiende al resto de las cuadrillas.');
     h += '<div class="thread dthread" data-sk="d-chat">' + chatThread('d', inc.id) + '</div>';
     if (!p.result) {
-      h += '<div class="dcomp"><div class="row wrap" style="gap:6px"><span class="xs muted b">Prioridad</span>' + ['Media', 'Alta', 'Crítica'].map(function (x) { return '<button class="chip pchip u' + PLV[x] + (d.priority === x ? ' on' : '') + '" data-a="setx" data-f="omsg.priority" data-v="' + x + '">' + prioMeter(x, true) + x + '</button>'; }).join('') + '<span class="sp"></span><button class="chip ' + (d.auth ? 'on' : '') + '" data-a="setb" data-f="omsg.auth" data-v="' + (d.auth ? '0' : '1') + '">' + icon('shield', 15) + 'Autorizar' + (d.authorized.length ? ' · ' + d.authorized.length : '') + '</button></div>';
+      h += '<div class="dcomp"><div class="row wrap" style="gap:6px"><span class="xs muted b">Prioridad</span>' + ['Normal', 'Alta', 'Emergencia'].map(function (x) { return '<button class="chip pchip u' + PLV[x] + (d.priority === x ? ' on' : '') + '" data-a="setx" data-f="omsg.priority" data-v="' + x + '">' + prioMeter(x, true) + x + '</button>'; }).join('') + '<span class="sp"></span><button class="chip ' + (d.auth ? 'on' : '') + '" data-a="setb" data-f="omsg.auth" data-v="' + (d.auth ? '0' : '1') + '">' + icon('shield', 15) + 'Autorizar' + (d.authorized.length ? ' · ' + d.authorized.length : '') + '</button></div>';
       if (d.auth) h += '<div class="checklist authl">' + DEMO_UPDATE.authorized.map(function (a) { return ckItem('omsg.authorized', a, d.authorized.indexOf(a) >= 0, ITEM_IC[a]); }).join('') + '</div>';
       h += '<div class="crow"><textarea data-f="omsg.text" rows="2" placeholder="Escribile a la cuadrilla…">' + esc(d.text) + '</textarea><button class="snd" data-a="sendOpsMsg" data-id="' + inc.id + '" aria-label="Enviar">' + icon('send', 19) + '</button></div></div>';
     }
@@ -2202,14 +2376,16 @@ function routeMapSVG(o) {
     return '<div class="chatpage"><div class="card convs"><div class="sec-t">Conversaciones</div>' + list + '</div><div>' + dChat(inc, proj(inc, 'd'), true) + '</div></div>';
   }
   function dActionCard(inc, p) {
-    var h = '<div class="card">';
+    var h = '<div class="card">', r = p.result;
     var byChip = '<div class="ichips" style="margin-top:10px">' + ichip('user', S.deskRole === 'supervision' ? 'Supervisión · C. Duarte' : 'Operaciones · L. Ferreyra') + '</div>';
+    var shots = '<div class="vshots">' + (r.photos || []).map(function (k, i) { return '<figure class="ev' + (i ? '' : ' main') + '"><div class="photo">' + photoSVG(k) + (i ? '' : '<span class="okb">' + icon('check', 14) + '</span>') + '</div><figcaption class="' + (i ? '' : 'ok') + '">' + icon(i ? 'camera' : 'checkCircle', 13) + (i ? 'Foto ' + (i + 1) : 'Foto del cierre · ' + p.resultEv.time) + (i === 0 && r.offline ? ' · ' + icon('wifiOff', 12) + 'sin señal' : '') + '</figcaption></figure>'; }).join('') + '</div>';
     if (p.validation) {
-      h += '<div class="sec-t">Cierre</div><div class="statusrow green" style="margin-top:0">' + icon('checkCircle', 20) + '<b>Cerrada · ' + p.validEv.time + '</b></div><button class="btn primary block" style="margin-top:10px" data-a="dgo" data-v="cierre" data-id="0248">Ver cierre</button>';
-    } else if (p.result) {
+      h += '<div class="sec-t">Cierre</div><div class="statusrow green" style="margin-top:0">' + icon('checkCircle', 20) + '<b>Cerrada · ' + p.validEv.time + '</b></div>' + shots + '<div style="margin-top:10px">' + miAguasCard(r, icon('cloudCheck', 12) + 'Publicado ' + p.validEv.time) + '</div><button class="btn primary block" style="margin-top:10px" data-a="dgo" data-v="cierre" data-id="0248">Ver cierre</button>';
+    } else if (r) {
       ensureValidDraft(); var d = S.drafts.valid;
-      h += '<div class="sec-t">Validar cierre' + demoBtn('valid') + '</div><div class="ichips">' + outcomeChip(p.result.outcome) + ichip(p.result.restored ? 'tap' : 'xCircle', p.result.restored ? 'Con servicio' : 'Sin servicio', p.result.restored ? 'ok' : 'red') + '</div>' + (p.result.text ? '<div class="note" style="margin-top:8px">«' + esc(p.result.text) + '»</div>' : '');
-      h += '<div class="checklist" style="margin-top:10px">' + DEMO_VALIDATION.checks.map(function (c) { return ckItem('valid.checks', c, d.checks.indexOf(c) >= 0, ITEM_IC[c]); }).join('') + '</div><label class="field"><span>' + icon('bulb', 14) + ' Aprendizaje <i>opcional</i></span><textarea class="textarea sm" data-f="valid.lesson" placeholder="¿Qué conviene recordar?">' + esc(d.lesson) + '</textarea></label>' + byChip + (S.formError ? '<div class="statusrow red">' + icon('alert', 16) + '<b>' + esc(S.formError) + '</b></div>' : '') + '<button class="btn ok block" style="margin-top:12px" data-a="validate">' + icon('stamp', 18) + 'Validar cierre</button>';
+      h += '<div class="sec-t">Validar cierre' + demoBtn('valid') + '</div>' + shots + '<div class="ichips" style="margin-top:10px">' + outcomeChip(r.outcome) + svcChip(r.service) + '</div>' + (r.text ? '<div class="note" style="margin-top:8px">«' + esc(r.text) + '»</div>' : '');
+      h += '<div style="margin-top:10px">' + miAguasCard(r, icon('stamp', 12) + 'Se publica al validar') + '</div>';
+      h += '<div class="checklist" style="margin-top:10px">' + DEMO_VALIDATION.checks.map(function (c) { return ckItem('valid.checks', c, d.checks.indexOf(c) >= 0, ITEM_IC[c]); }).join('') + '</div><label class="field"><span>' + icon('bulb', 14) + ' Aprendizaje <i>opcional</i></span><textarea class="textarea sm" data-f="valid.lesson" placeholder="¿Qué conviene recordar?">' + esc(d.lesson) + '</textarea></label>' + byChip + (S.formError ? '<div class="statusrow red">' + icon('alert', 16) + '<b>' + esc(S.formError) + '</b></div>' : '') + '<button class="btn ok block" style="margin-top:12px" data-a="validate">' + icon('stamp', 18) + 'Validar y publicar</button>';
     }
     return h + '</div>';
   }
@@ -2218,8 +2394,9 @@ function routeMapSVG(o) {
     if (!p.validation) return dIncident();
     var t = function (type) { var e = inc.events.filter(function (x) { return x.type === type; })[0]; return e ? e.time : '—'; };
     var ce = p.changeEv;
-    var steps = [[t('assigned'), 'users', 'Asignada', 'central'], [t('started'), 'play', 'Iniciada', 'campo'], [ce ? ce.time : '—', 'chat', 'Cambio por chat' + (p.change && p.change.offline ? ' sin señal' : ''), 'campo'], [p.ai.length ? p.ai[0].time : '—', 'spark', 'Consulta IA · #0176', 'ia'], [ce ? ce.syncedAt : '—', 'sync', 'Sincronizado', 'central'], [p.updateEv ? p.updateEv.time : '—', 'chat', 'Indicaciones por chat · ' + (p.update ? p.update.priority : ''), 'central'], [t('result'), 'checkCircle', 'Resultado', 'campo'], [p.validEv.time, 'stamp', 'Validada', 'central']];
-    var h = '<div class="dgrid even"><div class="card hero"><div class="bigic">' + icon('checkCircle', 34) + '</div><div class="h1">#0248 cerrada</div><div class="small muted row" style="justify-content:center;gap:5px;margin-top:6px">' + icon('stamp', 14) + esc(p.validation.by) + ' · ' + p.validEv.time + '</div>' + hop([['send', 'Resultado', 'done'], ['stamp', 'Validado', 'done'], ['history', 'Historial', 'done']]) + '<div class="row" style="justify-content:center;margin-top:16px;gap:10px"><button class="btn primary" data-a="casego" data-v="0248">' + icon('history', 18) + 'Ver en el historial</button><button class="btn secondary" data-a="dgo" data-v="panel">Panel</button></div></div>';
+    var steps = [[t('assigned'), 'users', 'Asignada', 'central'], [t('started'), 'play', 'Iniciada', 'campo'], [ce ? ce.time : '—', 'chat', 'Cambio por chat' + (p.change && p.change.offline ? ' sin señal' : ''), 'campo'], [p.ai.length ? p.ai[0].time : '—', 'spark', 'Consulta IA · #0176', 'ia'], [ce ? ce.syncedAt : '—', 'sync', 'Sincronizado', 'central'], [p.updateEv ? p.updateEv.time : '—', 'chat', 'Indicaciones por chat · ' + (p.update ? p.update.priority : ''), 'central'], [t('result'), 'camera', 'Cierre con foto · ' + outcomeOf(p.result.outcome)[2], 'campo'], [p.validEv.time, 'stamp', 'Validada', 'central'], [p.validEv.time, 'drop', 'MiAguas · ' + publicClose(p.result).state, 'central']];
+    steps = steps.filter(function (s) { return s[0] && s[0] !== '—' && !/· $/.test(s[2]); });
+    var h = '<div class="dgrid even"><div class="card hero closed">' + donePic(p.result, true) + '<div class="h1">#0248 cerrada</div><div class="small muted row" style="justify-content:center;gap:5px;margin-top:6px">' + icon('stamp', 14) + esc(p.validation.by) + ' · ' + p.validEv.time + '</div>' + hop([['camera', 'Foto', 'done'], ['stamp', 'Validado', 'done'], ['drop', 'MiAguas', 'done'], ['history', 'Historial', 'done']]) + '<div style="margin-top:14px;text-align:left">' + miAguasCard(p.result, icon('cloudCheck', 12) + 'Publicado ' + p.validEv.time) + '</div><div class="row" style="justify-content:center;margin-top:16px;gap:10px"><button class="btn primary" data-a="casego" data-v="0248">' + icon('history', 18) + 'Ver en el historial</button><button class="btn secondary" data-a="dgo" data-v="panel">Panel</button></div></div>';
     h += '<div class="card"><div class="sec-t">Recorrido</div>' + tlKey() + '<ul class="tl2">' + steps.map(function (s) { return '<li class="' + s[3] + '"><span class="ic2">' + icon(s[1], 15) + '</span><span class="t">' + esc(s[2]) + '</span><span class="tm">' + s[0] + '</span></li>'; }).join('') + '</ul>' + (p.validation.lesson ? '<div class="lesson" style="margin-top:12px">' + icon('bulb', 22) + '<span>' + esc(p.validation.lesson) + '</span></div>' : '') + '</div></div>';
     return h;
   }
@@ -2236,7 +2413,7 @@ function routeMapSVG(o) {
       { n: 'Escena 3 · Sin conexión', p: 'Cortá la señal (interruptor de arriba o el ícono de wifi del celular) antes de enviar el cambio: queda en el chat del celular y Operaciones no lo ve.', done: S.wentOffline && !!(rp && rp.data.report.offline), go: [['Ver vista dividida', 'dividida']] },
       { n: 'Escena 4 · Consulta a la IA', p: 'Abrí el Asistente sin conexión y enviá la consulta sugerida. Revisá el antecedente #0176, los criterios y los límites.', done: has('ai'), go: [['Abrir asistente', 'cuadrilla', 'm', 'asistente']] },
       { n: 'Escena 5 · Reconexión', p: 'Volvé a «Conectada» y pulsá «Sincronizar ahora». En Operaciones, abrí la alerta y respondé por el chat con la prioridad y lo que autorizás.', done: upd, go: [['Ir a Cuadrilla', 'cuadrilla', 'm', 'inicio'], ['Ir a Operaciones', 'operaciones', 'd', 'panel']] },
-      { n: 'Escena 6 · Resolución', p: 'En Cuadrilla, «Registrar resultado». En Operaciones o Supervisión, validá el cierre y buscá #0248 en el historial.', done: has('validated'), go: [['Resultado (Cuadrilla)', 'cuadrilla', 'm', 'resultado', '0248'], ['Validar (Supervisión)', 'supervision', 'd', 'incidente', '0248']] }
+      { n: 'Escena 6 · Cierre', p: 'En Cuadrilla, «Cerrar orden»: foto del trabajo terminado, motivo, servicio y comentario. En Operaciones o Supervisión, validá el cierre: el vecino ve «Resuelto» en MiAguas y #0248 pasa al historial.', done: has('validated'), go: [['Cerrar orden (Cuadrilla)', 'cuadrilla', 'm', 'resultado', '0248'], ['Validar (Supervisión)', 'supervision', 'd', 'incidente', '0248']] }
     ];
   }
   var FRIC_GUIDE = [
@@ -2273,7 +2450,7 @@ function routeMapSVG(o) {
   function guide() {
     var open = S.guide === null ? (window.innerWidth > 1240 && S.role === 'cuadrilla') : S.guide;
     var steps = guideSteps(), cur = steps.findIndex(function (s) { return !s.done; });
-    var h = '<aside class="guide ' + (open ? 'open' : '') + '"><div class="gh"><div><div class="h3">Recorrido de demostración</div><div class="xs muted">Caso #0248 · Calle 12, Sector Norte</div></div><button class="btn ghost sm" data-a="guide" aria-label="Cerrar">' + icon('x', 18) + '</button></div><div class="gb">';
+    var h = '<aside class="guide ' + (open ? 'open' : '') + '"><div class="gh"><div><div class="h3">Recorrido de demostración</div><div class="xs muted">Orden #0248 · Calle 12, Distrito Norte</div></div><button class="btn ghost sm" data-a="guide" aria-label="Cerrar">' + icon('x', 18) + '</button></div><div class="gb">';
     h += steps.map(function (s, i) { return '<div class="gstep ' + (s.done ? 'done' : (i === cur ? 'cur' : '')) + '"><div class="n">' + (s.done ? icon('checkCircle', 14) : '') + s.n + '</div><p>' + s.p + '</p><div class="row wrap">' + s.go.map(function (g) { return '<button class="btn secondary sm" data-a="gstep" data-v="' + g.join('|') + '">' + g[0] + '</button>'; }).join('') + '</div></div>'; }).join('');
     h += '<div class="notice blue" style="margin-top:6px">' + icon('split', 18) + '<div>Usá «Vista dividida» para mostrar al mismo tiempo lo que sabe la Cuadrilla y lo que sabe Operaciones.</div></div>';
     h += '<div class="h3" style="margin:18px 0 4px">Fricciones operativas · Clase 29</div><p class="small muted" style="margin:0 0 10px">Posibles problemas identificados al analizar el recorrido. No están comprobados ni resueltos.</p>';
@@ -2297,6 +2474,7 @@ function routeMapSVG(o) {
     if (el.getAttribute('data-a') === 'closeModal' && ev.target.closest('[data-stop]') && el.classList.contains('modal-bg')) return;
     var a = el.getAttribute('data-a'), v = el.getAttribute('data-v'), id = el.getAttribute('data-id'), f = el.getAttribute('data-f');
     var paneEl = el.closest('[data-pane]'), side = paneEl ? paneEl.getAttribute('data-pane') : null;
+    if (['set', 'toggle', 'setb', 'setx', 'step', 'addPhoto', 'rmPhoto'].indexOf(a) >= 0) S.formError = null; // el aviso de faltantes se va al completar
     switch (a) {
       case 'role': setRole(v); break;
       case 'deskrole': S.deskRole = v; if (S.role !== 'dividida' && !PRES) S.role = v; if (v === 'supervision' && S.d.name === 'panel') S.d = { name: 'validaciones' }; commit(); break;
@@ -2324,7 +2502,7 @@ function routeMapSVG(o) {
       case 'set': setPath(f, v); if (f === 'change.type' && S.drafts.change) S.drafts.change.actions = (S.drafts.change.actions || []).filter(function (x) { return actionsFor(v).indexOf(x) >= 0; }); commit(); break;
       case 'setb': setPath(f, v === '1'); commit(); break;
       case 'step': var nn = (parseInt(getPath(f) || '0', 10) || 0) + parseInt(v, 10); setPath(f, nn > 0 ? String(nn) : ''); commit(); break;
-      case 'addPhoto': var ph = getPath(f) || []; var kinds = f.indexOf('result') === 0 ? ['reparacion', 'calzada', 'vereda'] : ['calzada', 'vereda', 'reparacion']; ph.push(kinds[ph.length % 3]); setPath(f, ph); commit(); break;
+      case 'addPhoto': var ph = getPath(f) || []; var kinds = f.indexOf('result') === 0 ? ['cierre', 'reparacion', 'vereda'] : ['calzada', 'vereda', 'reparacion']; ph.push(kinds[ph.length % 3]); setPath(f, ph); commit(); break;
       case 'demoFill': demoFill(v); break;
       case 'sync': doSync(); break;
       case 'closeSync': S.syncUI = null; commit(); break;
