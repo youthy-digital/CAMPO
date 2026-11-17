@@ -120,14 +120,23 @@ function mapSVG(expanded) {
     streets + pipe + area + homes + pin + '</svg>';
 }
 
-/* Mapa de sectores con la posición de las cuadrillas (tablero de Operaciones) */
+/* Mapa de la ciudad con sectores, cuadrillas e incidencias (tablero de Operaciones) */
 function crewMapSVG(o) {
   o = o || {};
-  var z = function (x, y, w, h, n, f) { return '<rect x="' + x + '" y="' + y + '" width="' + w + '" height="' + h + '" rx="10" fill="' + f + '"/><text x="' + (x + 9) + '" y="' + (y + 16) + '" font-size="9.5" font-weight="700" fill="#66768a" letter-spacing=".08em">' + n + '</text>'; };
-  var zones = z(6, 6, 308, 50, 'NORTE', '#dfeaf8') + z(6, 120, 308, 50, 'SUR', '#e7ecf1') + z(6, 62, 98, 52, 'OESTE', '#e7ecf1') + z(216, 62, 98, 52, 'ESTE', '#e7ecf1') + z(110, 62, 100, 52, 'CENTRO', '#e7ecf1');
-  var crew = function (x, y, t, on) { return '<g transform="translate(' + x + ' ' + y + ')"><circle r="12" fill="' + (on ? '#1b7f50' : '#8d99a8') + '" stroke="#fff" stroke-width="2.5"/><text y="3.5" text-anchor="middle" font-size="9.5" font-weight="800" fill="#fff">' + t + '</text></g>'; };
-  var inc = function (x, y, c, big) { return '<circle cx="' + x + '" cy="' + y + '" r="' + (big ? 11 : 7) + '" fill="' + c + '" opacity=".22"/><circle cx="' + x + '" cy="' + y + '" r="4.5" fill="' + c + '"/>'; };
-  var incs = inc(206, 34, o.alert ? '#bf3434' : '#1f5fae', o.alert) + inc(286, 92, '#1f5fae') + inc(196, 148, '#1f5fae') + inc(36, 96, '#1f5fae');
-  var crews = crew(170, 34, 'C3', o.c3on !== false) + crew(262, 92, 'C1', true) + crew(160, 148, 'C2', true) + crew(70, 96, 'C4', true);
-  return '<svg viewBox="0 0 320 176" xmlns="http://www.w3.org/2000/svg" font-family="Inter,system-ui,sans-serif">' + zones + incs + crews + '</svg>';
+  var W = 320, H = 200, i, j, blocks = '';
+  for (i = 0; i < 13; i++) for (j = 0; j < 10; j++) blocks += '<rect x="' + (3 + i * 25) + '" y="' + (3 + j * 20) + '" width="21" height="16" rx="2.5" fill="#e3e6de"/>';
+  var park = '<rect x="128" y="86" width="44" height="34" rx="7" fill="#cfe6c3"/><g fill="#a9d29a"><circle cx="139" cy="97" r="4"/><circle cx="152" cy="108" r="5"/><circle cx="163" cy="95" r="3.5"/><circle cx="141" cy="112" r="3"/></g>';
+  var river = '<path d="M-8 128 C 22 140, 34 170, 70 178 S 118 196, 132 210" stroke="#bcd8ef" stroke-width="15" fill="none" stroke-linecap="round"/><path d="M-8 128 C 22 140, 34 170, 70 178 S 118 196, 132 210" stroke="#d3e6f6" stroke-width="5" fill="none"/>';
+  var roads = '<g stroke="#fff" stroke-linecap="round"><path d="M0 63H320M0 133H320M103 0V200M219 0V200" stroke-width="5.5"/><path d="M0 23H320M0 103H320M0 163H320M53 0V200M163 0V200M273 0V200" stroke-width="2.5"/></g><path d="M0 12 L320 188" stroke="#f2d98c" stroke-width="4.5"/><path d="M0 12 L320 188" stroke="#fbeec4" stroke-width="1.6"/>';
+  var sectors = '<g fill="none" stroke="#6f86a3" stroke-width="1.3" stroke-dasharray="5 4" opacity=".75"><path d="M0 66H320M0 136H320M100 66V136M222 66V136"/></g>';
+  var lab = function (x, y, t, anchor) { return '<text x="' + x + '" y="' + y + '" text-anchor="' + (anchor || 'start') + '">' + t + '</text>'; };
+  var labels = '<g font-size="8.5" font-weight="800" fill="#5b6b80" letter-spacing=".12em" stroke="#eef0ea" stroke-width="3" paint-order="stroke">' + lab(8, 14, 'NORTE') + lab(8, 78, 'OESTE') + lab(108, 78, 'CENTRO') + lab(230, 78, 'ESTE') + lab(150, 196, 'SUR') + '</g>';
+  var streetNames = '<g font-size="6.5" font-weight="700" fill="#8592a3" stroke="#fff" stroke-width="2.4" paint-order="stroke">' + lab(248, 61, 'Calle 12') + lab(248, 131, 'Calle 30') + '<text transform="translate(101 196) rotate(-90)">Av. 7</text><text transform="translate(217 196) rotate(-90)">Av. 22</text></g>';
+  var inc = function (x, y, c, big) { return '<circle cx="' + x + '" cy="' + y + '" r="' + (big ? 12 : 8) + '" fill="' + c + '" opacity=".2">' + (big ? '<animate attributeName="r" values="8;14;8" dur="1.8s" repeatCount="indefinite"/>' : '') + '</circle><circle cx="' + x + '" cy="' + y + '" r="4.5" fill="' + c + '" stroke="#fff" stroke-width="1.6"/>'; };
+  var pin = function (x, y, t, on) { return '<g transform="translate(' + x + ' ' + y + ')"><path d="M0 0c-7-9-11-13-11-19a11 11 0 0 1 22 0c0 6-4 10-11 19z" fill="' + (on ? '#1b7f50' : '#8d99a8') + '" stroke="#fff" stroke-width="2"/><text y="-15.5" text-anchor="middle" font-size="8.5" font-weight="800" fill="#fff">' + t + '</text></g>'; };
+  var incs = inc(196, 44, o.alert ? '#d93025' : '#1f5fae', o.alert) + inc(290, 104, '#1f5fae') + inc(186, 158, '#1f5fae') + inc(36, 104, '#1f5fae') + inc(128, 26, '#8d99a8') + inc(80, 34, '#8d99a8');
+  var pins = pin(166, 50, 'C3', o.c3on !== false) + pin(262, 108, 'C1', true) + pin(156, 166, 'C2', true) + pin(64, 110, 'C4', true);
+  var ctrls = '<g transform="translate(294 8)"><rect width="19" height="36" rx="5" fill="#fff" stroke="#d6dde6"/><path d="M5.5 10h8M9.5 6v8M5.5 27h8" stroke="#4f5e71" stroke-width="1.6" stroke-linecap="round"/><path d="M0 18h19" stroke="#e3e8ee"/></g>';
+  var scale = '<g transform="translate(248 192)"><path d="M0 0h34" stroke="#4f5e71" stroke-width="2"/><path d="M0 -3v6M34 -3v6" stroke="#4f5e71" stroke-width="1.4"/><text x="38" y="3" font-size="7" font-weight="700" fill="#4f5e71">500 m</text></g>';
+  return '<svg viewBox="0 0 ' + W + ' ' + H + '" xmlns="http://www.w3.org/2000/svg" font-family="Inter,system-ui,sans-serif"><rect width="' + W + '" height="' + H + '" fill="#eef0ea"/>' + blocks + park + river + roads + sectors + streetNames + labels + incs + pins + ctrls + scale + '</svg>';
 }

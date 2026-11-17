@@ -761,3 +761,13 @@ body.pres .stage.split .col-d{max-width:1280px}
 .bub.me .rcard .ichip.warn{background:#fff1e3;color:#9a4a07}
 .bub.me .rcard .ichip.ok{background:var(--green-bg);color:var(--green)}
 .regbtn{border-color:#e9b27e;color:#a24d0b;background:#fff8f0}.regbtn>.ic{color:#c26412}
+/* mapa de cuadrillas */
+.cmap{background:#eef0ea}
+.cmap svg{max-width:none}
+.maplg{display:flex;flex-wrap:wrap;gap:12px;margin-top:8px;font-size:11.5px;font-weight:700;color:var(--g500)}
+.maplg span{display:inline-flex;align-items:center;gap:5px}
+.pinlg{width:10px;height:12px;background:#1b7f50;border-radius:50% 50% 50% 0;transform:rotate(-45deg);display:inline-block}
+.dotlg{width:9px;height:9px;border-radius:50%;background:#1f5fae;box-shadow:0 0 0 3px rgba(31,95,174,.2);display:inline-block}
+.dotlg.red{background:#d93025;box-shadow:0 0 0 3px rgba(217,48,37,.2)}
+.dotlg.gray{background:#8d99a8;box-shadow:0 0 0 3px rgba(141,153,168,.2)}
+.cmap svg{max-width:560px;margin:0 auto}
