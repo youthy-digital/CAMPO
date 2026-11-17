@@ -1,0 +1,1924 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CAMPO · Gestión de incidencias</title>
+<meta name="description" content="CAMPO · gestión de incidencias en campo para Aguas del Este: la cuadrilla y Operaciones trabajando sobre el mismo caso, con o sin conexión.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 2.8s-6.4 7-6.4 11.8a6.4 6.4 0 0 0 12.8 0C18.4 9.8 12 2.8 12 2.8z' fill='%231f5fae'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --blue-800:#173f73;--blue-700:#1b4f91;--blue-600:#1f5fae;--blue-500:#2f74c8;--blue-200:#c4d8f1;--blue-100:#e3edf9;--blue-50:#f2f7fd;
+  --navy:#10243f;--navy-2:#18345a;
+  --g900:#18212d;--g700:#3a4859;--g600:#4f5e71;--g500:#66768a;--g400:#8d99a8;--g300:#c3ccd7;--g200:#dde3ea;--g150:#e7ecf1;--g100:#eef2f6;--g50:#f6f8fb;
+  --green:#1b7f50;--green-bg:#e2f3ea;--amber:#a45208;--amber-bg:#fdf0d5;--amber-line:#f4c56b;--red:#bf3434;--red-bg:#fbe7e7;--indigo:#4351b5;--indigo-bg:#eaedfb;
+  --radius:12px;--shadow:0 1px 2px rgba(16,36,63,.06),0 4px 16px rgba(16,36,63,.06);
+  font-family:Inter,"Segoe UI",system-ui,-apple-system,Roboto,Arial,sans-serif;
+}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:#e9eef4;color:var(--g900);-webkit-font-smoothing:antialiased}
+body{font-size:15px;line-height:1.4}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+.ic{flex:none;display:block}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+.no-anim *,.no-anim *::before,.no-anim *::after{transition:none!important;animation:none!important}
+
+/* ------- Barra de demostración ------- */
+.demobar{position:sticky;top:0;z-index:50;display:flex;align-items:center;gap:14px;flex-wrap:wrap;padding:8px 16px;background:var(--navy);color:#dbe6f3;font-size:13px}
+.demobar .brand{display:flex;align-items:center;gap:8px;font-weight:700;color:#fff;font-size:15px;letter-spacing:.02em}
+.demobar .brand small{font-weight:600;color:#9fb6d3;font-size:11px;letter-spacing:.08em;text-transform:uppercase;border:1px solid #35557f;border-radius:5px;padding:1px 6px}
+.demobar .grp{display:flex;align-items:center;gap:8px}
+.demobar .lbl{color:#9fb6d3;font-size:11px;text-transform:uppercase;letter-spacing:.08em;font-weight:600}
+.seg{display:inline-flex;background:#0b1a2f;border-radius:9px;padding:3px;gap:2px}
+.seg button{border:0;background:transparent;color:#b7c8dd;padding:6px 11px;border-radius:7px;font-weight:600;font-size:13px;display:flex;align-items:center;gap:6px}
+.seg button.on{background:#fff;color:var(--navy)}
+.conn-toggle{display:flex;align-items:center;gap:8px;border:1px solid #35557f;background:#0b1a2f;border-radius:9px;padding:5px 10px 5px 6px;color:#fff;font-weight:600}
+.conn-toggle .sw{width:34px;height:20px;border-radius:10px;background:#2e9d68;position:relative;transition:background .2s}
+.conn-toggle .sw::after{content:"";position:absolute;top:2px;left:16px;width:16px;height:16px;border-radius:50%;background:#fff;transition:left .2s}
+.conn-toggle.off .sw{background:#d0782a}.conn-toggle.off .sw::after{left:2px}
+.dbtn{border:1px solid #35557f;background:transparent;color:#dbe6f3;border-radius:8px;padding:6px 10px;font-weight:600;display:flex;align-items:center;gap:6px;font-size:13px}
+.dbtn:hover{background:#18345a}
+.demobar .spacer{flex:1}
+@media (max-width:1560px){.demobar .sim-note{display:none}}
+@media (max-width:1380px){.demobar .lbl{display:none}}
+.sim-note{color:#9fb6d3;font-size:12px}
+
+/* ------- Escenario ------- */
+.stage{display:flex;gap:24px;justify-content:center;align-items:flex-start;padding:22px 18px 40px;min-height:calc(100vh - 52px)}
+.stage.split{justify-content:stretch}
+.pane-label{display:flex;align-items:center;gap:8px;font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--g600);margin:0 0 8px 4px}
+.pane-label .dot{width:8px;height:8px;border-radius:50%;background:var(--blue-600)}
+.pane-label.ops .dot{background:var(--navy)}
+.col-m{flex:none;width:400px}
+.col-d{flex:1;min-width:0;max-width:1320px}
+.stage:not(.split) .col-d{max-width:1360px}
+.phone{width:400px;height:min(860px,calc(100vh - 110px));min-height:640px;border-radius:38px;background:#0d1724;padding:11px;box-shadow:0 20px 50px rgba(16,36,63,.25)}
+.phone .screen{position:relative;width:100%;height:100%;border-radius:28px;overflow:hidden;background:var(--g50)}
+.deskframe{border-radius:14px;overflow:hidden;box-shadow:0 14px 40px rgba(16,36,63,.18);background:#fff;height:min(900px,calc(100vh - 110px));min-height:640px}
+
+/* ------- App móvil (Cuadrilla) ------- */
+.mapp{display:flex;flex-direction:column;height:100%;background:var(--g50)}
+.statusbar{display:flex;justify-content:space-between;align-items:center;padding:9px 22px 5px;font-size:13px;font-weight:600;color:var(--g900);background:#fff}
+.statusbar .r{display:flex;gap:6px;align-items:center}
+.statusbar .batt{width:22px;height:11px;border:1.5px solid var(--g700);border-radius:3px;position:relative}
+.statusbar .batt::after{content:"";position:absolute;inset:1.5px 5px 1.5px 1.5px;background:var(--g700);border-radius:1px}
+.mhead{display:flex;align-items:center;justify-content:space-between;padding:8px 16px 10px;background:#fff;border-bottom:1px solid var(--g200)}
+.mhead .t{display:flex;align-items:center;gap:8px;font-weight:800;font-size:17px;color:var(--blue-700);letter-spacing:.04em}
+.mhead .back{border:0;background:var(--g100);width:34px;height:34px;border-radius:10px;display:grid;place-items:center;color:var(--g700)}
+.mhead .ttl{font-weight:700;font-size:16px;color:var(--g900)}
+.pill{display:inline-flex;align-items:center;gap:6px;border-radius:999px;padding:4px 10px 4px 8px;font-size:12px;font-weight:700;white-space:nowrap}
+.pill.on{background:var(--green-bg);color:var(--green)}
+.pill.off{background:var(--amber-bg);color:var(--amber)}
+.pill.pend{background:var(--amber-bg);color:var(--amber)}
+.pill.ok{background:var(--green-bg);color:var(--green)}
+.pill.blue{background:var(--blue-100);color:var(--blue-700)}
+.pill.gray{background:var(--g100);color:var(--g600)}
+.pill.red{background:var(--red-bg);color:var(--red)}
+.pill.ia{background:var(--indigo-bg);color:var(--indigo)}
+.offline-banner{display:flex;gap:10px;align-items:center;background:#f6d48f;color:#5b2d02;padding:9px 14px;font-weight:800;font-size:13px;letter-spacing:.02em;border-bottom:1px solid #e7b24f}
+.offline-banner small{display:block;font-weight:600;letter-spacing:0;font-size:12px;color:#6b3a07}
+.mbody{flex:1;min-height:0;overflow-y:auto;padding:14px 14px 18px}
+.mbody::-webkit-scrollbar,.dmain::-webkit-scrollbar{width:8px}.mbody::-webkit-scrollbar-thumb,.dmain::-webkit-scrollbar-thumb{background:var(--g300);border-radius:4px}
+.tabbar{display:grid;grid-template-columns:repeat(5,1fr);background:#fff;border-top:1px solid var(--g200);padding:6px 4px 10px}
+.tabbar button{border:0;background:transparent;display:flex;flex-direction:column;align-items:center;gap:3px;font-size:11px;font-weight:600;color:var(--g500);padding:5px 0;position:relative}
+.tabbar button.on{color:var(--blue-600)}
+.tabbar .badge{position:absolute;top:0;right:calc(50% - 20px);background:var(--amber);color:#fff;border-radius:9px;font-size:10px;padding:0 5px;line-height:16px}
+
+/* ------- Componentes ------- */
+.card{background:#fff;border:1px solid var(--g200);border-radius:var(--radius);padding:14px;box-shadow:var(--shadow)}
+.card + .card,.card + .sec,.sec + .card{margin-top:12px}
+.sec{margin-top:16px}
+.sec-t{font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--g500);margin:0 0 8px 2px;display:flex;align-items:center;justify-content:space-between;gap:8px}
+h1,h2,h3,h4{margin:0;line-height:1.2}
+.h1{font-size:22px;font-weight:800}
+.h2{font-size:18px;font-weight:750}
+.h3{font-size:15px;font-weight:700}
+.muted{color:var(--g500)}
+.small{font-size:13px}
+.xs{font-size:12px}
+.row{display:flex;align-items:center;gap:8px}
+.row.wrap{flex-wrap:wrap}
+.between{justify-content:space-between}
+.stack>*+*{margin-top:8px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.btn{border:1px solid transparent;border-radius:11px;padding:11px 14px;font-weight:700;font-size:15px;display:inline-flex;align-items:center;justify-content:center;gap:8px;background:var(--g100);color:var(--g900);transition:filter .15s,transform .05s}
+.btn:active{transform:translateY(1px)}
+.btn.primary{background:var(--blue-600);color:#fff}
+.btn.primary:hover{background:var(--blue-700)}
+.btn.secondary{background:#fff;border-color:var(--g300);color:var(--blue-700)}
+.btn.secondary:hover{background:var(--blue-50)}
+.btn.warn{background:#c26412;color:#fff}
+.btn.ia{background:var(--indigo);color:#fff}
+.btn.ok{background:var(--green);color:#fff}
+.btn.ghost{background:transparent;color:var(--blue-700);padding:8px 6px}
+.btn.big{width:100%;padding:15px 16px;font-size:16px;border-radius:13px}
+.btn.sm{padding:7px 11px;font-size:13px;border-radius:9px}
+.btn.block{width:100%}
+.btn[disabled]{opacity:.45;cursor:not-allowed}
+.kv{display:grid;grid-template-columns:auto 1fr;gap:6px 12px;font-size:14px}
+.kv dt{color:var(--g500);font-weight:600}
+.kv dd{margin:0;font-weight:600}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{border:1.5px solid var(--g300);background:#fff;border-radius:999px;padding:7px 12px;font-size:13px;font-weight:600;color:var(--g700);display:inline-flex;align-items:center;gap:6px}
+.chip.on{background:var(--blue-600);border-color:var(--blue-600);color:#fff}
+.chip.static{cursor:default;padding:4px 10px;font-size:12px;border-width:1px}
+.chip.ia{border-color:#c5cbf1;color:var(--indigo);background:var(--indigo-bg)}
+.field{display:block;margin-top:14px}
+.field>span{display:block;font-size:13px;font-weight:700;color:var(--g700);margin-bottom:6px}
+.field>span em{font-style:normal;color:var(--red)}
+.input,.select,.textarea{width:100%;border:1.5px solid var(--g300);border-radius:10px;background:#fff;padding:11px 12px;font-size:15px;outline:none}
+.input:focus,.select:focus,.textarea:focus{border-color:var(--blue-500);box-shadow:0 0 0 3px var(--blue-100)}
+.textarea{min-height:76px;resize:vertical}
+.segc{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.segc button{border:1.5px solid var(--g300);background:#fff;border-radius:10px;padding:10px 4px;font-weight:700;font-size:14px;color:var(--g700)}
+.segc button.on{border-color:var(--blue-600);background:var(--blue-600);color:#fff}
+.segc button.on.u-Alta{background:#c26412;border-color:#c26412}.segc button.on.u-Crítica{background:var(--red);border-color:var(--red)}
+.photos{display:flex;gap:8px;flex-wrap:wrap}
+.photo{width:96px;height:72px;border-radius:9px;overflow:hidden;position:relative;border:1px solid var(--g200)}
+.photo svg{width:100%;height:100%;display:block}
+.photo .tag{position:absolute;left:4px;bottom:4px;background:rgba(16,36,63,.75);color:#fff;font-size:9.5px;font-weight:700;border-radius:4px;padding:1px 5px}
+.photo-add{width:96px;height:72px;border-radius:9px;border:1.5px dashed var(--g400);background:var(--g50);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;font-size:11px;font-weight:700;color:var(--g600)}
+.notice{border-radius:11px;padding:11px 12px;display:flex;gap:10px;font-size:13.5px;align-items:flex-start}
+.notice b{display:block;margin-bottom:2px}
+.notice.amber{background:var(--amber-bg);color:#6b3a07;border:1px solid var(--amber-line)}
+.notice.blue{background:var(--blue-50);color:var(--blue-800);border:1px solid var(--blue-200)}
+.notice.green{background:var(--green-bg);color:#14583a;border:1px solid #a9dcc0}
+.notice.red{background:var(--red-bg);color:#7d1f1f;border:1px solid #efb9b9}
+.notice.ia{background:var(--indigo-bg);color:#2d3780;border:1px solid #c5cbf1}
+.map{border-radius:11px;overflow:hidden;height:150px;border:1px solid var(--g200);background:#e6ecf2}
+.map svg{width:100%;height:100%;display:block}
+.prio{font-weight:800}
+.prio.Media{color:#9a6a00}.prio.Alta{color:#c26412}.prio.Crítica{color:var(--red)}.prio.Baja{color:var(--g600)}
+.divider{height:1px;background:var(--g200);margin:12px 0}
+
+/* Línea de tiempo */
+.tl{list-style:none;margin:0;padding:0}
+.tl li{display:grid;grid-template-columns:44px 18px 1fr;gap:0 8px;position:relative;padding-bottom:12px}
+.tl li::before{content:"";position:absolute;left:60px;top:18px;bottom:0;width:2px;background:var(--g200)}
+.tl li:last-child::before{display:none}
+.tl .tm{font-size:12px;font-weight:700;color:var(--g500);padding-top:2px;text-align:right}
+.tl .dt{width:12px;height:12px;border-radius:50%;margin-top:4px;background:var(--g400);border:2px solid #fff;box-shadow:0 0 0 1.5px var(--g400)}
+.tl .dt.campo{background:var(--blue-600);box-shadow:0 0 0 1.5px var(--blue-600)}
+.tl .dt.central{background:var(--navy);box-shadow:0 0 0 1.5px var(--navy)}
+.tl .dt.ia{background:var(--indigo);box-shadow:0 0 0 1.5px var(--indigo)}
+.tl .dt.pend{background:#fff;box-shadow:0 0 0 2px var(--amber)}
+.tl .tx{font-size:13.5px}
+.tl .tx b{display:block;font-size:14px}
+.tl .meta{display:flex;gap:6px;align-items:center;margin-top:3px;font-size:11.5px;font-weight:600;color:var(--g500);flex-wrap:wrap}
+
+/* Inicio */
+.hello{display:flex;align-items:center;gap:12px;margin-bottom:12px}
+.avatar{width:42px;height:42px;border-radius:50%;background:var(--blue-100);color:var(--blue-700);display:grid;place-items:center;font-weight:800}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.stat{background:#fff;border:1px solid var(--g200);border-radius:12px;padding:10px;box-shadow:var(--shadow)}
+.stat .n{font-size:24px;font-weight:800;line-height:1}
+.stat .l{font-size:11.5px;font-weight:600;color:var(--g500);margin-top:4px}
+.stat.amber{background:var(--amber-bg);border-color:var(--amber-line)}.stat.amber .n{color:var(--amber)}
+.order{display:block;width:100%;text-align:left;background:#fff;border:1px solid var(--g200);border-radius:14px;padding:14px;box-shadow:var(--shadow)}
+.order.hl{border:2px solid var(--blue-500)}
+.order .id{font-weight:800;font-size:13px;color:var(--blue-700)}
+.order .tt{font-weight:750;font-size:16px;margin:2px 0 4px}
+.order + .order{margin-top:10px}
+
+/* Sync stepper */
+.sync{background:#fff;border:1px solid var(--g200);border-radius:14px;padding:14px;box-shadow:var(--shadow)}
+.steps{display:flex;align-items:center;gap:4px;margin-top:10px}
+.steps .s{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;font-size:10.5px;font-weight:700;color:var(--g400);text-align:center}
+.steps .s i{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;background:var(--g100);color:var(--g400);font-style:normal}
+.steps .s.done{color:var(--green)}.steps .s.done i{background:var(--green-bg);color:var(--green)}
+.steps .s.cur{color:var(--blue-700)}.steps .s.cur i{background:var(--blue-600);color:#fff}
+.steps .s.off i{background:var(--amber-bg);color:var(--amber)}.steps .s.off{color:var(--amber)}
+.steps .ln{height:2px;flex:.4;background:var(--g200);margin-bottom:18px}
+.spin{animation:spin 1s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}
+.bar{height:6px;border-radius:3px;background:var(--g100);overflow:hidden;margin-top:10px}
+.bar>i{display:block;height:100%;background:var(--blue-600);border-radius:3px;transition:width .4s}
+
+/* Chat */
+.chat{display:flex;flex-direction:column;gap:10px}
+.msg{max-width:88%;border-radius:14px;padding:10px 12px;font-size:14px}
+.msg.u{align-self:flex-end;background:var(--blue-600);color:#fff;border-bottom-right-radius:4px}
+.msg.a{align-self:flex-start;background:#fff;border:1px solid var(--g200);border-bottom-left-radius:4px;box-shadow:var(--shadow)}
+.msg .who{font-size:11px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;margin-bottom:4px;display:flex;gap:6px;align-items:center}
+.msg.a .who{color:var(--indigo)}
+.msg.u .who{color:#cfe0f6}
+.aic{max-width:100%;align-self:stretch}
+.aic h5{margin:12px 0 5px;font-size:12px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--g600);display:flex;align-items:center;gap:6px}
+.aic ul{margin:0;padding-left:18px}.aic li{margin:3px 0}
+.aic .ok li::marker{color:var(--green)}
+.ante{border:1px solid #c5cbf1;background:var(--indigo-bg);border-radius:10px;padding:9px 10px;margin-top:4px}
+.ante button{margin-top:6px}
+.src{display:flex;flex-wrap:wrap;gap:5px;margin-top:4px}
+.limits{border-left:3px solid var(--red);background:var(--red-bg);border-radius:0 9px 9px 0;padding:8px 10px;color:#6f1d1d;font-size:13.5px;margin-top:4px}
+.thinking{display:flex;flex-direction:column;gap:6px;font-size:13px;color:var(--g600)}
+.thinking .row i{width:16px;height:16px;border-radius:50%;border:2px solid var(--indigo);border-top-color:transparent;display:inline-block}
+.suggest{display:flex;flex-direction:column;gap:6px;margin-top:6px}
+.suggest button{text-align:left;border:1px solid #c5cbf1;background:#fff;color:var(--indigo);border-radius:11px;padding:9px 11px;font-size:13.5px;font-weight:600}
+.composer{display:flex;gap:8px;padding:10px 12px;background:#fff;border-top:1px solid var(--g200)}
+.composer textarea{flex:1;border:1.5px solid var(--g300);border-radius:12px;padding:9px 11px;font-size:14px;resize:none;height:44px;outline:none}
+.composer button{width:46px;border-radius:12px;border:0;background:var(--indigo);color:#fff;display:grid;place-items:center}
+
+/* Historial y criterios */
+.searchbox{display:flex;align-items:center;gap:8px;border:1.5px solid var(--g300);background:#fff;border-radius:11px;padding:0 11px;color:var(--g500)}
+.searchbox input{border:0;outline:none;padding:11px 0;flex:1;font-size:15px;background:transparent;min-width:0}
+.case{display:block;width:100%;text-align:left;background:#fff;border:1px solid var(--g200);border-radius:12px;padding:12px;box-shadow:var(--shadow)}
+.case + .case{margin-top:8px}
+.case.new{border:2px solid var(--green);background:#fbfefc}
+.case .id{font-weight:800;color:var(--blue-700);font-size:13px}
+.case .tt{font-weight:700;font-size:14.5px;margin:2px 0 6px}
+.crit{background:#fff;border:1px solid var(--g200);border-radius:12px;padding:12px;box-shadow:var(--shadow)}
+.crit + .crit{margin-top:8px}
+.crit .code{font-size:11.5px;font-weight:800;color:var(--blue-700);letter-spacing:.04em}
+.crit .rule{margin-top:8px;padding-top:8px;border-top:1px solid var(--g200);font-size:13.5px}
+.crit button.hd{all:unset;cursor:pointer;display:block;width:100%}
+.crit.hl{border:2px solid var(--indigo)}
+
+/* ------- App escritorio (Operaciones / Supervisión) ------- */
+.dapp{display:grid;grid-template-columns:230px 1fr;grid-template-rows:minmax(0,1fr);height:100%;background:var(--g50)}
+.side{background:var(--navy);color:#cbd8e8;display:flex;flex-direction:column;padding:16px 12px}
+.side .logo{display:flex;align-items:center;gap:9px;color:#fff;font-weight:800;font-size:18px;letter-spacing:.05em;padding:2px 8px 16px}
+.side .logo small{display:block;font-size:11px;font-weight:600;color:#8fa9c9;letter-spacing:.08em;text-transform:uppercase}
+.side nav button{width:100%;border:0;background:transparent;color:#cbd8e8;display:flex;align-items:center;gap:10px;padding:10px 10px;border-radius:9px;font-weight:600;font-size:14px;text-align:left}
+.side nav button.on{background:#20406b;color:#fff}
+.side nav button:hover{background:#18345a}
+.side nav .b{margin-left:auto;background:#e0802c;color:#fff;border-radius:9px;font-size:11px;padding:1px 7px;font-weight:800}
+.side .foot{margin-top:auto;font-size:11.5px;color:#8fa9c9;border-top:1px solid #22406a;padding:12px 8px 0}
+.dcol{display:flex;flex-direction:column;min-width:0;height:100%}
+.dtop{display:flex;align-items:center;gap:14px;background:#fff;border-bottom:1px solid var(--g200);padding:12px 20px}
+.dtop .tt{font-size:18px;font-weight:800}
+.dtop .sp{flex:1}
+.crewsig{display:flex;align-items:center;gap:8px;font-size:12.5px;font-weight:600;border:1px solid var(--g200);border-radius:10px;padding:6px 10px;background:var(--g50)}
+.crewsig .d{width:8px;height:8px;border-radius:50%;background:var(--green)}
+.crewsig.stale .d{background:var(--g400)}
+.dmain{flex:1;min-height:0;overflow-y:auto;padding:18px 20px 28px}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.kpi{background:#fff;border:1px solid var(--g200);border-radius:12px;padding:14px;box-shadow:var(--shadow)}
+.kpi .n{font-size:28px;font-weight:800;line-height:1}
+.kpi .l{font-size:12.5px;color:var(--g500);font-weight:600;margin-top:6px}
+.kpi.alert{border-color:#f0b47a;background:#fff8f0}.kpi.alert .n{color:#c26412}
+.dgrid{display:grid;grid-template-columns:1.55fr 1fr;gap:16px;margin-top:16px}
+.dgrid.even{grid-template-columns:1fr 1fr}
+table.tbl{width:100%;border-collapse:collapse;font-size:13.5px}
+.tbl th{text-align:left;font-size:11.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--g500);font-weight:700;padding:8px 10px;border-bottom:1px solid var(--g200)}
+.tbl td{padding:11px 10px;border-bottom:1px solid var(--g150);vertical-align:middle}
+.tbl tr.click{cursor:pointer}.tbl tr.click:hover td{background:var(--blue-50)}
+.tbl tr.hl td{background:#fff8f0}
+.alertrow{display:flex;gap:12px;align-items:flex-start;padding:12px;border:1px solid #f0b47a;background:#fff8f0;border-radius:12px}
+.alertrow + .alertrow{margin-top:8px}
+.alertrow.read{border-color:var(--g200);background:#fff}
+.alertrow .ico{width:36px;height:36px;border-radius:10px;background:#fbe2c7;color:#b45309;display:grid;place-items:center;flex:none}
+.alertrow.read .ico{background:var(--g100);color:var(--g500)}
+.compare{display:grid;grid-template-columns:1fr 1fr;gap:0;border:1px solid var(--g200);border-radius:12px;overflow:hidden}
+.compare>div{padding:12px 14px}
+.compare>div:first-child{background:var(--g50);border-right:1px solid var(--g200)}
+.compare>div:last-child{background:#fffaf3}
+.compare .hd{font-size:11.5px;font-weight:800;letter-spacing:.07em;text-transform:uppercase;margin-bottom:8px;display:flex;gap:6px;align-items:center}
+.checklist label{display:flex;gap:10px;align-items:flex-start;padding:8px 10px;border:1px solid var(--g200);border-radius:10px;background:#fff;font-size:14px;cursor:pointer}
+.checklist label + label{margin-top:6px}
+.checklist input{width:18px;height:18px;margin:1px 0 0;accent-color:var(--blue-600);flex:none}
+.checklist label.on{border-color:var(--blue-200);background:var(--blue-50)}
+.dsec{margin-top:16px}
+.empty{padding:22px;text-align:center;color:var(--g500);font-size:14px;border:1.5px dashed var(--g300);border-radius:12px;background:#fff}
+.closure{text-align:center;padding:20px 12px}
+.closure .bigic{width:64px;height:64px;border-radius:50%;background:var(--green-bg);color:var(--green);display:grid;place-items:center;margin:0 auto 10px}
+.ministeps{display:flex;flex-direction:column;gap:6px;text-align:left;margin-top:12px}
+.ministeps div{display:flex;gap:8px;align-items:center;font-size:13.5px}
+.ministeps b{width:46px;color:var(--g500);font-size:12px}
+
+/* Guía de demostración */
+.guide{position:fixed;top:52px;right:0;bottom:0;width:360px;background:#fff;border-left:1px solid var(--g200);box-shadow:-10px 0 30px rgba(16,36,63,.12);z-index:40;display:flex;flex-direction:column;transform:translateX(100%);transition:transform .25s}
+.guide.open{transform:none}
+.guide .gh{padding:14px 16px;border-bottom:1px solid var(--g200);display:flex;align-items:center;justify-content:space-between}
+.guide .gb{flex:1;overflow-y:auto;padding:12px 16px 20px}
+.gstep{border:1px solid var(--g200);border-radius:12px;padding:11px 12px;margin-bottom:8px}
+.gstep.done{background:#f5fbf8;border-color:#bfe3cf}
+.gstep.cur{border:2px solid var(--blue-500)}
+.gstep .n{font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--blue-700);display:flex;gap:6px;align-items:center}
+.gstep.done .n{color:var(--green)}
+.gstep p{margin:5px 0 8px;font-size:13.5px;color:var(--g700)}
+
+/* Toasts y modales */
+.toasts{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);z-index:80;display:flex;flex-direction:column;gap:8px;align-items:center;pointer-events:none}
+.toast{background:var(--navy);color:#fff;border-radius:11px;padding:10px 14px;font-size:14px;font-weight:600;box-shadow:0 10px 30px rgba(0,0,0,.2);display:flex;gap:8px;align-items:center;animation:tin .25s}
+@keyframes tin{from{opacity:0;transform:translateY(8px)}}
+.modal-bg{position:fixed;inset:0;background:rgba(16,36,63,.45);z-index:90;display:grid;place-items:center;padding:16px}
+.modal{background:#fff;border-radius:16px;max-width:520px;width:100%;padding:20px;box-shadow:0 20px 60px rgba(0,0,0,.25);max-height:86vh;overflow:auto}
+.modal h3{font-size:18px;margin-bottom:8px}
+.simtbl{width:100%;border-collapse:collapse;font-size:13.5px;margin-top:8px}
+.simtbl td{padding:7px 6px;border-bottom:1px solid var(--g150);vertical-align:top}
+.simtbl td:first-child{font-weight:700;width:42%}
+
+/* Modo incrustado (para el video) */
+body.embed .demobar,body.embed .guide,body.embed .pane-label{display:none!important}
+body.embed .stage{padding:0;min-height:0;height:100vh;gap:0}
+body.embed .col-m,body.embed .col-d{width:100%;max-width:none;height:100vh}
+body.embed .phone{width:100%;height:100vh;min-height:0;border-radius:0;padding:0;box-shadow:none;background:transparent}
+body.embed .phone .screen{border-radius:0}
+body.embed .deskframe{height:100vh;min-height:0;border-radius:0;box-shadow:none}
+
+/* ------- Responsive ------- */
+@media (max-width:1100px){
+  .stage.split{flex-direction:column;align-items:center}
+  .stage.split .col-d{width:100%}
+  .kpis{grid-template-columns:repeat(2,1fr)}
+  .dgrid{grid-template-columns:1fr}
+}
+@media (max-width:760px){
+  .demobar{padding:8px 10px;gap:8px}
+  .demobar .sim-note{display:none}
+  .demobar .brand small{display:none}
+  .seg button{padding:6px 8px;font-size:12px}
+  .seg button .lbl-long{display:none}
+  .stage{padding:0}
+  .col-m{width:100%}
+  .phone{width:100%;height:calc(100vh - 96px);min-height:520px;border-radius:0;padding:0;box-shadow:none}
+  .phone .screen{border-radius:0}
+  body:not(.embed) .statusbar{display:none}
+  .pane-label{display:none}
+  .deskframe{border-radius:0;height:calc(100vh - 96px)}
+  .dapp{grid-template-columns:1fr;grid-template-rows:auto 1fr}
+  .side{flex-direction:row;padding:6px;overflow-x:auto}
+  .side .logo,.side .foot{display:none}
+  .side nav{display:flex;gap:4px}
+  .side nav button{white-space:nowrap;padding:8px 10px}
+  .dtop{padding:10px 12px;flex-wrap:wrap}
+  .dmain{padding:12px}
+  .compare{grid-template-columns:1fr}
+  .compare>div:first-child{border-right:0;border-bottom:1px solid var(--g200)}
+  .guide{width:100%;top:auto;height:70vh;transform:translateY(100%)}
+  .guide.open{transform:none}
+}
+.checklist .ck{display:flex;gap:10px;align-items:flex-start;width:100%;text-align:left;padding:9px 10px;border:1px solid var(--g200);border-radius:10px;background:#fff;font-size:14px;font-weight:500}
+.checklist .ck + .ck{margin-top:6px}
+.checklist .ck .box{width:20px;height:20px;border-radius:6px;border:1.5px solid var(--g400);display:grid;place-items:center;flex:none;color:#fff;margin-top:1px}
+.checklist .ck.on{border-color:var(--blue-200);background:var(--blue-50)}
+.checklist .ck.on .box{background:var(--blue-600);border-color:var(--blue-600)}
+/* El tablero se adapta al ancho de su panel (vista dividida, pantallas medianas) */
+.deskframe{container-type:inline-size}
+.dgrid>*{min-width:0}
+.dtop>div:first-child{min-width:0}
+.dtop .xs{white-space:nowrap}
+.tblwrap{overflow-x:auto}
+@container (max-width:1060px){
+  .dapp{grid-template-columns:68px 1fr}
+  .side{padding:16px 8px}
+  .side .logo{justify-content:center;padding:2px 0 16px}
+  .side .logo>div,.side .foot{display:none}
+  .side nav button{justify-content:center;position:relative;padding:11px 0;font-size:0;gap:0}
+  .side nav .b{position:absolute;top:3px;right:6px;font-size:10px;padding:0 5px}
+  .dgrid,.dgrid.even{grid-template-columns:1fr}
+  .dtop{flex-wrap:wrap;gap:8px 12px}
+  .tbl td,.tbl th{padding:9px 7px}
+}
+@container (max-width:640px){
+  .kpis{grid-template-columns:repeat(2,1fr)}
+  .dtop .seg{display:none}
+}
+@container (max-width:640px){
+  .dapp{grid-template-columns:1fr;grid-template-rows:auto 1fr}
+  .side{flex-direction:row;padding:6px 8px;overflow-x:auto}
+  .side .logo{display:none}
+  .side nav{display:flex;gap:2px;width:100%;justify-content:space-between}
+  .side nav button{width:auto;flex:1;padding:9px 0}
+}
+.limits .ic{display:inline-block;vertical-align:-2px}
+@media (max-width:760px){
+  .dbtn .t{display:none}
+  .dbtn{padding:6px 8px}
+  .demobar .grp{gap:6px}
+}
+@container (max-width:640px){
+  .dapp{grid-template-rows:auto minmax(0,1fr)}
+  .dcol{height:auto;min-height:0}
+  .side nav button{font-size:10px;flex-direction:column;gap:2px;padding:6px 0}
+  .side nav .b{top:0;right:2px}
+}
+/* Fricciones operativas (Clase 29): etiquetas de análisis sobre el prototipo */
+.fric{margin:12px 0;border:1.5px dashed #10243f;border-radius:10px;background:#f5f7fa;padding:8px 10px}
+.fric-tag{display:inline-flex;align-items:center;gap:5px;background:#10243f;color:#fff;font-size:11px;font-weight:800;letter-spacing:.09em;border-radius:6px;padding:3px 8px 3px 6px}
+.fric-tag .ic{color:#f6c35a}
+.fric-note{font-size:12.5px;line-height:1.38;color:var(--g700);margin-top:5px}
+.dsec .fric{margin-top:8px}
+.gstep .fric-tag{margin-bottom:2px}
+.dbtn.fric-toggle.on{background:#f6c35a;color:#10243f;border-color:#f6c35a}
+@media (max-width:1700px){.demobar .lbl{display:none}}
+@media (max-width:1560px){.dbtn[data-a=about] .t{display:none}}
+@media (max-width:1280px){.dbtn.fric-toggle .t{display:none}}
+
+/* ================= v2 · interfaz simplificada: menos texto, más visual ================= */
+.ichips{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.ichip{display:inline-flex;align-items:center;gap:5px;border-radius:999px;padding:4px 9px 4px 7px;font-size:12px;font-weight:650;background:var(--g100);color:var(--g700);white-space:nowrap;max-width:100%;overflow:hidden;text-overflow:ellipsis}
+.ichip.warn{background:#fff1e3;color:#9a4a07}
+.ichip.ok{background:var(--green-bg);color:var(--green)}
+.ichip.red{background:var(--red-bg);color:var(--red)}
+.ichip.ia{background:var(--indigo-bg);color:var(--indigo)}
+.ichip.blue{background:var(--blue-100);color:var(--blue-700)}
+.ichip.off{background:#fff;color:var(--g400);border:1px dashed var(--g300)}
+/* medidor de prioridad / urgencia */
+.pm{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;font-weight:800;white-space:nowrap}
+.pm .bars{display:inline-flex;align-items:flex-end;gap:2px;height:14px}
+.pm .bars i{width:4px;border-radius:1.5px;background:var(--g200)}
+.pm .bars i:nth-child(1){height:5px}.pm .bars i:nth-child(2){height:8px}.pm .bars i:nth-child(3){height:11px}.pm .bars i:nth-child(4){height:14px}
+.pm.l1{color:var(--g600)}.pm.l1 .bars i:nth-child(-n+1){background:var(--g500)}
+.pm.l2{color:#9a6a00}.pm.l2 .bars i:nth-child(-n+2){background:#d29a00}
+.pm.l3{color:#c26412}.pm.l3 .bars i:nth-child(-n+3){background:#e07a1f}
+.pm.l4{color:var(--red)}.pm.l4 .bars i{background:var(--red)}
+/* ícono de tipo */
+.tic{width:40px;height:40px;border-radius:12px;background:var(--blue-50);color:var(--blue-700);display:grid;place-items:center;flex:none}
+.tic.sm{width:32px;height:32px;border-radius:9px}
+.tic.warn{background:#fff1e3;color:#c26412}
+.tic.gray{width:34px;height:34px;border-radius:10px;background:var(--g100);color:var(--g500)}
+/* cabecera móvil */
+.offline-banner{padding:8px 14px;font-size:13px}
+.offline-banner small{font-size:11.5px}
+.hello{margin-bottom:14px}
+.stat .row{gap:6px;color:var(--blue-600)}
+.stat.amber .row{color:var(--amber)}
+.stat .l{margin-top:6px}
+.notice.tap{width:100%;text-align:left;cursor:pointer;align-items:center;margin-bottom:12px}
+.notice.tap>div{flex:1}
+.notice.tap .row{margin-top:4px;gap:10px}
+.order .tt{margin:0}
+.order.mini{display:flex;align-items:center;gap:10px;padding:11px 12px;margin-top:10px;box-shadow:none;cursor:default}
+.order.mini b{font-size:13.5px}
+.tiles{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.tile{border:1px solid var(--g200);background:#fff;border-radius:12px;padding:12px 6px 10px;display:flex;flex-direction:column;align-items:center;gap:4px;font-size:12.5px;font-weight:700;color:var(--g700);box-shadow:var(--shadow);position:relative}
+.tile>.ic{color:var(--blue-600)}
+.tile b{font-size:11px;color:var(--g500);font-weight:700;display:flex}
+.tile .off{position:absolute;top:6px;right:7px;color:var(--green)}
+/* pasos visuales */
+.hop{display:flex;align-items:flex-start;justify-content:center;margin-top:14px}
+.hop .n{display:flex;flex-direction:column;align-items:center;gap:5px;font-size:11px;font-weight:700;color:var(--green);width:64px;text-align:center}
+.hop .n i{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;background:var(--green-bg);color:var(--green);font-style:normal}
+.hop .n.cur{color:var(--blue-700)}.hop .n.cur i{background:var(--blue-600);color:#fff}
+.hop .n.pend{color:var(--amber)}.hop .n.pend i{background:#fff;color:var(--amber);border:2px dashed var(--amber)}
+.hop .n.todo{color:var(--g400)}.hop .n.todo i{background:var(--g100);color:var(--g400)}
+.hop .l{height:2px;flex:1;max-width:46px;min-width:14px;background:var(--green);margin-top:16px}
+.hop .l.pend,.hop .l.cur{background:repeating-linear-gradient(90deg,var(--amber) 0 6px,transparent 6px 11px)}
+.hop .l.todo{background:var(--g200)}
+.sync .hop{margin-top:12px}
+/* datos rápidos */
+.facts{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:10px}
+.fact{background:var(--g50);border-radius:10px;padding:8px 9px;display:flex;flex-direction:column;gap:5px;min-width:0}
+.fact small{font-size:10px;font-weight:800;letter-spacing:.07em;text-transform:uppercase;color:var(--g500)}
+.fact .v{display:flex;align-items:center;gap:5px;font-size:13px;font-weight:700;color:var(--g700)}
+/* estado en una línea */
+.statusrow{display:flex;align-items:center;gap:8px;border-radius:11px;padding:10px 12px;font-size:13.5px;margin-top:12px}
+.statusrow.blue{background:var(--blue-50);color:var(--blue-800);border:1px solid var(--blue-200)}
+.statusrow.amber{background:var(--amber-bg);color:#6b3a07;border:1px solid var(--amber-line)}
+.statusrow.green{background:var(--green-bg);color:#14583a;border:1px solid #a9dcc0}
+.statusrow.gray{background:#fff;color:var(--g700);border:1px solid var(--g200)}
+.statusrow.red{background:var(--red-bg);color:#7d1f1f;border:1px solid #efb9b9}
+.statusrow .sp{flex:1}
+.wait{display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:700}
+/* listas con ícono */
+.todo{list-style:none;margin:8px 0 0;padding:0}
+.todo li{display:flex;align-items:center;gap:9px;padding:7px 0;font-size:13.5px;font-weight:600;border-bottom:1px solid var(--g150)}
+.todo li:last-child{border-bottom:0}
+.todo li>.ic{color:var(--blue-600)}
+.todo li.done>.ic{color:var(--green)}
+.todo.wait{margin-top:2px}.todo.wait li{color:var(--g500)}.todo.wait li>.ic{color:var(--g400)}
+.upd{border:2px solid var(--blue-500)}
+.quote{margin:10px 0 2px;padding:8px 10px;border-left:3px solid var(--blue-500);background:var(--blue-50);border-radius:0 9px 9px 0;font-size:13px;color:var(--blue-800)}
+/* formulario */
+.locrow{display:flex;align-items:center;gap:8px;border:1.5px solid var(--g300);border-radius:10px;background:#fff;padding:0 10px;color:var(--blue-600)}
+.locrow .input{border:0;padding:11px 0;box-shadow:none!important;color:var(--g900);min-width:0}
+.gps{display:inline-flex;align-items:center;gap:4px;font-size:10.5px;font-weight:800;color:var(--green);background:var(--green-bg);border-radius:6px;padding:2px 6px;flex:none}
+.textarea.sm{min-height:50px}
+.field>span i{font-style:normal;font-weight:600;color:var(--g400);font-size:12px}
+.field>span .ic{display:inline-block;vertical-align:-2px}
+.opts3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.opt{border:1.5px solid var(--g300);background:#fff;border-radius:12px;padding:11px 4px 9px;display:flex;flex-direction:column;align-items:center;gap:6px;font-size:12.5px;font-weight:700;color:var(--g700);text-align:center;line-height:1.15}
+.opt>.ic{color:var(--g500)}
+.opt.on{border-color:var(--blue-600);background:var(--blue-50);color:var(--blue-800);box-shadow:0 0 0 2px var(--blue-100)}
+.opt.on>.ic{color:var(--blue-600)}
+.opt.ok>.ic{color:var(--green)}.opt.amber>.ic{color:var(--amber)}.opt.red>.ic{color:var(--red)}
+.opt.ok.on{border-color:var(--green);background:var(--green-bg);color:#14583a;box-shadow:0 0 0 2px #cdebd9}
+.opt.amber.on{border-color:var(--amber);background:var(--amber-bg);color:#6b3a07;box-shadow:0 0 0 2px #f7e1b7}
+.opt.red.on{border-color:var(--red);background:var(--red-bg);color:#7d1f1f;box-shadow:0 0 0 2px #f5cdcd}
+.chip.ic>.ic{color:var(--g500)}
+.chip.ic.on>.ic{color:#fff}
+.stepper{display:flex;align-items:center;gap:10px}
+.stepper button{width:40px;height:40px;border-radius:11px;border:1.5px solid var(--g300);background:#fff;display:grid;place-items:center;color:var(--g700)}
+.stepper .val{font-size:22px;font-weight:800;min-width:26px;text-align:center}
+.homes{display:flex;flex-wrap:wrap;gap:2px;color:var(--amber);font-weight:800;align-items:center}
+.urg{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.urg button{border:1.5px solid var(--g300);background:#fff;border-radius:11px;padding:9px 2px 8px;display:flex;flex-direction:column;align-items:center;gap:5px;font-size:12.5px;font-weight:700;color:var(--g700)}
+.urg button.on.u1{border-color:var(--g500);background:var(--g100);box-shadow:0 0 0 2px var(--g200)}
+.urg button.on.u2{border-color:#d29a00;background:#fff8e1;box-shadow:0 0 0 2px #f6e7b4}
+.urg button.on.u3{border-color:#e07a1f;background:#fff3e8;box-shadow:0 0 0 2px #fadcc0}
+.urg button.on.u4{border-color:var(--red);background:var(--red-bg);box-shadow:0 0 0 2px #f5cdcd}
+.cmpmini{display:flex;align-items:center;gap:10px;margin-top:10px;padding:9px 11px;border-radius:11px;background:var(--g50);border:1px solid var(--g200);color:var(--g500)}
+.cmpmini>div{display:flex;align-items:center;gap:6px;flex:1;color:var(--g700)}
+.cmpmini small{font-size:10px;font-weight:800;letter-spacing:.07em;text-transform:uppercase;color:var(--g500)}
+.photo .tag{font-size:10.5px}
+.photo-add{gap:0;font-size:16px;color:var(--g500)}
+.checklist .ck .cki{color:var(--blue-600);display:flex;margin-top:1px}
+.checklist .ck{align-items:center}
+/* registro guardado */
+.hero{text-align:center;padding:20px 14px}
+.bigic{width:64px;height:64px;border-radius:50%;background:var(--green-bg);color:var(--green);display:grid;place-items:center;margin:0 auto 10px}
+.bigic.amber{background:var(--amber-bg);color:var(--amber)}
+.evalc{border-color:#efb9b9}
+.lockline{display:flex;align-items:center;gap:6px;margin-top:10px;font-size:12.5px;font-weight:700;color:var(--red)}
+/* línea de tiempo con íconos */
+.tlkey{display:flex;gap:12px;font-size:11px;font-weight:700;color:var(--g500);margin-bottom:6px}
+.tlkey span{display:inline-flex;align-items:center;gap:5px}.tlkey i{width:9px;height:9px;border-radius:50%;display:inline-block}
+.tl2{list-style:none;margin:0;padding:0}
+.tl2 li{display:flex;align-items:center;gap:10px;padding:6px 0;position:relative;font-size:13.5px;font-weight:600}
+.tl2 li+li::after{content:"";position:absolute;left:14px;top:-8px;height:16px;width:2px;background:var(--g200)}
+.tl2 .ic2{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;flex:none;background:var(--navy);color:#fff;position:relative;z-index:1}
+.tl2 li.campo .ic2{background:var(--blue-600)}
+.tl2 li.ia .ic2{background:var(--indigo)}
+.tl2 li.pend .ic2{background:#fff;color:var(--amber);box-shadow:inset 0 0 0 2px var(--amber)}
+.tl2 .t{flex:1;min-width:0;display:flex;align-items:center;gap:8px}
+.tl2 .tm{font-size:12px;font-weight:700;color:var(--g500);min-width:38px;text-align:right}
+.tl2 .st{display:inline-flex;align-items:center;gap:3px}.tl2 .st.ok{color:var(--green)}.tl2 .st.pend{color:var(--amber)}
+.tl2 .st small{font-size:11px;font-weight:700}
+/* asistente */
+.aihead{display:flex;align-items:center;gap:8px;padding:10px 12px;border-radius:12px;background:var(--indigo-bg);color:#2d3780;font-size:14px}
+.aihead .sp{flex:1}
+.ante .match{display:inline-flex;align-items:center;gap:3px}
+.ante .match i{width:9px;height:9px;border-radius:50%;background:#c5cbf1}
+.ante .match i.on{background:var(--indigo)}
+.ante .match b{font-size:12px;color:var(--indigo);margin-left:4px}
+.ante .b{font-weight:800;letter-spacing:.06em}
+.ante .ichip.off .ic{opacity:.6}
+.esc{display:flex;align-items:center;gap:6px;margin-top:10px;padding:8px 10px;border-radius:10px;background:var(--blue-50);color:var(--blue-800);font-size:13px}
+.esc .ic{color:var(--blue-600)}
+.srcline{display:flex;align-items:center;gap:6px;margin-top:10px;padding-top:8px;border-top:1px solid var(--g200);font-size:11.5px;font-weight:600;color:var(--g500);flex-wrap:wrap}
+.srcline .sp{flex:1}
+.lnk{border:0;background:none;color:var(--indigo);font-weight:700;padding:0;font-size:11.5px;text-decoration:underline}
+.nocard{display:flex;align-items:center;gap:10px;padding:12px;border-radius:12px;background:var(--red-bg);color:#7d1f1f;margin-top:2px}
+.nocard small{display:block;font-weight:600;font-size:12px;margin-top:2px}
+.sugg{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.sugg button{display:inline-flex;align-items:center;gap:6px;border:1px solid #c5cbf1;background:#fff;color:var(--indigo);border-radius:999px;padding:8px 12px;font-size:13px;font-weight:700}
+.thinking .row .ic{color:var(--indigo)}
+/* historial y criterios */
+.case .tt{font-size:14.5px}
+.ab{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.ab>div{border-radius:11px;padding:10px;background:var(--g50);font-size:13px}
+.ab>div:last-child{background:#fffaf3}
+.ab small{display:flex;align-items:center;gap:5px;font-size:10px;font-weight:800;letter-spacing:.07em;text-transform:uppercase;color:var(--g500);margin-bottom:5px}
+.steps2{list-style:none;margin:0;padding:0;counter-reset:s}
+.steps2 li{display:flex;gap:9px;font-size:13px;padding:5px 0;align-items:flex-start;counter-increment:s}
+.steps2 li::before{content:counter(s);width:20px;height:20px;border-radius:50%;background:var(--blue-100);color:var(--blue-700);font-size:11px;font-weight:800;display:grid;place-items:center;flex:none}
+.lesson{display:flex;gap:10px;align-items:flex-start;border:1px solid var(--blue-200);background:var(--blue-50);border-radius:12px;padding:12px;font-size:13.5px;font-weight:650;color:var(--blue-800)}
+.lesson .ic{color:#d29a00;flex:none}
+.lesson + .card{margin-top:12px}
+.cic{width:34px;height:34px;border-radius:10px;background:var(--blue-50);color:var(--blue-600);display:grid;place-items:center;flex:none}
+.crit .rule{font-size:13px}
+.chip>.ic{color:inherit}
+/* escritorio */
+.av{width:32px;height:32px;border-radius:50%;background:var(--navy);color:#fff;display:grid;place-items:center;font-weight:800;font-size:11.5px;flex:none}
+.crewsig{gap:6px}
+.crewsig.stale{color:var(--amber);border-color:var(--amber-line);background:var(--amber-bg)}
+.kpi{display:flex;align-items:center;gap:12px}
+.kpi .i{width:44px;height:44px;border-radius:12px;background:var(--blue-50);color:var(--blue-600);display:grid;place-items:center;flex:none}
+.kpi .l{margin-top:4px}
+.kpi.alert .i{background:#fbe2c7;color:#b45309}
+.newdot{display:inline-block;width:8px;height:8px;border-radius:50%;background:#e0802c;box-shadow:0 0 0 3px #fbe2c7;vertical-align:1px;margin-left:4px}
+.tbl td .ic{color:var(--g500)}
+.cmap{border-radius:11px;overflow:hidden;border:1px solid var(--g200);background:#f3f6f9}
+.cmap svg{width:100%;display:block}
+.crews{display:grid;grid-template-columns:1fr 1fr;gap:6px 10px;margin-top:10px}
+.crews div{display:flex;align-items:center;gap:6px;font-size:12.5px;font-weight:700}
+.crews .d{width:8px;height:8px;border-radius:50%;background:var(--green)}
+.crews .d.off{background:var(--g400)}
+.crews small{color:var(--g500);font-weight:600;display:inline-flex;align-items:center;gap:3px}
+.cmp{display:grid;grid-template-columns:1fr 34px 1fr;border:1px solid var(--g200);border-radius:12px;overflow:hidden}
+.cmp>.c{padding:14px;display:flex;flex-direction:column;gap:10px;min-width:0}
+.cmp>.c:first-child{background:var(--g50)}
+.cmp>.c:last-child{background:#fffaf3}
+.cmp>.mid{display:grid;place-items:center;color:var(--g400);background:linear-gradient(90deg,var(--g50) 50%,#fffaf3 50%)}
+.cmp .hd{font-size:11px;font-weight:800;letter-spacing:.07em;text-transform:uppercase;display:flex;gap:6px;align-items:center;color:var(--navy)}
+.cmp .c:last-child .hd{color:#b45309}
+.cmp .big{display:flex;align-items:center;gap:10px;font-weight:750;font-size:15px}
+.cmp .empty-c{background:#fff}
+.diff{font-size:9.5px;font-weight:800;color:#fff;background:var(--red);border-radius:5px;padding:2px 5px;letter-spacing:.05em}
+.note{font-size:12.5px;color:var(--g600);font-style:italic}
+.nodata{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;flex:1;min-height:110px;color:var(--g400);font-size:13px;font-weight:700}
+.nodata.sm{min-height:70px;flex-direction:row}
+.evalbar{display:flex;align-items:center;flex-wrap:wrap;gap:8px;margin-top:10px;padding:10px 12px;border-radius:11px;background:var(--red-bg);border:1px solid #efb9b9;color:#7d1f1f;font-size:13px}
+.evalbar .ichip.red{background:#fff}
+.airow{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.airow .ii{width:38px;height:38px;border-radius:10px;background:var(--indigo-bg);color:var(--indigo);display:grid;place-items:center;flex:none}
+.ellipsis{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.lg{display:inline-block;width:12px;height:12px;border-radius:50%}
+.lg.red{background:rgba(214,69,69,.18);border:1.5px dashed #d64545}
+[data-k="actioncard"] .todo li{font-size:13px}
+@container (max-width:1060px){.airow .ichips{width:100%}.cmp{grid-template-columns:1fr}.cmp>.mid{display:none}}
+.todo.pendl{margin-top:2px}.todo.pendl li{color:var(--g500)}.todo.pendl li>.ic{color:var(--g400)}
+.segc button{display:flex;align-items:center;justify-content:center;gap:6px}
+.tbl td.nw{white-space:nowrap}
+.evalbar .sp{flex:1}
+.evalbar .rb{width:28px;height:28px;border-radius:50%;background:#fff;color:var(--red);display:grid;place-items:center;border:1px solid #efb9b9}
+.chips.scrollx{flex-wrap:nowrap;overflow-x:auto;padding-bottom:4px;scrollbar-width:none}
+.chips.scrollx::-webkit-scrollbar{display:none}
+.chips.scrollx .chip{flex:none}
+.cmap svg{max-width:440px;margin:0 auto}
+/* ===== Versión de presentación (Vercel): celular y escritorio lado a lado, sin controles de demo ===== */
+.sigbtn{border:0;background:none;padding:2px;margin:-2px;color:inherit;display:grid;place-items:center;border-radius:6px;cursor:pointer}
+.sigbtn:hover{background:var(--g100)}
+button.pill.sigpill{border:0;cursor:pointer;font-size:12px;font-weight:700}
+body.pres{background:#e6ebf2}
+body.pres .stage{padding:20px 22px;min-height:100vh;align-items:center;justify-content:center;gap:24px}
+body.pres .phone{height:min(860px,calc(100vh - 70px))}
+body.pres .deskframe{height:min(880px,calc(100vh - 70px))}
+body.pres .stage.split .col-d{max-width:1280px}
+@media (max-width:760px){body.pres .phone,body.pres .deskframe{height:calc(100vh - 40px)}body.pres .stage{padding:0}}
+
+</style>
+</head>
+<body>
+<div id="app"></div>
+<div id="toasts" class="toasts" aria-live="polite"></div>
+<div id="modal"></div>
+<script>window.CAMPO_PRES = true;</script>
+<script>
+/* CAMPO · datos ficticios precargados del prototipo */
+const PEOPLE = {
+  foreman: 'Raúl Benítez',
+  crew: 'Cuadrilla 3',
+  operator: 'Lucía Ferreyra',
+  supervisor: 'Carla Duarte'
+};
+
+const CRITERIA_CATEGORIES = [
+  { id: 'seg', name: 'Seguridad' },
+  { id: 'doc', name: 'Documentación' },
+  { id: 'esc', name: 'Escalamiento' },
+  { id: 'man', name: 'Maniobras y restricciones' },
+  { id: 'pri', name: 'Prioridades' },
+  { id: 'off', name: 'Sin conexión' },
+  { id: 'cie', name: 'Cierre y validación' }
+];
+
+const CRITERIA = [
+  { id: 'CO-SEG-01', cat: 'seg', title: 'Priorizar la seguridad en el lugar',
+    summary: 'Antes de cualquier tarea, señalizar y delimitar la zona afectada.',
+    rule: 'Si hay agua en calzada, señalizar para vehículos y peatones y delimitar el paso. Ninguna tarea continúa si el entorno no es seguro.',
+    who: 'Encargado de cuadrilla', version: 'v2.1', validated: '03/03/2026' },
+  { id: 'CO-SEG-02', cat: 'seg', title: 'Distancia de trabajo en calzada',
+    summary: 'Trabajar en calzada solo con corte o desvío de tránsito coordinado.',
+    rule: 'Las tareas en calzada requieren conos, cartelería y, si corresponde, desvío coordinado por Operaciones con el municipio.',
+    who: 'Operaciones', version: 'v1.4', validated: '03/03/2026' },
+  { id: 'CO-DOC-01', cat: 'doc', title: 'Documentar todo cambio de escenario',
+    summary: 'Registrar diferencias respecto de la orden apenas se detectan.',
+    rule: 'Registrar ubicación, condiciones observadas, diferencia con lo previsto, urgencia preliminar, acciones realizadas y evidencia fotográfica, con hora.',
+    who: 'Encargado de cuadrilla', version: 'v1.8', validated: '12/01/2026' },
+  { id: 'CO-DOC-02', cat: 'doc', title: 'Comparar con antecedentes',
+    summary: 'Consultar casos similares del historial antes de proponer acciones.',
+    rule: 'Revisar antecedentes del mismo sector o con condiciones parecidas y dejar constancia de cuáles se consideraron.',
+    who: 'Cuadrilla y Operaciones', version: 'v1.2', validated: '12/01/2026' },
+  { id: 'CO-ESC-01', cat: 'esc', title: 'Escalar cuando el caso excede el alcance',
+    summary: 'Agua en calzada + baja presión en varios domicilios indica posible falla de red.',
+    rule: 'Si se observan agua en calzada, baja presión en más de un domicilio o indicios de afectación de la red distribuidora, el caso se escala a Operaciones para su evaluación.',
+    who: 'Encargado de cuadrilla → Operaciones', version: 'v2.0', validated: '20/02/2026' },
+  { id: 'CO-MAN-01', cat: 'man', title: 'Evitar maniobras no autorizadas',
+    summary: 'No operar válvulas de red ni cortar el suministro sin autorización.',
+    rule: 'El cierre de válvulas de sector, los cortes de suministro y las excavaciones en calzada requieren autorización expresa de Operaciones.',
+    who: 'Solo Operaciones autoriza', version: 'v2.3', validated: '20/02/2026' },
+  { id: 'CO-PRI-01', cat: 'pri', title: 'Criterios de prioridad alta',
+    summary: 'Afectación a varios usuarios, riesgo en vía pública o pérdida continua en red.',
+    rule: 'Se eleva a prioridad alta si hay afectación de servicio a más de un domicilio, riesgo para tránsito o peatones, o pérdida continua en red distribuidora.',
+    who: 'Operaciones', version: 'v1.6', validated: '05/02/2026' },
+  { id: 'CO-OFF-01', cat: 'off', title: 'Trabajo sin conexión',
+    summary: 'Registrar localmente y reintentar el contacto por canal alternativo.',
+    rule: 'Sin conexión, los registros se guardan en el dispositivo y se sincronizan al volver la señal. Reintentar contacto por radio o teléfono. La falta de conexión no habilita maniobras no autorizadas.',
+    who: 'Encargado de cuadrilla', version: 'v1.1', validated: '05/02/2026' },
+  { id: 'CO-CIE-01', cat: 'cie', title: 'Validación del cierre',
+    summary: 'El cierre lo valida Operaciones o Supervisión antes de pasar al historial.',
+    rule: 'Un caso se incorpora al historial solo después de validar evidencia, acciones realizadas dentro de lo autorizado y restablecimiento del servicio.',
+    who: 'Operaciones o Supervisión', version: 'v1.3', validated: '05/02/2026' }
+];
+
+const HISTORY_SEED = [
+  { id: '0176', short: 'Pérdida en vereda → rotura de red', title: 'Pérdida domiciliaria que resultó ser rotura en red distribuidora',
+    type: 'Pérdida en red distribuidora', sector: 'Norte', address: 'Calle 9 entre Av. 3 y Av. 5',
+    date: '14/08/2026', status: 'resuelto', validatedBy: 'Supervisión · C. Duarte',
+    tags: ['Agua en calzada', 'Baja presión', 'Escalado', 'Inicio como pérdida domiciliaria'],
+    initial: 'Reclamo por pérdida menor en vereda, frente a un domicilio. Prioridad media.',
+    found: 'Agua en calzada y baja presión en 6 domicilios de la cuadra. La pérdida provenía de un caño de 75 mm de la red.',
+    decisions: ['La cuadrilla documentó el cambio y escaló a Operaciones.', 'Operaciones elevó la prioridad a alta y envió al equipo de red.', 'Corte de sector autorizado por Operaciones durante 40 minutos.'],
+    result: 'Caño de 75 mm reparado. Servicio restablecido en 3 h 20 min. 38 usuarios avisados del corte.',
+    lesson: 'Agua en calzada + baja presión en varios domicilios es indicio de falla en red: documentar y escalar temprano.',
+    criteria: ['CO-DOC-01', 'CO-ESC-01', 'CO-MAN-01', 'CO-PRI-01'] },
+  { id: '0189', short: 'Baja presión por válvula cerrada', title: 'Baja presión por válvula parcialmente cerrada', type: 'Baja presión', sector: 'Este',
+    address: 'Av. 20 y Calle 31', date: '02/09/2026', status: 'resuelto', validatedBy: 'Operaciones · L. Ferreyra',
+    tags: ['Baja presión', 'Sin pérdida visible'],
+    initial: 'Varios reclamos por baja presión en una manzana.', found: 'Válvula de sector parcialmente cerrada tras una obra anterior.',
+    decisions: ['Operaciones autorizó la apertura de la válvula.', 'La cuadrilla verificó presión en tres domicilios.'],
+    result: 'Presión normalizada en 1 h 10 min.', lesson: 'Antes de buscar pérdidas, revisar maniobras recientes en el sector.',
+    criteria: ['CO-MAN-01', 'CO-DOC-02'] },
+  { id: '0203', short: 'Rotura de conexión domiciliaria', title: 'Rotura de conexión domiciliaria', type: 'Pérdida en conexión domiciliaria', sector: 'Sur',
+    address: 'Calle 44 N.º 812', date: '19/09/2026', status: 'resuelto', validatedBy: 'Operaciones · L. Ferreyra',
+    tags: ['Dentro del alcance de la cuadrilla'],
+    initial: 'Pérdida en vereda frente a un domicilio.', found: 'Rotura de la conexión domiciliaria, sin afectación de la red.',
+    decisions: ['Reparación realizada por la cuadrilla dentro de su alcance.'],
+    result: 'Reparado en 1 h 40 min.', lesson: 'Caso típico de pérdida menor: no requirió escalamiento.',
+    criteria: ['CO-DOC-01', 'CO-SEG-01'] },
+  { id: '0212', short: 'Pérdida en medidor', title: 'Pérdida en medidor con caudal continuo', type: 'Pérdida en medidor', sector: 'Norte',
+    address: 'Calle 14 N.º 1720', date: '27/09/2026', status: 'resuelto', validatedBy: 'Supervisión · C. Duarte',
+    tags: ['Medidor', 'Caudal continuo'],
+    initial: 'Reclamo por agua en nicho de medidor.', found: 'Junta del medidor dañada.',
+    decisions: ['Cambio de junta por la cuadrilla.'], result: 'Resuelto en 50 min.',
+    lesson: 'Revisar nicho y llave de paso antes de abrir vereda.', criteria: ['CO-DOC-01'] },
+  { id: '0221', short: 'Hundimiento de vereda', title: 'Hundimiento de vereda por pérdida prolongada', type: 'Hundimiento', sector: 'Centro',
+    address: 'Av. 7 y Calle 50', date: '08/10/2026', status: 'resuelto', validatedBy: 'Supervisión · C. Duarte',
+    tags: ['Riesgo peatonal', 'Escalado', 'Municipio'],
+    initial: 'Vereda hundida reportada por vecinos.', found: 'Pérdida subterránea de larga data bajo la vereda.',
+    decisions: ['Delimitación inmediata del área.', 'Operaciones coordinó con el municipio la reparación de vereda.'],
+    result: 'Pérdida reparada; vereda a cargo del municipio.', lesson: 'Un hundimiento es riesgo para peatones: señalizar primero.',
+    criteria: ['CO-SEG-01', 'CO-ESC-01'] },
+  { id: '0231', short: 'Pérdida en cámara de válvula', title: 'Pérdida en cámara de válvula', type: 'Pérdida en red distribuidora', sector: 'Oeste',
+    address: 'Calle 60 y Av. 1', date: '21/10/2026', status: 'pendiente', pendingLabel: 'Pendiente de validación',
+    tags: ['Cámara de válvula'],
+    initial: 'Agua en cámara de válvula.', found: 'Empaquetadura de válvula con pérdida.',
+    decisions: ['Operaciones autorizó el cambio de empaquetadura.'], result: 'Reparación informada por la cuadrilla, falta validar.',
+    lesson: '—', criteria: ['CO-MAN-01', 'CO-CIE-01'] },
+  { id: '0239', short: 'Agua turbia', title: 'Agua turbia reportada por usuarios', type: 'Calidad de agua', sector: 'Norte',
+    address: 'Calle 16 y Av. 9', date: '29/10/2026', status: 'pendiente', pendingLabel: 'En seguimiento',
+    tags: ['Calidad', 'Seguimiento'],
+    initial: 'Tres reclamos por agua turbia.', found: 'Turbiedad tras maniobra en la red.',
+    decisions: ['Purga autorizada por Operaciones.', 'Toma de muestras en curso.'], result: 'Pendiente de resultados de laboratorio.',
+    lesson: '—', criteria: ['CO-MAN-01'] },
+  { id: '0244', short: 'Rotura por obra de terceros', title: 'Rotura por obra de terceros', type: 'Rotura de caño', sector: 'Este',
+    address: 'Calle 33 y Av. 18', date: '03/11/2026', status: 'pendiente', pendingLabel: 'Pendiente de validación',
+    tags: ['Terceros', 'Escalado'],
+    initial: 'Rotura de caño durante obra privada.', found: 'Caño de 63 mm dañado por excavadora.',
+    decisions: ['Operaciones autorizó corte de sector.', 'Se labró acta a la empresa contratista.'], result: 'Reparación informada, falta validar.',
+    lesson: '—', criteria: ['CO-MAN-01', 'CO-ESC-01'] }
+];
+
+function seedIncidents() {
+  return {
+    '0248': {
+      id: '0248', kind: 'Pérdida de agua en vereda', address: 'Calle 12 entre Av. 5 y Av. 7', short: 'Calle 12 · Av. 5 y 7', sector: 'Norte',
+      cues: [['flow', 'Caudal bajo'], ['car', 'Sin afectar tránsito']],
+      ref: 'Frente al N.º 1450', description: 'Vecino reporta pérdida de agua en vereda. Caudal aparentemente bajo, sin afectación al tránsito.',
+      reportedBy: 'Reclamo telefónico · Centro de atención', reportedAt: '08:52', crew: 'Cuadrilla 3', priority: 'Media',
+      events: [
+        { id: 'e1', type: 'created', src: 'central', who: 'Operaciones · L. Ferreyra', time: '08:58', synced: true, text: 'Orden #0248 creada a partir de un reclamo telefónico.' },
+        { id: 'e2', type: 'assigned', src: 'central', who: 'Operaciones · L. Ferreyra', time: '09:00', synced: true, text: 'Asignada a Cuadrilla 3 con prioridad media.' }
+      ]
+    },
+    '0249': {
+      id: '0249', kind: 'Baja presión', address: 'Av. 22 y Calle 35', sector: 'Este', ref: 'Manzana completa',
+      description: 'Reclamos por baja presión en una manzana.', reportedBy: 'Web', reportedAt: '07:40', crew: 'Cuadrilla 1', priority: 'Media',
+      events: [
+        { id: 'a1', type: 'created', src: 'central', who: 'Operaciones', time: '07:45', synced: true, text: 'Orden creada.' },
+        { id: 'a2', type: 'assigned', src: 'central', who: 'Operaciones', time: '07:50', synced: true, text: 'Asignada a Cuadrilla 1.' },
+        { id: 'a3', type: 'started', src: 'campo', who: 'Cuadrilla 1', time: '08:20', synced: true, text: 'Intervención iniciada.' }
+      ]
+    },
+    '0250': {
+      id: '0250', kind: 'Pérdida en medidor', address: 'Calle 47 N.º 1033', sector: 'Sur', ref: 'Nicho de medidor',
+      description: 'Agua en nicho de medidor.', reportedBy: 'Teléfono', reportedAt: '08:30', crew: 'Cuadrilla 2', priority: 'Baja',
+      events: [
+        { id: 'b1', type: 'created', src: 'central', who: 'Operaciones', time: '08:35', synced: true, text: 'Orden creada.' },
+        { id: 'b2', type: 'assigned', src: 'central', who: 'Operaciones', time: '08:40', synced: true, text: 'Asignada a Cuadrilla 2.' }
+      ]
+    },
+    '0251': {
+      id: '0251', kind: 'Revisión de conexión', address: 'Calle 10 N.º 1215', sector: 'Norte', ref: 'Programada 14:00',
+      description: 'Revisión programada de conexión domiciliaria.', reportedBy: 'Programada', reportedAt: '—', crew: 'Cuadrilla 3', priority: 'Baja',
+      events: [
+        { id: 'c1', type: 'created', src: 'central', who: 'Operaciones', time: '08:10', synced: true, text: 'Orden programada.' },
+        { id: 'c2', type: 'assigned', src: 'central', who: 'Operaciones', time: '08:10', synced: true, text: 'Asignada a Cuadrilla 3 para las 14:00.' }
+      ]
+    },
+    '0246': {
+      id: '0246', kind: 'Reparación de vereda', address: 'Calle 2 y Av. 13', sector: 'Oeste', ref: 'Esquina',
+      description: 'Reposición de vereda tras reparación.', reportedBy: 'Interno', reportedAt: 'Ayer', crew: 'Cuadrilla 4', priority: 'Baja',
+      events: [
+        { id: 'd1', type: 'created', src: 'central', who: 'Operaciones', time: '07:00', synced: true, text: 'Orden creada.' },
+        { id: 'd2', type: 'assigned', src: 'central', who: 'Operaciones', time: '07:05', synced: true, text: 'Asignada a Cuadrilla 4.' },
+        { id: 'd3', type: 'started', src: 'campo', who: 'Cuadrilla 4', time: '07:30', synced: true, text: 'Intervención iniciada.' }
+      ]
+    }
+  };
+}
+
+/* Valores del caso de demostración (para completar formularios rápidamente) */
+const DEMO_CHANGE = {
+  location: 'Calle 12 entre Av. 5 y Av. 7 · N.º 1450',
+  type: 'Posible pérdida en red distribuidora',
+  conditions: ['Agua en calzada', 'Reportes de baja presión', 'Caudal continuo'],
+  conditionsText: 'El agua cubre media calzada y corre hacia Av. 7.',
+  homes: '4',
+  difference: '',
+  urgency: 'Alta',
+  actions: ['Señalización de la zona', 'Delimitación del paso peatonal', 'Registro fotográfico'],
+  actionsText: '',
+  photos: ['calzada', 'vereda']
+};
+
+const DEMO_QUESTION = 'Pérdida mayor de lo previsto, agua en calzada y sin contacto con Operaciones. ¿Antecedentes y cómo seguimos?';
+
+const DEMO_UPDATE = {
+  priority: 'Alta',
+  authorized: [
+    'Mantener la zona señalizada',
+    'Esperar al equipo de red · 10:35',
+    'Excavar solo con el equipo de red',
+    'Corte V-N12 · 10:40 a 11:15 (equipo de red)',
+    'Avisar a los vecinos del corte'
+  ],
+  pending: [
+    'Confirmar baja presión con telemetría',
+    'Avisar al municipio'
+  ],
+  message: 'Prioridad alta. Mantengan la zona señalizada. No operar válvulas: el corte lo hace el equipo de red.'
+};
+
+const DEMO_RESULT = {
+  outcome: 'Pérdida reparada y servicio restablecido',
+  text: 'Caño de 75 mm reparado con el equipo de red. Presión normal en los 4 domicilios.',
+  restored: true,
+  photos: ['reparacion']
+};
+
+const DEMO_VALIDATION = {
+  checks: ['Evidencia completa', 'Acciones dentro de lo autorizado', 'Servicio restablecido', 'Usuarios informados'],
+  lesson: 'Pérdida "menor" que resultó rotura de red (75 mm), igual que #0176. Registrar sin señal y escalar al reconectar.'
+};
+
+const CHANGE_OPTIONS = {
+  types: ['Pérdida de agua en vereda', 'Pérdida en conexión domiciliaria', 'Posible pérdida en red distribuidora', 'Rotura de caño', 'Baja presión', 'Otro'],
+  conditions: ['Agua en calzada', 'Reportes de baja presión', 'Caudal continuo', 'Hundimiento', 'Afecta el tránsito', 'Agua turbia'],
+  urgency: ['Baja', 'Media', 'Alta', 'Crítica'],
+  actions: ['Señalización de la zona', 'Delimitación del paso peatonal', 'Registro fotográfico', 'Consulta a vecinos', 'Cierre de llave de paso domiciliaria']
+};
+
+/* Íconos de trazo simple (24×24) dibujados para el prototipo */
+const ICON_PATHS = {
+  home: '<path d="M3 11.5 12 4l9 7.5"/><path d="M5.5 9.8V20h13V9.8"/><path d="M10 20v-5.5h4V20"/>',
+  clipboard: '<rect x="5" y="4.5" width="14" height="16.5" rx="2"/><path d="M9 4.5h6v3H9z"/><path d="M8.5 12h7M8.5 16h5"/>',
+  history: '<path d="M3.5 12a8.5 8.5 0 1 0 2.6-6.1"/><path d="M3.5 4.5v4h4"/><path d="M12 7.5V12l3 2"/>',
+  book: '<path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v15H6.5A2.5 2.5 0 0 0 4 20.5z"/><path d="M4 20.5A2.5 2.5 0 0 0 6.5 23H20v-5"/><path d="M8.5 8h7"/>',
+  chat: '<path d="M4 5h16v11H9l-5 4z"/><path d="M8.5 9.5h7M8.5 12.5h4.5"/>',
+  spark: '<path d="M12 3.5 13.8 9 19.5 10.8 13.8 12.6 12 18.3 10.2 12.6 4.5 10.8 10.2 9z"/><path d="M19 3v3M17.5 4.5h3"/>',
+  wifi: '<path d="M2.5 9a14 14 0 0 1 19 0"/><path d="M5.5 12.3a9.5 9.5 0 0 1 13 0"/><path d="M8.7 15.5a5 5 0 0 1 6.6 0"/><circle cx="12" cy="18.8" r="1" fill="currentColor"/>',
+  wifiOff: '<path d="M3 3l18 18"/><path d="M8.7 15.5a5 5 0 0 1 6.6 0"/><path d="M5.5 12.3a9.5 9.5 0 0 1 4-2.2M14.8 10.4a9.5 9.5 0 0 1 3.7 1.9"/><path d="M2.5 9a14 14 0 0 1 4.3-2.7M11 5.1A14 14 0 0 1 21.5 9"/><circle cx="12" cy="18.8" r="1" fill="currentColor"/>',
+  cloud: '<path d="M7 18.5h10.5a4 4 0 0 0 .6-8 6 6 0 0 0-11.6 1.6A3.3 3.3 0 0 0 7 18.5z"/>',
+  cloudCheck: '<path d="M7 18.5h10.5a4 4 0 0 0 .6-8 6 6 0 0 0-11.6 1.6A3.3 3.3 0 0 0 7 18.5z"/><path d="m9.5 13.8 2 2 3.5-3.6"/>',
+  cloudPending: '<path d="M7 18.5h10.5a4 4 0 0 0 .6-8 6 6 0 0 0-11.6 1.6A3.3 3.3 0 0 0 7 18.5z"/><path d="M12 11v3l2 1.2"/>',
+  device: '<rect x="6.5" y="2.5" width="11" height="19" rx="2.2"/><path d="M10.5 18.5h3"/>',
+  alert: '<path d="M12 3.5 21.5 20h-19z"/><path d="M12 10v4.5"/><circle cx="12" cy="17.2" r=".9" fill="currentColor"/>',
+  bell: '<path d="M6 16.5V11a6 6 0 0 1 12 0v5.5l1.5 2h-15z"/><path d="M10 20.5a2 2 0 0 0 4 0"/>',
+  check: '<path d="m5 12.5 4.5 4.5L19 7.5"/>',
+  checkCircle: '<circle cx="12" cy="12" r="8.5"/><path d="m8.3 12.3 2.6 2.6 4.9-5"/>',
+  camera: '<path d="M4 8h3.5L9 5.5h6L16.5 8H20v11H4z"/><circle cx="12" cy="13.3" r="3.3"/>',
+  pin: '<path d="M12 21s-6.5-6.2-6.5-11a6.5 6.5 0 0 1 13 0c0 4.8-6.5 11-6.5 11z"/><circle cx="12" cy="10" r="2.3"/>',
+  user: '<circle cx="12" cy="8.5" r="3.8"/><path d="M4.5 20.5a7.5 7.5 0 0 1 15 0"/>',
+  users: '<circle cx="9" cy="8.5" r="3.3"/><path d="M2.8 20a6.2 6.2 0 0 1 12.4 0"/><path d="M15.5 5.6a3.2 3.2 0 0 1 0 6.1M17.5 14.2a6 6 0 0 1 3.7 5.8"/>',
+  search: '<circle cx="10.8" cy="10.8" r="6.3"/><path d="m15.5 15.5 5 5"/>',
+  filter: '<path d="M4 5h16l-6.2 7.3V19l-3.6-1.8v-4.9z"/>',
+  arrowRight: '<path d="M4.5 12h15M13.5 6l6 6-6 6"/>',
+  arrowLeft: '<path d="M19.5 12h-15M10.5 6l-6 6 6 6"/>',
+  chevronRight: '<path d="m9 5.5 6.5 6.5L9 18.5"/>',
+  chevronDown: '<path d="m5.5 9 6.5 6.5L18.5 9"/>',
+  x: '<path d="M6 6l12 12M18 6 6 18"/>',
+  refresh: '<path d="M20 11a8 8 0 0 0-14.3-4.4L4 8.5"/><path d="M4 4v4.5h4.5"/><path d="M4 13a8 8 0 0 0 14.3 4.4L20 15.5"/><path d="M20 20v-4.5h-4.5"/>',
+  sync: '<path d="M20 11a8 8 0 0 0-14.3-4.4L4 8.5"/><path d="M4 4v4.5h4.5"/><path d="M4 13a8 8 0 0 0 14.3 4.4L20 15.5"/><path d="M20 20v-4.5h-4.5"/>',
+  shield: '<path d="M12 3 4.5 6v5.5c0 4.6 3.2 8.2 7.5 9.5 4.3-1.3 7.5-4.9 7.5-9.5V6z"/><path d="m8.8 12 2.3 2.3 4.2-4.3"/>',
+  drop: '<path d="M12 3.2s-6 6.6-6 11.1a6 6 0 0 0 12 0C18 9.8 12 3.2 12 3.2z"/>',
+  gauge: '<path d="M4 17a8 8 0 1 1 16 0"/><path d="M12 17l3.8-5"/><circle cx="12" cy="17" r="1" fill="currentColor"/>',
+  layers: '<path d="m12 3.5 9 4.8-9 4.8-9-4.8z"/><path d="m3 12.5 9 4.8 9-4.8"/><path d="m3 16.5 9 4.8 9-4.8" opacity=".5"/>',
+  grid: '<rect x="4" y="4" width="7" height="7" rx="1.2"/><rect x="13" y="4" width="7" height="7" rx="1.2"/><rect x="4" y="13" width="7" height="7" rx="1.2"/><rect x="13" y="13" width="7" height="7" rx="1.2"/>',
+  list: '<path d="M9 6.5h11M9 12h11M9 17.5h11"/><circle cx="5" cy="6.5" r="1" fill="currentColor"/><circle cx="5" cy="12" r="1" fill="currentColor"/><circle cx="5" cy="17.5" r="1" fill="currentColor"/>',
+  send: '<path d="M4 12 20 4l-4.5 16-3.8-6.4z"/><path d="M11.7 13.6 20 4"/>',
+  info: '<circle cx="12" cy="12" r="8.5"/><path d="M12 11v5"/><circle cx="12" cy="7.9" r=".9" fill="currentColor"/>',
+  play: '<path d="M7 4.5v15l12-7.5z"/>',
+  split: '<rect x="3" y="4.5" width="18" height="15" rx="2"/><path d="M12 4.5v15"/>',
+  stamp: '<path d="M9 3.5h6l-1 7h-4z"/><path d="M5 14.5h14v3H5z"/><path d="M4.5 20.5h15"/>',
+  clock: '<circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/>',
+  edit: '<path d="M4 20h4.5L19 9.5 14.5 5 4 15.5z"/><path d="m12.5 7 4.5 4.5"/>',
+  link: '<path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1"/><path d="M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/>',
+  plus: '<path d="M12 5v14M5 12h14"/>',
+  radio: '<rect x="6" y="7" width="12" height="14" rx="2"/><path d="M9 7 15 2.5"/><path d="M9.5 11.5h5M9.5 14.5h5"/>',
+  lock: '<rect x="5" y="10.5" width="14" height="10" rx="2"/><path d="M8 10.5V8a4 4 0 0 1 8 0v2.5"/>',
+  database: '<ellipse cx="12" cy="6" rx="7.5" ry="2.8"/><path d="M4.5 6v12c0 1.5 3.4 2.8 7.5 2.8s7.5-1.3 7.5-2.8V6"/><path d="M4.5 12c0 1.5 3.4 2.8 7.5 2.8s7.5-1.3 7.5-2.8"/>',
+  logo: '<path d="M12 2.8s-6.4 7-6.4 11.8a6.4 6.4 0 0 0 12.8 0C18.4 9.8 12 2.8 12 2.8z"/><path d="M8.8 14.8a3.3 3.3 0 0 0 3.2 3.1"/>',
+  car: '<path d="M5 11l1.6-4.2A1.5 1.5 0 0 1 8 6h8a1.5 1.5 0 0 1 1.4.8L19 11"/><rect x="3.5" y="11" width="17" height="6" rx="2"/><path d="M6 17v2.5M18 17v2.5"/><circle cx="7.5" cy="14" r=".9" fill="currentColor"/><circle cx="16.5" cy="14" r=".9" fill="currentColor"/>',
+  phone: '<path d="M6.5 3.5h3l1.5 4-2 1.5a10 10 0 0 0 6 6l1.5-2 4 1.5v3a2 2 0 0 1-2 2A16 16 0 0 1 4.5 5.5a2 2 0 0 1 2-2z"/>',
+  eye: '<path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12z"/><circle cx="12" cy="12" r="3"/>',
+  bulb: '<path d="M9.5 17.5h5M10.5 21h3"/><path d="M12 3a6 6 0 0 0-3.6 10.8c.6.5 1.1 1.3 1.1 2.2v1.5h5V16c0-.9.5-1.7 1.1-2.2A6 6 0 0 0 12 3z"/>',
+  hourglass: '<path d="M6.5 3.5h11M6.5 20.5h11"/><path d="M8 3.5v2.5a4 4 0 0 0 1.6 3.2L12 11l2.4-1.8A4 4 0 0 0 16 6V3.5"/><path d="M8 20.5V18a4 4 0 0 1 1.6-3.2L12 13l2.4 1.8A4 4 0 0 1 16 18v2.5"/>',
+  tool: '<path d="M15 4.5a4.5 4.5 0 0 0-4.3 5.8L4 17l3 3 6.7-6.7A4.5 4.5 0 0 0 19.5 9l-2.8 2.8-2.5-.3-.3-2.5L16.7 6A4.5 4.5 0 0 0 15 4.5z"/>',
+  cone: '<path d="M9.5 4h5l4 15.5h-13z"/><path d="M8.3 10h7.4M7.2 14.5h9.6"/><path d="M3.5 19.5h17"/>',
+  pipe: '<path d="M2.5 9.5h7v5h-7zM14.5 9.5h7v5h-7z"/><path d="M9.5 12h1.5M13 12h1.5"/><path d="M12 6.5v2M12 15.5v2"/>',
+  network: '<circle cx="5" cy="12" r="2.2"/><circle cx="19" cy="5.5" r="2.2"/><circle cx="19" cy="18.5" r="2.2"/><path d="M7.2 12h4.3M11.5 12l5.6-5M11.5 12l5.6 5"/>',
+  flow: '<path d="M3 8.5c3 0 3 2 6 2s3-2 6-2 3 2 6 2"/><path d="M3 14.5c3 0 3 2 6 2s3-2 6-2 3 2 6 2"/>',
+  hole: '<path d="M2.5 8.5h19"/><path d="M5.5 8.5l2.5 7.5h8l2.5-7.5"/><path d="M10 12.5h4"/>',
+  turbid: '<path d="M12 3.5s-6 6.5-6 11a6 6 0 0 0 12 0c0-4.5-6-11-6-11z"/><circle cx="10" cy="14.5" r=".9" fill="currentColor"/><circle cx="13.8" cy="16.6" r=".9" fill="currentColor"/><circle cx="13.2" cy="12.2" r=".9" fill="currentColor"/>',
+  tap: '<path d="M3.5 9.5h9a3.5 3.5 0 0 1 3.5 3.5v.5"/><path d="M3.5 7v5"/><path d="M8.5 9.5V6.5M6 6.5h5"/><path d="M16 17c0 1.2-1 2.8-1 2.8s-1-1.6-1-2.8a1 1 0 0 1 2 0z"/>',
+  xCircle: '<circle cx="12" cy="12" r="8.5"/><path d="m9 9 6 6M15 9l-6 6"/>',
+  minus: '<path d="M5 12h14"/>',
+  escalate: '<path d="M4 18l6-6 4 4 6-6"/><path d="M15 10h5v5"/>',
+  gps: '<circle cx="12" cy="12" r="4"/><circle cx="12" cy="12" r="1" fill="currentColor"/><path d="M12 2.5v3M12 18.5v3M2.5 12h3M18.5 12h3"/>'
+};
+function icon(name, size, cls) {
+  size = size || 20;
+  return '<svg class="ic ' + (cls || '') + '" width="' + size + '" height="' + size + '" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + (ICON_PATHS[name] || '') + '</svg>';
+}
+
+/* Fotos simuladas (ilustraciones SVG) */
+function photoSVG(kind) {
+  const W = 320, H = 220;
+  let body = '';
+  if (kind === 'calzada') {
+    body = '<rect width="320" height="220" fill="#9fb1c3"/><rect y="0" width="320" height="70" fill="#c9d6e2"/>' +
+      '<rect y="70" width="320" height="34" fill="#b7a998"/><rect y="104" width="320" height="116" fill="#5d6873"/>' +
+      '<path d="M0 160h320" stroke="#e8e2c8" stroke-width="4" stroke-dasharray="26 18"/>' +
+      '<path d="M40 104c40 6 70 30 140 34s110 30 140 52v30H0v-70c10-30 20-44 40-46z" fill="#6f9fc8" opacity=".75"/>' +
+      '<path d="M70 120c30 8 60 18 100 20M120 150c40 4 80 14 120 30" stroke="#d6e8f7" stroke-width="2.5" fill="none" opacity=".8"/>' +
+      '<rect x="20" y="20" width="60" height="50" fill="#e9eef3"/><rect x="100" y="10" width="80" height="60" fill="#dfe6ed"/><rect x="200" y="24" width="70" height="46" fill="#e9eef3"/>' +
+      '<path d="M250 98l10-26 10 26z" fill="#f08a24"/><rect x="249" y="96" width="22" height="4" fill="#333"/><path d="M254 86h12" stroke="#fff" stroke-width="3"/>';
+  } else if (kind === 'vereda') {
+    body = '<rect width="320" height="220" fill="#b8ad9d"/><path d="M0 70h320M0 140h320M80 0v220M160 0v220M240 0v220" stroke="#a39885" stroke-width="3"/>' +
+      '<path d="M120 90c20-10 60-8 80 6s30 40 10 60-70 22-96 6-14-62 6-72z" fill="#6f9fc8" opacity=".8"/>' +
+      '<path d="M150 112l12 10 8-6 14 14" stroke="#3f4a55" stroke-width="3" fill="none"/>' +
+      '<path d="M168 125c10 14 30 30 60 40s70 12 92 10" stroke="#6f9fc8" stroke-width="10" fill="none" opacity=".7"/>';
+  } else {
+    body = '<rect width="320" height="220" fill="#7a6a55"/><rect x="0" y="0" width="320" height="60" fill="#5d6873"/>' +
+      '<path d="M40 60h240l-20 140H60z" fill="#8a7860"/><rect x="40" y="120" width="240" height="26" rx="13" fill="#3e6fa3"/>' +
+      '<rect x="140" y="112" width="44" height="42" rx="6" fill="#c9ced4"/><path d="M146 120h32M146 146h32" stroke="#8a929b" stroke-width="3"/>' +
+      '<path d="M0 60h320" stroke="#f08a24" stroke-width="6" stroke-dasharray="20 14"/>';
+  }
+  return '<svg viewBox="0 0 ' + W + ' ' + H + '" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">' + body + '</svg>';
+}
+
+function mapSVG(expanded) {
+  /* Plano esquemático del Sector Norte con la ubicación de #0248 */
+  const streets = '<g stroke="#ffffff" stroke-width="14" stroke-linecap="square">' +
+    '<path d="M0 60h400M0 150h400M0 240h400"/><path d="M70 0v300M190 0v300M310 0v300"/></g>' +
+    '<g font-family="Inter,system-ui,sans-serif" font-size="11" fill="#6b7a8c" font-weight="600">' +
+    '<text x="6" y="54">Calle 10</text><text x="6" y="144">Calle 12</text><text x="6" y="234">Calle 14</text>' +
+    '<text x="76" y="292">Av. 5</text><text x="196" y="292">Av. 7</text><text x="316" y="292">Av. 9</text></g>';
+  const pipe = '<path d="M0 158h400" stroke="#7aa7d6" stroke-width="3" stroke-dasharray="6 5"/>';
+  const area = expanded
+    ? '<ellipse cx="150" cy="150" rx="105" ry="62" fill="#d64545" opacity=".14" stroke="#d64545" stroke-width="1.5" stroke-dasharray="5 4"/>'
+    : '<circle cx="140" cy="150" r="22" fill="#1f5fae" opacity=".14"/>';
+  const homes = expanded
+    ? '<g fill="#d64545">' + [[100, 128], [118, 128], [160, 172], [182, 128]].map(function (p) { return '<circle cx="' + p[0] + '" cy="' + p[1] + '" r="4.5"/>'; }).join('') + '</g>'
+    : '';
+  const pinc = expanded ? '#d64545' : '#1f5fae';
+  const pin = '<g transform="translate(140 150)"><path d="M0 0c0 0-13-13-13-23a13 13 0 0 1 26 0C13-13 0 0 0 0z" fill="' + pinc + '"/><circle cx="0" cy="-23" r="5" fill="#fff"/></g>';
+  return '<svg viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet"><rect width="400" height="300" fill="#e6ecf2"/>' +
+    '<g fill="#d9e1ea"><rect x="84" y="74" width="92" height="62" rx="4"/><rect x="204" y="74" width="92" height="62" rx="4"/><rect x="84" y="164" width="92" height="62" rx="4"/><rect x="204" y="164" width="92" height="62" rx="4"/><rect x="0" y="74" width="56" height="62" rx="4"/><rect x="324" y="74" width="76" height="62" rx="4"/><rect x="0" y="164" width="56" height="62" rx="4"/><rect x="324" y="164" width="76" height="62" rx="4"/></g>' +
+    streets + pipe + area + homes + pin + '</svg>';
+}
+
+/* Mapa de sectores con la posición de las cuadrillas (tablero de Operaciones) */
+function crewMapSVG(o) {
+  o = o || {};
+  var z = function (x, y, w, h, n, f) { return '<rect x="' + x + '" y="' + y + '" width="' + w + '" height="' + h + '" rx="10" fill="' + f + '"/><text x="' + (x + 9) + '" y="' + (y + 16) + '" font-size="9.5" font-weight="700" fill="#66768a" letter-spacing=".08em">' + n + '</text>'; };
+  var zones = z(6, 6, 308, 50, 'NORTE', '#dfeaf8') + z(6, 120, 308, 50, 'SUR', '#e7ecf1') + z(6, 62, 98, 52, 'OESTE', '#e7ecf1') + z(216, 62, 98, 52, 'ESTE', '#e7ecf1') + z(110, 62, 100, 52, 'CENTRO', '#e7ecf1');
+  var crew = function (x, y, t, on) { return '<g transform="translate(' + x + ' ' + y + ')"><circle r="12" fill="' + (on ? '#1b7f50' : '#8d99a8') + '" stroke="#fff" stroke-width="2.5"/><text y="3.5" text-anchor="middle" font-size="9.5" font-weight="800" fill="#fff">' + t + '</text></g>'; };
+  var inc = function (x, y, c, big) { return '<circle cx="' + x + '" cy="' + y + '" r="' + (big ? 11 : 7) + '" fill="' + c + '" opacity=".22"/><circle cx="' + x + '" cy="' + y + '" r="4.5" fill="' + c + '"/>'; };
+  var incs = inc(206, 34, o.alert ? '#bf3434' : '#1f5fae', o.alert) + inc(286, 92, '#1f5fae') + inc(196, 148, '#1f5fae') + inc(36, 96, '#1f5fae');
+  var crews = crew(170, 34, 'C3', o.c3on !== false) + crew(262, 92, 'C1', true) + crew(160, 148, 'C2', true) + crew(70, 96, 'C4', true);
+  return '<svg viewBox="0 0 320 176" xmlns="http://www.w3.org/2000/svg" font-family="Inter,system-ui,sans-serif">' + zones + incs + crews + '</svg>';
+}
+
+/* CAMPO · prototipo navegable (estado, lógica y vistas) */
+(function () {
+  'use strict';
+  var PRES = !!window.CAMPO_PRES; // versión de presentación: dos vistas, sin controles de demo
+  var KEY = PRES ? 'campo-pres-v1' : 'campo-demo-v2';
+  var S = null;
+  var persist = true, videoMode = false, embedSide = null;
+  var modal = null;
+  var timers = [];
+
+  /* ---------- utilidades ---------- */
+  function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
+  function clone(o) { return JSON.parse(JSON.stringify(o)); }
+  function fmt(m) { var h = Math.floor(m / 60) % 24, mm = m % 60; return (h < 10 ? '0' : '') + h + ':' + (mm < 10 ? '0' : '') + mm; }
+  function now() { return fmt(S.clock); }
+  function tick(d) { S.clock += d; return now(); }
+  function uid() { S.seq += 1; return 'x' + S.seq; }
+  function norm(s) { return String(s || '').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, ''); }
+  function getPath(p) { var parts = p.split('.'), o = S.drafts; for (var i = 0; i < parts.length; i++) { if (o == null) return undefined; o = o[parts[i]]; } return o; }
+  function setPath(p, v) { var parts = p.split('.'), o = S.drafts; for (var i = 0; i < parts.length - 1; i++) { if (o[parts[i]] == null) o[parts[i]] = {}; o = o[parts[i]]; } o[parts[parts.length - 1]] = v; }
+  function todayStr() { var d = new Date(); return ('0' + d.getDate()).slice(-2) + '/' + ('0' + (d.getMonth() + 1)).slice(-2) + '/' + d.getFullYear(); }
+  var URG = { 'Baja': 0, 'Media': 1, 'Alta': 2, 'Crítica': 3 };
+
+  /* ---------- fricciones operativas (Clase 29 · Actividad 3) ---------- */
+  var FRIC = {
+    handoff: ['HANDOFF FRÁGIL', 'La información tiene que llegar a Operaciones: puede llegar tarde, sin suficiente contexto o sin que sepamos si alguien la recibió.'],
+    sindueno: ['SIN DUEÑO', 'El aviso queda pendiente o llega a Operaciones, pero todavía no está claro quién se hace responsable de retomarlo.'],
+    sobrecarga: ['SOBRECARGA', 'Quien organiza las órdenes recibe muchas actualizaciones: puede no tener tiempo de revisar todo y algunos cambios importantes pueden quedar sin atender.'],
+    espera: ['ESPERA', 'La cuadrilla necesita una decisión de Operaciones que puede no llegar a tiempo: sigue con lo que tiene a su alcance, pero parte del trabajo queda esperando.'],
+    sinautoridad: ['SIN AUTORIDAD', 'La cuadrilla detecta que hay que cambiar recursos o prioridades, pero esa decisión no le corresponde: tiene que consultar a Operaciones para reorganizar el trabajo.']
+  };
+  function fricOn() { return S.fric === true; }
+  function fric(key, note) {
+    if (!fricOn()) return '';
+    var f = FRIC[key];
+    return '<div class="fric" data-fric="' + key + '"><div class="fric-tag">' + icon('alert', 13) + f[0] + '</div><div class="fric-note">' + esc(note || f[1]) + '</div></div>';
+  }
+
+  /* ---------- estado ---------- */
+  function seed() {
+    return {
+      v: 2, clock: 9 * 60 + 5, online: true, lastSync: '09:05', offlineSince: null, wentOffline: false,
+      role: PRES ? 'dividida' : 'cuadrilla', deskRole: 'operaciones', guide: PRES ? false : null,
+      m: { name: 'inicio' }, d: { name: 'panel' },
+      incidents: seedIncidents(), history: clone(HISTORY_SEED), alerts: [], chat: [], chatPending: false,
+      drafts: { change: null, result: null, update: null, valid: null, composer: '' },
+      hist: { q: '', status: 'todos', sector: 'Todos' }, crit: { cat: 'todas', open: null, hl: [] },
+      syncUI: null, newCase: null, seenUpdate: false, seq: 100, fric: false
+    };
+  }
+  function save() { if (!persist) return; try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) { } }
+  function load() { try { var t = localStorage.getItem(KEY); if (t) { var o = JSON.parse(t); if (o && o.v === 2) return o; } } catch (e) { } return null; }
+
+  /* ---------- proyección de la información por lado ---------- */
+  // 'm' = dispositivo de la cuadrilla · 'd' = central (Operaciones / Supervisión)
+  function visible(inc, side) {
+    return inc.events.filter(function (e) { return side === 'm' ? (e.src === 'campo' || e.synced) : (e.src === 'central' || e.synced); });
+  }
+  function proj(inc, side) {
+    var p = { status: 'Asignada', key: 'asignada', priority: inc.priority, change: null, changeEv: null, update: null, updateEv: null, result: null, resultEv: null, validation: null, validEv: null, ai: [], started: false, events: visible(inc, side) };
+    p.events.forEach(function (e) {
+      if (e.type === 'started') { p.status = 'En curso'; p.key = 'curso'; p.started = true; }
+      else if (e.type === 'change') { p.status = 'Cambio de escenario'; p.key = 'cambio'; p.change = e.data; p.changeEv = e; }
+      else if (e.type === 'ai') { p.ai.push(e); }
+      else if (e.type === 'update') { p.status = 'Autorizada'; p.key = 'autorizada'; p.priority = e.data.priority; p.update = e.data; p.updateEv = e; }
+      else if (e.type === 'result') { p.status = 'A validar'; p.key = 'resuelta'; p.result = e.data; p.resultEv = e; }
+      else if (e.type === 'validated') { p.status = 'Cerrada'; p.key = 'cerrada'; p.validation = e.data; p.validEv = e; }
+    });
+    p.last = p.events[p.events.length - 1];
+    return p;
+  }
+  function statusPill(p) {
+    var cls = { asignada: 'blue', curso: 'blue', cambio: 'red', autorizada: 'blue', resuelta: 'pend', cerrada: 'ok' }[p.key] || 'gray';
+    var ic = { asignada: 'clipboard', curso: 'play', cambio: 'alert', autorizada: 'shield', resuelta: 'hourglass', cerrada: 'checkCircle' }[p.key] || 'info';
+    return '<span class="pill ' + cls + '">' + icon(ic, 13) + esc(p.status) + '</span>';
+  }
+  /* ---------- vocabulario visual: íconos en lugar de texto ---------- */
+  var PLV = { 'Baja': 1, 'Media': 2, 'Alta': 3, 'Crítica': 4 };
+  function prioMeter(pr, noLabel) { var l = PLV[pr] || 0; return '<span class="pm l' + l + '" title="Prioridad ' + esc(pr) + '"><span class="bars"><i></i><i></i><i></i><i></i></span>' + (noLabel ? '' : '<b>' + esc(pr) + '</b>') + '</span>'; }
+  function prioTxt(pr) { return prioMeter(pr); }
+  var TYPE_IC = { 'Pérdida de agua en vereda': 'drop', 'Pérdida en conexión domiciliaria': 'home', 'Posible pérdida en red distribuidora': 'network', 'Rotura de caño': 'pipe', 'Baja presión': 'gauge', 'Pérdida en medidor': 'gauge', 'Revisión de conexión': 'home', 'Reparación de vereda': 'tool', 'Otro': 'plus' };
+  var TYPE_SHORT = { 'Pérdida de agua en vereda': 'Pérdida en vereda', 'Pérdida en conexión domiciliaria': 'Conexión domiciliaria', 'Posible pérdida en red distribuidora': 'Posible falla de red' };
+  var TYPE_TILE = { 'Pérdida de agua en vereda': 'Vereda', 'Pérdida en conexión domiciliaria': 'Conexión', 'Posible pérdida en red distribuidora': 'Falla de red', 'Rotura de caño': 'Rotura', 'Baja presión': 'Presión', 'Otro': 'Otro' };
+  var COND = { 'Agua en calzada': ['drop', 'Agua en calzada'], 'Reportes de baja presión': ['gauge', 'Baja presión'], 'Caudal continuo': ['flow', 'Caudal continuo'], 'Hundimiento': ['hole', 'Hundimiento'], 'Afecta el tránsito': ['car', 'Tránsito'], 'Agua turbia': ['turbid', 'Agua turbia'] };
+  var ACT = { 'Señalización de la zona': ['cone', 'Señalizado'], 'Delimitación del paso peatonal': ['users', 'Paso peatonal'], 'Registro fotográfico': ['camera', 'Fotos'], 'Consulta a vecinos': ['home', 'Vecinos'], 'Cierre de llave de paso domiciliaria': ['tap', 'Llave de paso'] };
+  var ITEM_IC = { 'Mantener la zona señalizada': 'cone', 'Esperar al equipo de red · 10:35': 'clock', 'Excavar solo con el equipo de red': 'tool', 'Corte V-N12 · 10:40 a 11:15 (equipo de red)': 'tap', 'Avisar a los vecinos del corte': 'users', 'Confirmar baja presión con telemetría': 'gauge', 'Avisar al municipio': 'bell', 'Evidencia completa': 'camera', 'Acciones dentro de lo autorizado': 'shield', 'Servicio restablecido': 'tap', 'Usuarios informados': 'users' };
+  var TAG_IC = { 'Agua en calzada': 'drop', 'Baja presión': 'gauge', 'Escalado': 'escalate', 'Inicio como pérdida domiciliaria': 'home', 'Sin pérdida visible': 'eye', 'Dentro del alcance de la cuadrilla': 'check', 'Medidor': 'gauge', 'Caudal continuo': 'flow', 'Riesgo peatonal': 'users', 'Municipio': 'grid', 'Cámara de válvula': 'tap', 'Calidad': 'turbid', 'Seguimiento': 'clock', 'Terceros': 'tool', 'Registrado sin conexión': 'wifiOff' };
+  var CAT_IC = { todas: 'list', seg: 'shield', doc: 'camera', esc: 'escalate', man: 'lock', pri: 'gauge', off: 'wifiOff', cie: 'stamp' };
+  var OUTCOMES = [['Pérdida reparada y servicio restablecido', 'checkCircle', 'Reparada', 'ok'], ['Pérdida controlada · requiere seguimiento', 'clock', 'Controlada', 'amber'], ['No resuelta · requiere otro equipo', 'xCircle', 'No resuelta', 'red']];
+  function tIc(k) { return TYPE_IC[k] || 'drop'; }
+  function tShort(k) { return TYPE_SHORT[k] || k; }
+  function ichip(ic, t, cls) { return '<span class="ichip ' + (cls || '') + '">' + icon(ic, 14) + esc(t) + '</span>'; }
+  function condChip(c, cls) { var m = COND[c] || ['alert', c]; return ichip(m[0], m[1], cls || 'warn'); }
+  function actChip(a) { var m = ACT[a] || ['check', a]; return ichip(m[0], m[1], 'ok'); }
+  function tagChip(t) { return ichip(TAG_IC[t] || 'info', t); }
+  function outcomeOf(o) { return OUTCOMES.filter(function (x) { return x[0] === o; })[0] || [o, 'checkCircle', o, 'ok']; }
+  function outcomeChip(o) { var x = outcomeOf(o); return ichip(x[1], x[2], x[3] === 'ok' ? 'ok' : x[3] === 'red' ? 'red' : 'warn'); }
+  function reasonChips(rs) { return (rs || []).map(function (r) { return typeof r === 'string' ? ichip('alert', r, 'red') : ichip(r.ic, r.t, 'red'); }).join(''); }
+  function pendingOut() { var n = 0; Object.keys(S.incidents).forEach(function (k) { S.incidents[k].events.forEach(function (e) { if (e.src === 'campo' && !e.synced) n++; }); }); return n; }
+  function pendingIn() { var n = 0; Object.keys(S.incidents).forEach(function (k) { S.incidents[k].events.forEach(function (e) { if (e.src === 'central' && !e.synced) n++; }); }); return n; }
+  function inc0248() { return S.incidents['0248']; }
+  function addEvent(inc, ev) { ev.id = uid(); inc.events.push(ev); return ev; }
+  function lastCrewContact() {
+    var t = null; inc0248().events.forEach(function (e) { if (e.src === 'campo' && e.synced) t = e.syncedAt || e.time; });
+    return t || S.lastSync;
+  }
+
+  /* ---------- reglas: detección de cambio que requiere evaluación ---------- */
+  function evalChange(d, inc) {
+    var r = [];
+    if (d.urgency && URG[d.urgency] > URG[inc.priority]) r.push({ ic: 'escalate', t: 'Urgencia ' + d.urgency + ' > ' + inc.priority });
+    if ((d.conditions || []).indexOf('Agua en calzada') >= 0) r.push({ ic: 'drop', t: 'Agua en calzada' });
+    if ((d.conditions || []).indexOf('Reportes de baja presión') >= 0) r.push({ ic: 'gauge', t: 'Baja presión' + (d.homes ? ' · ' + d.homes + ' domicilios' : '') });
+    if (d.type && d.type !== inc.kind) r.push({ ic: tIc(d.type), t: tShort(d.type) });
+    return r;
+  }
+
+  /* ---------- acciones del flujo ---------- */
+  function go(side, name, id) { S[side] = { name: name, id: id || null }; if (side === 'm' && name === 'incidencia') { var p = proj(inc0248(), 'm'); if (p.update) S.seenUpdate = true; } commit(); }
+  function setRole(r) {
+    if (PRES) return;
+    if (r === 'dividida') { S.role = 'dividida'; }
+    else if (r === 'cuadrilla') { S.role = 'cuadrilla'; }
+    else { S.role = r; S.deskRole = r; if (r === 'supervision' && S.d.name === 'panel') S.d = { name: 'validaciones' }; if (r === 'operaciones' && S.d.name === 'validaciones') S.d = { name: 'panel' }; }
+    try { if (!embedSide && location.hash !== '#' + r) location.hash = r; } catch (e) { }
+    commit();
+  }
+  function setOnline(on) {
+    if (on === S.online) return;
+    if (!on) { S.online = false; S.offlineSince = tick(17); S.wentOffline = true; S.syncUI = null; toast('Sin conexión · se guarda en el celular', 'wifiOff'); }
+    else {
+      S.online = true; tick(18);
+      var n = pendingOut() + pendingIn();
+      S.syncUI = n > 0 ? { phase: 'recovered', count: n, progress: 0 } : null;
+      toast(n > 0 ? 'Señal recuperada · ' + n + ' sin enviar' : 'Señal recuperada', 'wifi');
+    }
+    commit();
+  }
+  function start(id) {
+    var inc = S.incidents[id || '0248'];
+    if (proj(inc, 'm').started) return;
+    addEvent(inc, { type: 'started', src: 'campo', who: 'Cuadrilla 3 · R. Benítez', time: tick(13), synced: S.online, syncedAt: S.online ? now() : null, text: 'Intervención iniciada por el encargado.' });
+    if (S.online) S.lastSync = now();
+    toast(S.online ? 'Intervención iniciada' : 'Iniciada · sin enviar', 'play');
+    S.m = { name: 'incidencia', id: inc.id }; commit();
+  }
+  function ensureChangeDraft() {
+    if (!S.drafts.change) { var inc = inc0248(); S.drafts.change = { location: inc.address + ' · ' + inc.ref.toLowerCase() + ' · Sector ' + inc.sector, type: inc.kind, conditions: [], conditionsText: '', homes: '', difference: '', urgency: '', actions: [], actionsText: '', photos: [] }; }
+  }
+  function saveChange() {
+    ensureChangeDraft();
+    var d = S.drafts.change, inc = inc0248(), miss = [];
+    if (!d.type) miss.push('tipo');
+    if (!(d.conditions.length || d.conditionsText)) miss.push('qué ves');
+    if (!d.urgency) miss.push('urgencia');
+    if (miss.length) { S.formError = 'Falta: ' + miss.join(', '); commit(); return false; }
+    S.formError = null;
+    if (!d.difference) d.difference = 'Orden: ' + tShort(inc.kind) + ' (' + inc.priority + '). En el lugar: ' + tShort(d.type) + ' (' + d.urgency + ').';
+    var data = clone(d); data.reasons = evalChange(d, inc); data.requiresEval = data.reasons.length > 0; data.offline = !S.online;
+    if (!proj(inc, 'm').started) addEvent(inc, { type: 'started', src: 'campo', who: 'Cuadrilla 3 · R. Benítez', time: tick(1), synced: S.online, syncedAt: S.online ? now() : null, text: 'Intervención iniciada por el encargado.' });
+    var ev = addEvent(inc, { type: 'change', src: 'campo', who: 'Cuadrilla 3 · R. Benítez', time: tick(6), synced: S.online, syncedAt: S.online ? now() : null, data: data });
+    if (S.online) { S.lastSync = now(); makeAlert(inc, ev); }
+    S.drafts.change = null;
+    S.m = { name: 'registrado', id: inc.id }; commit(); return true;
+  }
+  function makeAlert(inc, ev) {
+    if (ev.type === 'change') S.alerts.unshift({ id: uid(), inc: inc.id, kind: 'change', title: '#' + inc.id + ' · Cambio de escenario', body: 'Cuadrilla 3 informa: ' + (ev.data.conditions || []).join(', ').toLowerCase() + '. Urgencia preliminar ' + (ev.data.urgency || '').toLowerCase() + '.' + (ev.data.offline ? ' Registrado sin conexión a las ' + ev.time + '.' : ''), time: now(), read: false });
+    if (ev.type === 'result') S.alerts.unshift({ id: uid(), inc: inc.id, kind: 'result', title: '#' + inc.id + ' · Resultado para validar', body: ev.data.outcome + '. Pendiente de validación del cierre.', time: now(), read: false });
+  }
+  function startSync() {
+    if (!S.online) return;
+    var n = pendingOut() + pendingIn();
+    S.syncUI = { phase: 'syncing', count: n, progress: 15 }; commit();
+    if (videoMode) return;
+    later(function () { S.syncUI.progress = 65; commit(); }, 600);
+    later(function () { completeSync(); }, 1500);
+  }
+  function completeSync() {
+    var n = 0, gotUpdate = false;
+    Object.keys(S.incidents).forEach(function (k) {
+      var inc = S.incidents[k];
+      inc.events.forEach(function (e) {
+        if (!e.synced) { e.synced = true; e.syncedAt = now(); n++; if (e.src === 'campo') makeAlert(inc, e); if (e.src === 'central' && e.type === 'update') gotUpdate = true; }
+      });
+    });
+    S.lastSync = now();
+    S.syncUI = { phase: 'shared', count: n || (S.syncUI && S.syncUI.count) || 0, progress: 100 };
+    toast('Compartido con Operaciones', 'cloudCheck');
+    if (gotUpdate) toast('Nuevas indicaciones de Operaciones', 'bell');
+    commit();
+  }
+  function doSync() { startSync(); if (videoMode) completeSync(); }
+
+  /* ---------- asistente (simulado, por reglas) ---------- */
+  function buildAnswer(q) {
+    var t = norm(q), inc = inc0248(), p = proj(inc, 'm'), ch = p.change;
+    var intent = 'main';
+    if (/valvul|cerrar|cortar|corte|excav|maniobr|puedo/.test(t)) intent = 'limits';
+    else if (/(seguimos|hacemos|recomend|que hago|como sigo|antecedentes)/.test(t)) intent = 'main';
+    else if (/0176/.test(t)) intent = 'ante';
+    else if (/falta|informacion|registrar|completar/.test(t)) intent = 'missing';
+    else if (/criterio|regla|procedimiento/.test(t)) intent = 'criteria';
+    else if (/operaciones (sabe|conoce|recibio)|sincroniz|pendiente/.test(t)) intent = 'status';
+    var cond = ch ? ch.conditions : [];
+    var water = cond.indexOf('Agua en calzada') >= 0 || /calzada/.test(t);
+    var lowp = cond.indexOf('Reportes de baja presion') >= 0 || cond.indexOf('Reportes de baja presión') >= 0 || /presion/.test(t);
+    var coinc = [{ t: 'Sector Norte', ic: 'pin', ok: true }, { t: 'Empezó en vereda', ic: 'clipboard', ok: true }, { t: 'Agua en calzada', ic: 'drop', ok: water }, { t: 'Baja presión', ic: 'gauge', ok: lowp }];
+    var missing = [];
+    if (!ch) missing.push({ ic: 'edit', t: 'Registrar el cambio en #0248' });
+    if (!ch || !ch.homes) missing.push({ ic: 'home', t: 'Cuántos domicilios sin presión' });
+    if (!ch || (ch.photos || []).length < 2) missing.push({ ic: 'camera', t: 'Fotos de vereda y calzada' });
+    missing.push({ ic: 'pin', t: 'Origen probable: vereda, calzada o conexión' });
+    missing.push({ ic: 'flow', t: 'Si el caudal aumenta (con hora)' });
+    var acts = ch ? ch.actions : [];
+    var verif = [
+      { t: 'Señalizar y delimitar la zona', ic: 'cone', c: 'CO-SEG-01', done: acts.indexOf('Señalización de la zona') >= 0 },
+      { t: 'Relevar domicilios sin presión', ic: 'home', c: 'CO-DOC-01', done: !!(ch && ch.homes) },
+      { t: 'Fotos con hora', ic: 'camera', c: 'CO-DOC-01', done: !!(ch && (ch.photos || []).length >= 2) },
+      { t: 'Observar sin intervenir', ic: 'eye', c: 'CO-SEG-01', done: false },
+      { t: 'Reintentar contacto (radio o teléfono)', ic: 'radio', c: 'CO-OFF-01', done: false }
+    ];
+    var crit = ['CO-DOC-01', 'CO-SEG-01', 'CO-DOC-02', 'CO-MAN-01', 'CO-ESC-01'];
+    var situ = ch
+      ? 'Orden original: pérdida menor en vereda, prioridad ' + inc.priority.toLowerCase() + '. Registrado en campo (' + p.changeEv.time + '): ' + cond.join(', ').toLowerCase() + (ch.homes ? ' (' + ch.homes + ' domicilios)' : '') + '; urgencia preliminar ' + (ch.urgency || '—').toLowerCase() + '.'
+      : 'Orden original: pérdida menor en vereda, prioridad ' + inc.priority.toLowerCase() + '. Todavía no hay un cambio de escenario registrado en el dispositivo.';
+    var sources = ['#0248 · registro local', '#0176 · historial local', '#0221 · historial local'].concat(crit).concat(['Datos locales al ' + S.lastSync]);
+    return { intent: intent, offline: !S.online, situ: situ, hasChange: !!ch, coinc: coinc, missing: missing, verif: verif, crit: crit, sources: sources, pending: pendingOut(), q: q };
+  }
+  function ask(text) {
+    text = (text || '').trim(); if (!text || S.chatPending) return;
+    S.chat.push({ from: 'u', text: text, time: now() });
+    S.drafts.composer = ''; S.chatPending = true; S.m = { name: 'asistente' }; commit(); scrollEnd('m');
+    var fin = function () {
+      var a = buildAnswer(text);
+      tick(3);
+      S.chat.push({ from: 'a', ans: a, time: now() });
+      S.chatPending = false;
+      addEvent(inc0248(), { type: 'ai', src: 'campo', who: 'Cuadrilla 3 · consulta al asistente', time: now(), synced: S.online, syncedAt: S.online ? now() : null, data: { q: text, intent: a.intent, sources: a.sources, crit: a.crit } });
+      a.logged = true;
+      commit(); scrollToLastQ('m');
+    };
+    if (videoMode) fin(); else later(fin, 1400);
+  }
+
+  /* ---------- Operaciones / Supervisión ---------- */
+  function ensureUpdateDraft() { if (!S.drafts.update) S.drafts.update = { priority: 'Alta', authorized: [], pending: [], message: '' }; }
+  function sendUpdate() {
+    ensureUpdateDraft();
+    var d = S.drafts.update;
+    if (!d.authorized.length && !d.message) { S.formError = 'Marcá al menos una acción o escribí un mensaje'; commit(); return false; }
+    S.formError = null;
+    var inc = inc0248();
+    addEvent(inc, { type: 'update', src: 'central', who: 'Operaciones · L. Ferreyra', time: tick(6), synced: S.online, syncedAt: S.online ? now() : null, data: clone(d) });
+    S.alerts.forEach(function (a) { if (a.inc === inc.id && a.kind === 'change') a.read = true; });
+    S.drafts.update = null; S.seenUpdate = false;
+    toast(S.online ? 'Enviado a Cuadrilla 3' : 'Guardado · se entrega cuando C3 tenga señal', 'send');
+    commit(); return true;
+  }
+  function ensureResultDraft() { if (!S.drafts.result) S.drafts.result = { done: [], outcome: '', text: '', restored: null, photos: [] }; }
+  function sendResult() {
+    ensureResultDraft();
+    var d = S.drafts.result;
+    if (!d.outcome) { S.formError = 'Elegí el resultado'; commit(); return false; }
+    S.formError = null;
+    var inc = inc0248();
+    var ev = addEvent(inc, { type: 'result', src: 'campo', who: 'Cuadrilla 3 · R. Benítez', time: tick(77), synced: S.online, syncedAt: S.online ? now() : null, data: clone(d) });
+    if (S.online) { S.lastSync = now(); makeAlert(inc, ev); }
+    S.drafts.result = null; S.m = { name: 'cierre', id: inc.id }; commit(); return true;
+  }
+  function ensureValidDraft() { if (!S.drafts.valid) S.drafts.valid = { checks: [], lesson: '' }; }
+  function validate() {
+    ensureValidDraft();
+    var d = S.drafts.valid, inc = inc0248(), p = proj(inc, 'd');
+    if (d.checks.length < 3) { S.formError = 'Marcá los controles antes de validar'; commit(); return false; }
+    S.formError = null;
+    var by = S.deskRole === 'supervision' ? 'Supervisión · C. Duarte' : 'Operaciones · L. Ferreyra';
+    addEvent(inc, { type: 'validated', src: 'central', who: by, time: tick(15), synced: S.online, syncedAt: S.online ? now() : null, data: { by: by, checks: clone(d.checks), lesson: d.lesson } });
+    S.alerts.forEach(function (a) { if (a.inc === inc.id) a.read = true; });
+    var ch = p.change || {}, up = p.update || {}, rs = p.result || {};
+    S.history = S.history.filter(function (h) { return h.id !== '0248'; });
+    S.history.unshift({
+      id: '0248', short: 'Pérdida "menor" → rotura de red', title: 'Pérdida informada como menor que resultó ser una rotura en red', type: ch.type || inc.kind, sector: inc.sector, address: inc.address,
+      date: todayStr(), status: 'resuelto', validatedBy: by, isNew: true,
+      tags: ['Agua en calzada', 'Baja presión', 'Registrado sin conexión', 'Escalado'],
+      initial: 'Reclamo por pérdida de agua en vereda. Prioridad media.',
+      found: (ch.conditionsText || '') + (ch.difference ? ' ' + ch.difference : ''),
+      decisions: ['La cuadrilla registró el cambio sin conexión y consultó al asistente (antecedente #0176).', 'Al sincronizar, Operaciones elevó la prioridad a ' + (up.priority || 'alta').toLowerCase() + '.'].concat((up.authorized || []).slice(2, 4).map(function (x) { return 'Autorizado: ' + x.charAt(0).toLowerCase() + x.slice(1) + '.'; })),
+      result: rs.text || rs.outcome || '', lesson: d.lesson || '—', criteria: ['CO-DOC-01', 'CO-OFF-01', 'CO-ESC-01', 'CO-MAN-01', 'CO-CIE-01']
+    });
+    S.newCase = '0248'; S.drafts.valid = null;
+    S.d = { name: 'cierre', id: inc.id };
+    toast('#0248 validada · en el historial', 'checkCircle');
+    commit(); return true;
+  }
+
+  /* ---------- demo: completar formularios ---------- */
+  function demoFill(kind) {
+    if (kind === 'change') S.drafts.change = clone(DEMO_CHANGE);
+    if (kind === 'update') S.drafts.update = { priority: DEMO_UPDATE.priority, authorized: clone(DEMO_UPDATE.authorized), pending: clone(DEMO_UPDATE.pending), message: DEMO_UPDATE.message };
+    if (kind === 'result') { var p = proj(inc0248(), 'm'); S.drafts.result = { done: clone((p.update && p.update.authorized) || []), outcome: DEMO_RESULT.outcome, text: DEMO_RESULT.text, restored: true, photos: clone(DEMO_RESULT.photos) }; }
+    if (kind === 'valid') S.drafts.valid = { checks: clone(DEMO_VALIDATION.checks), lesson: DEMO_VALIDATION.lesson };
+    S.formError = null; commit();
+  }
+
+  /* ---------- infraestructura de render ---------- */
+  function later(fn, ms) { var t = setTimeout(fn, ms); timers.push(t); }
+  function commit() { save(); render(); }
+  function toast(msg, ic) {
+    if (videoMode || embedSide) return;
+    var root = document.getElementById('toasts'); if (!root) return;
+    var el = document.createElement('div'); el.className = 'toast'; el.innerHTML = icon(ic || 'info', 18) + '<span>' + esc(msg) + '</span>';
+    root.appendChild(el); setTimeout(function () { el.remove(); }, 3400);
+  }
+  function scrollToLastQ(side) {
+    var box = document.querySelector('[data-pane="' + side + '"] [data-sk]'); if (!box) return;
+    var qs = box.querySelectorAll('.msg.u'), el = qs[qs.length - 1]; if (!el) return;
+    box.scrollTop = el.getBoundingClientRect().top - box.getBoundingClientRect().top + box.scrollTop - 8;
+  }
+  function scrollEnd(side) { var el = document.querySelector('[data-pane="' + side + '"] [data-sk]'); if (el) el.scrollTop = el.scrollHeight; }
+  var lastRoutes = {};
+  function render() {
+    var app = document.getElementById('app');
+    var scrolls = {};
+    document.querySelectorAll('[data-sk]').forEach(function (el) { scrolls[el.getAttribute('data-sk')] = el.scrollTop; });
+    var ae = document.activeElement, focusKey = ae && ae.getAttribute && (ae.getAttribute('data-f') || ae.getAttribute('data-k')), sel = null;
+    if (focusKey && ae.selectionStart != null) sel = [ae.selectionStart, ae.selectionEnd];
+    var focusPane = ae && ae.closest && ae.closest('[data-pane]'); focusPane = focusPane && focusPane.getAttribute('data-pane');
+    app.innerHTML = layout();
+    document.querySelectorAll('[data-sk]').forEach(function (el) {
+      var k = el.getAttribute('data-sk'), side = k.charAt(0), r = JSON.stringify(S[side]);
+      if (lastRoutes[side] === r && scrolls[k] != null) el.scrollTop = scrolls[k];
+      lastRoutes[side] = r;
+    });
+    if (focusKey) {
+      var q = (focusPane ? '[data-pane="' + focusPane + '"] ' : '') + '[data-f="' + focusKey + '"],' + (focusPane ? '[data-pane="' + focusPane + '"] ' : '') + '[data-k="' + focusKey + '"]';
+      var el = document.querySelector(q);
+      if (el) { el.focus(); if (sel && el.setSelectionRange) try { el.setSelectionRange(sel[0], sel[1]); } catch (e) { } }
+    }
+    renderModal();
+    document.body.classList.toggle('no-anim', videoMode);
+  }
+
+  /* ---------- layout general ---------- */
+  function layout() {
+    var showM = embedSide ? embedSide === 'm' : (S.role === 'cuadrilla' || S.role === 'dividida');
+    var showD = embedSide ? embedSide === 'd' : (S.role !== 'cuadrilla');
+    var h = embedSide || PRES ? '' : demobar();
+    h += '<main class="stage' + (S.role === 'dividida' && !embedSide ? ' split' : '') + '">';
+    if (showM) h += '<section class="col-m"><div class="pane-label"><span class="dot"></span>' + (PRES ? 'Campo · celular del encargado' : 'Cuadrilla · dispositivo del encargado') + '</div><div class="phone"><div class="screen" data-pane="m">' + mobileApp() + '</div></div></section>';
+    if (showD) h += '<section class="col-d"><div class="pane-label ops"><span class="dot"></span>' + (S.deskRole === 'supervision' ? 'Supervisión' : 'Operaciones') + ' · central</div><div class="deskframe" data-pane="d">' + deskApp() + '</div></section>';
+    h += '</main>';
+    if (!embedSide && !PRES) h += guide();
+    return h;
+  }
+  function demobar() {
+    var roles = [['cuadrilla', 'device', 'Cuadrilla'], ['operaciones', 'grid', 'Operaciones'], ['supervision', 'shield', 'Supervisión'], ['dividida', 'split', 'Vista dividida']];
+    var r = '<header class="demobar"><div class="brand">' + icon('logo', 22) + 'CAMPO <small>Prototipo</small></div>';
+    r += '<div class="grp"><span class="lbl">Rol</span><div class="seg" role="tablist">' + roles.map(function (x) { return '<button data-a="role" data-v="' + x[0] + '" class="' + (S.role === x[0] ? 'on' : '') + '">' + icon(x[1], 16) + '<span class="' + (x[0] === 'dividida' ? 'lbl-long' : '') + '">' + x[2] + '</span></button>'; }).join('') + '</div></div>';
+    r += '<div class="grp"><span class="lbl">Red de la cuadrilla</span><button class="conn-toggle ' + (S.online ? '' : 'off') + '" data-a="toggleNet" aria-pressed="' + (!S.online) + '"><span class="sw"></span>' + (S.online ? 'Conectada' : 'Sin conexión') + '</button></div>';
+    r += '<button class="dbtn fric-toggle ' + (fricOn() ? 'on' : '') + '" data-a="fricToggle" title="Mostrar u ocultar las fricciones operativas">' + icon('alert', 16) + '<span class="t">Fricciones: ' + (fricOn() ? 'visibles' : 'ocultas') + '</span></button>';
+    r += '<span class="spacer"></span><span class="sim-note">Datos ficticios · red, servidor e IA simulados</span>';
+    r += '<button class="dbtn" data-a="about" title="Qué es simulado">' + icon('info', 16) + '<span class="t">Qué es simulado</span></button><button class="dbtn" data-a="guide" title="Guía">' + icon('list', 16) + '<span class="t">Guía</span></button><button class="dbtn" data-a="reset" title="Reiniciar">' + icon('refresh', 16) + '<span class="t">Reiniciar</span></button></header>';
+    return r;
+  }
+
+  /* ================= APP MÓVIL · CUADRILLA ================= */
+  function mobileApp() {
+    var r = S.m.name;
+    var pend = pendingOut();
+    var h = '<div class="mapp">';
+    h += '<div class="statusbar"><span>' + now() + '</span><span class="r"><button class="sigbtn" data-a="toggleNet" title="' + (S.online ? 'Cortar la señal' : 'Recuperar la señal') + '" aria-label="' + (S.online ? 'Cortar la señal' : 'Recuperar la señal') + '">' + (S.online ? icon('wifi', 15) : icon('wifiOff', 15)) + '</button><span class="batt"></span></span></div>';
+    var titles = { incidencia: 'Orden #0248', cambio: 'Registrar cambio', registrado: 'Registro', caso: 'Caso #' + (S.m.id || ''), resultado: 'Resultado', cierre: 'Cierre #0248' };
+    h += '<div class="mhead">';
+    if (['inicio', 'historial', 'criterios', 'asistente'].indexOf(r) >= 0) h += '<div class="t">' + icon('logo', 22) + 'CAMPO</div>';
+    else h += '<div class="row"><button class="back" data-a="mback" aria-label="Volver">' + icon('arrowLeft', 18) + '</button><span class="ttl">' + esc(titles[r] || '') + '</span></div>';
+    h += '<div class="row">' + (pend ? '<span class="pill pend" title="Registros sin enviar">' + icon('cloudPending', 14) + pend + '</span>' : '') + (S.online ? '<button class="pill on sigpill" data-a="toggleNet" title="Cortar la señal">' + icon('wifi', 14) + 'Conectado</button>' : '<button class="pill off sigpill" data-a="toggleNet" title="Recuperar la señal">' + icon('wifiOff', 14) + 'Sin señal</button>') + '</div></div>';
+    if (!S.online) h += '<div class="offline-banner">' + icon('wifiOff', 18) + '<div>Sin conexión<small>Todo se guarda en el celular</small></div></div>';
+    h += '<div class="mbody" data-sk="m-' + r + '">' + mView() + '</div>';
+    if (r === 'asistente') h += '<div class="composer"><textarea data-f="composer" placeholder="Preguntá…" rows="1">' + esc(S.drafts.composer || '') + '</textarea><button data-a="ask" aria-label="Enviar">' + icon('send', 20) + '</button></div>';
+    var tab = { inicio: 'inicio', incidencia: 'orden', cambio: 'orden', registrado: 'orden', resultado: 'orden', cierre: 'orden', historial: 'historial', caso: 'historial', criterios: 'criterios', asistente: 'asistente' }[r];
+    var tabs = [['inicio', 'home', 'Inicio'], ['orden', 'clipboard', 'Orden'], ['historial', 'history', 'Historial'], ['criterios', 'book', 'Criterios'], ['asistente', 'spark', 'Asistente']];
+    h += '<nav class="tabbar">' + tabs.map(function (t) { return '<button data-a="mtab" data-v="' + t[0] + '" class="' + (tab === t[0] ? 'on' : '') + '">' + icon(t[1], 22) + t[2] + (t[0] === 'inicio' && pend ? '<span class="badge">' + pend + '</span>' : '') + '</button>'; }).join('') + '</nav>';
+    return h + '</div>';
+  }
+  function mView() {
+    switch (S.m.name) {
+      case 'inicio': return mHome();
+      case 'incidencia': return mIncident();
+      case 'cambio': return mChangeForm();
+      case 'registrado': return mSaved();
+      case 'historial': return historyView('m');
+      case 'caso': return caseView('m', S.m.id);
+      case 'criterios': return criteriaView('m');
+      case 'asistente': return mAssistant();
+      case 'resultado': return mResultForm();
+      case 'cierre': return mClosure();
+    }
+    return '';
+  }
+  // pasos visuales (nodo → línea → nodo); estado: done | cur | pend | todo
+  function hop(nodes) {
+    return '<div class="hop">' + nodes.map(function (n, i) { return (i ? '<span class="l ' + (n[2] === 'done' ? '' : n[2]) + '"></span>' : '') + '<div class="n ' + n[2] + '"><i>' + icon(n[0], 18, n[2] === 'cur' ? 'spin' : '') + '</i>' + esc(n[1]) + '</div>'; }).join('') + '</div>';
+  }
+  function syncCard() {
+    var u = S.syncUI; if (!u) return '';
+    var st = u.phase === 'recovered' ? [['wifiOff', 'Sin señal', 'done'], ['wifi', 'Señal', 'done'], ['sync', 'Envío', 'todo'], ['cloudCheck', 'Listo', 'todo']]
+      : u.phase === 'syncing' ? [['wifiOff', 'Sin señal', 'done'], ['wifi', 'Señal', 'done'], ['sync', 'Envío', 'cur'], ['cloudCheck', 'Listo', 'todo']]
+        : [['wifiOff', 'Sin señal', 'done'], ['wifi', 'Señal', 'done'], ['sync', 'Envío', 'done'], ['cloudCheck', 'Listo', 'done']];
+    var h = '<div class="sync" data-k="sync">';
+    if (u.phase === 'recovered') h += '<div class="row between"><div class="h3 row">' + icon('wifi', 20) + 'Señal recuperada</div><span class="pill pend">' + icon('cloudPending', 14) + u.count + ' sin enviar</span></div>' + hop(st) + '<button class="btn primary big" style="margin-top:12px" data-a="sync">' + icon('sync', 18) + 'Sincronizar ahora</button>';
+    else if (u.phase === 'syncing') h += '<div class="h3 row">' + icon('sync', 20, 'spin') + 'Enviando ' + u.count + '…</div>' + hop(st) + '<div class="bar"><i style="width:' + u.progress + '%"></i></div>';
+    else if (u.phase === 'shared') h += '<div class="row between"><div class="h3 row" style="color:var(--green)">' + icon('cloudCheck', 20) + 'Compartido · ' + S.lastSync + '</div><button class="btn ghost sm" data-a="closeSync" aria-label="Cerrar">' + icon('x', 16) + '</button></div>' + hop(st);
+    h += '</div>';
+    if (u.phase === 'shared') h += fric('handoff', 'El registro llegó a la central, pero eso no confirma que alguien lo haya leído: la cuadrilla no sabe si Operaciones lo recibió ni si tiene el contexto suficiente.');
+    return h;
+  }
+  function stat(ic, n, l, cls) { return '<div class="stat ' + (cls || '') + '"><div class="row">' + icon(ic, 18) + '<span class="n">' + n + '</span></div><div class="l">' + l + '</div></div>'; }
+  function mHome() {
+    var inc = inc0248(), p = proj(inc, 'm'), pend = pendingOut();
+    var h = '<div class="hello"><div class="avatar">RB</div><div><div class="h2">Hola, Raúl</div><div class="small muted">Cuadrilla 3 · Norte</div></div></div>';
+    if (S.syncUI) h += syncCard() + '<div style="height:12px"></div>';
+    if (p.update && !S.seenUpdate) h += '<button class="notice blue tap" data-a="mgo" data-v="incidencia" data-id="0248">' + icon('bell', 20) + '<div><b>Nuevas indicaciones · #0248</b><span class="row">' + prioMeter(p.update.priority) + '<span class="xs">' + icon('shield', 13) + p.update.authorized.length + ' autorizadas</span></span></div>' + icon('chevronRight', 18) + '</button>';
+    var active = Object.keys(S.incidents).filter(function (k) { var q = proj(S.incidents[k], 'm'); return S.incidents[k].crew === 'Cuadrilla 3' && q.started && q.key !== 'cerrada'; }).length;
+    h += '<div class="stats">' + stat('clipboard', 2, 'Órdenes') + stat('play', active, 'Activas') + stat('cloudPending', pend, 'Sin enviar', pend ? 'amber' : '') + '</div>';
+    if (pend) h += fric('sindueno', 'Los registros quedan pendientes en el dispositivo hasta que vuelva la señal: si nadie los retoma, no está claro quién se hace cargo de que lleguen.');
+    h += '<div class="sec"><div class="sec-t">Hoy</div>';
+    h += '<div class="order hl" data-k="order-0248"><div class="row between"><span class="id">#0248</span>' + statusPill(p) + '</div><div class="row" style="gap:10px;margin-top:8px"><span class="tic">' + icon(tIc(inc.kind), 22) + '</span><div style="min-width:0"><div class="tt">' + esc(tShort(inc.kind)) + '</div><div class="small muted row" style="gap:4px">' + icon('pin', 14) + esc(inc.short) + '</div></div></div><div class="row" style="margin-top:10px;gap:14px">' + prioMeter(p.priority) + '<span class="xs muted row" style="gap:4px">' + icon('clock', 13) + inc.events[1].time + '</span></div>';
+    h += p.started ? '<button class="btn secondary block" style="margin-top:12px" data-a="mgo" data-v="incidencia" data-id="0248">Abrir orden ' + icon('arrowRight', 16) + '</button>' : '<div class="grid2" style="margin-top:12px"><button class="btn secondary" data-a="mgo" data-v="incidencia" data-id="0248">' + icon('eye', 16) + 'Ver</button><button class="btn primary" data-a="start" data-id="0248">' + icon('play', 16) + 'Iniciar</button></div>';
+    h += '</div>';
+    var o2 = S.incidents['0251'];
+    h += '<button class="order mini" data-a="noop"><span class="tic gray">' + icon(tIc(o2.kind), 18) + '</span><div style="flex:1;min-width:0"><div class="row between"><b>#0251 · ' + esc(o2.kind) + '</b></div><div class="xs muted row" style="gap:4px">' + icon('clock', 12) + '14:00 · ' + icon('pin', 12) + esc(o2.address) + '</div></div></button></div>';
+    h += '<div class="sec"><div class="sec-t">Sin señal también</div><div class="tiles">' + [['historial', 'history', 'Historial', S.history.length], ['criterios', 'book', 'Criterios', CRITERIA.length], ['asistente', 'spark', 'Asistente', '']].map(function (t) { return '<button class="tile" data-a="mtab" data-v="' + t[0] + '"><span class="off" title="Disponible sin conexión">' + icon('device', 13) + '</span>' + icon(t[1], 22) + t[2] + (t[3] !== '' ? '<b>' + t[3] + '</b>' : '<b>' + icon('check', 12) + '</b>') + '</button>'; }).join('') + '</div></div>';
+    return h;
+  }
+  var EV_IC = { created: 'plus', assigned: 'users', started: 'play', change: 'edit', ai: 'spark', update: 'bell', result: 'checkCircle', validated: 'stamp' };
+  var EV_T = { created: 'Orden creada', assigned: 'Asignada', started: 'Iniciada', change: 'Cambio registrado', ai: 'Consulta IA', update: 'Orden actualizada', result: 'Resultado', validated: 'Validada' };
+  function tlKey() { return '<div class="tlkey"><span><i style="background:var(--blue-600)"></i>Cuadrilla</span><span><i style="background:var(--navy)"></i>Central</span><span><i style="background:var(--indigo)"></i>IA</span></div>'; }
+  function timeline(inc, side) {
+    var p = proj(inc, side);
+    var items = p.events.slice().reverse().map(function (e) {
+      var who = e.type === 'ai' ? 'ia' : (e.src === 'campo' ? 'campo' : 'central');
+      var pendM = side === 'm' && e.src === 'campo' && !e.synced;
+      var extra = '';
+      if (e.type === 'change') extra = prioMeter(e.data.urgency, true);
+      if (e.type === 'update') extra = prioMeter(e.data.priority, true);
+      var st = '';
+      if (side === 'm' && e.src === 'campo') st = e.synced ? '<span class="st ok" title="Sincronizado ' + (e.syncedAt || '') + '">' + icon('cloudCheck', 16) + '</span>' : '<span class="st pend" title="Sin enviar">' + icon('cloudPending', 16) + '</span>';
+      if (side === 'd' && e.src === 'campo' && e.syncedAt && e.syncedAt !== e.time) st = '<span class="st pend" title="Registrado sin conexión · recibido ' + e.syncedAt + '">' + icon('wifiOff', 15) + '<small>' + e.syncedAt + '</small></span>';
+      if (side === 'd' && e.src === 'central' && !e.synced) st = '<span class="st pend" title="Sin entregar a la cuadrilla">' + icon('cloudPending', 16) + '</span>';
+      return '<li class="' + who + (pendM ? ' pend' : '') + '"><span class="ic2">' + icon(EV_IC[e.type] || 'info', 15) + '</span><span class="t">' + EV_T[e.type] + ' ' + extra + '</span>' + st + '<span class="tm">' + e.time + '</span></li>';
+    }).join('');
+    return tlKey() + '<ul class="tl2">' + items + '</ul>';
+  }
+  function demoBtn(k) { return PRES ? '' : '<button class="btn ghost sm" data-a="demoFill" data-v="' + k + '">' + icon('edit', 14) + 'Completar demo</button>'; }
+  function fact(label, v) { return '<div class="fact"><small>' + label + '</small><div class="v">' + v + '</div></div>'; }
+  function todoList(list, done, iconMap, cls) { return '<ul class="todo ' + (cls || '') + '">' + list.map(function (a) { var t = typeof a === 'string' ? a : a.t, ic = typeof a === 'string' ? (iconMap && iconMap[a]) || 'check' : a.ic, d = done && done(a); return '<li class="' + (d ? 'done' : '') + '">' + icon(d ? 'checkCircle' : ic, 17) + '<span>' + esc(t) + '</span></li>'; }).join('') + '</ul>'; }
+  function mIncident() {
+    var inc = inc0248(), p = proj(inc, 'm');
+    var h = '<div class="card"><div class="row between"><span class="id" style="font-weight:800;color:var(--blue-700)">#0248</span>' + statusPill(p) + '</div><div class="row" style="gap:10px;margin:8px 0 2px"><span class="tic">' + icon(tIc(inc.kind), 22) + '</span><div><div class="h2">' + esc(tShort(inc.kind)) + '</div><div class="small muted row" style="gap:4px">' + icon('pin', 14) + esc(inc.short) + '</div></div></div>';
+    h += '<div class="map" style="margin-top:10px">' + mapSVG(!!p.change) + '</div>';
+    h += '<div class="facts">' + fact('Prioridad', prioMeter(p.priority)) + (p.change ? fact('En campo', prioMeter(p.change.urgency)) : fact('Reclamo', icon('phone', 14) + inc.reportedAt)) + fact('Sector', icon('pin', 14) + inc.sector) + '</div>';
+    h += '<div class="ichips" style="margin-top:10px">' + (inc.cues || []).map(function (c) { return ichip(c[0], c[1]); }).join('') + '</div></div>';
+    if (!p.started) h += '<button class="btn primary big" style="margin-top:12px" data-a="start" data-id="0248">' + icon('play', 18) + 'Iniciar intervención</button>';
+    if (p.change && !p.update) {
+      var ce = p.changeEv;
+      h += ce.synced ? '<div class="statusrow blue">' + icon('cloudCheck', 20) + '<b>Enviado ' + ce.syncedAt + '</b><span class="sp"></span><span class="wait">' + icon('hourglass', 16) + 'Esperando a Operaciones</span></div>'
+        : '<div class="statusrow amber">' + icon('cloudPending', 20) + '<b>Sin enviar</b><span class="sp"></span><span class="wait">' + icon('wifi', 15) + 'se envía con señal</span></div>';
+      h += fric('espera', 'La cuadrilla necesita la decisión de Operaciones para seguir con la reparación. Mientras no llega, solo puede señalizar, registrar y observar: parte del trabajo queda esperando.');
+    }
+    if (p.update) {
+      var u = p.update;
+      h += '<div class="card upd" style="margin-top:12px"><div class="row between"><div class="h3 row">' + icon('bell', 18) + 'Indicaciones</div><span class="row" style="gap:10px">' + prioMeter(u.priority) + '<span class="xs muted">' + p.updateEv.time + '</span></span></div>';
+      if (u.message) h += '<div class="quote">' + esc(u.message) + '</div>';
+      h += todoList(u.authorized, null, ITEM_IC) + (u.pending.length ? todoList(u.pending.map(function (x) { return { ic: 'hourglass', t: x }; }), null, null, 'pendl') : '') + '</div>';
+    }
+    if (p.started && !p.result) {
+      h += '<div class="stack" style="margin-top:12px">';
+      if (p.update) h += '<button class="btn primary big" data-a="mgo" data-v="resultado" data-id="0248">' + icon('checkCircle', 18) + 'Registrar resultado</button><div class="grid2"><button class="btn secondary" data-a="mgo" data-v="cambio" data-id="0248">' + icon('edit', 17) + 'Cambio</button><button class="btn secondary" style="color:var(--indigo)" data-a="mgo" data-v="asistente">' + icon('spark', 17) + 'Asistente</button></div>';
+      else h += '<button class="btn warn big" data-a="mgo" data-v="cambio" data-id="0248">' + icon('edit', 18) + 'Registrar cambio</button><button class="btn secondary big" style="color:var(--indigo)" data-a="mgo" data-v="asistente">' + icon('spark', 18) + 'Consultar asistente</button>';
+      h += '</div>';
+    }
+    if (p.result) h += '<button class="btn secondary big" style="margin-top:12px" data-a="mgo" data-v="cierre" data-id="0248">' + icon('stamp', 18) + (p.validation ? 'Ver cierre' : 'Ver estado del cierre') + '</button>';
+    h += '<div class="sec"><div class="sec-t">Registro</div><div class="card">' + timeline(inc, 'm') + '</div></div>';
+    return h;
+  }
+  function iconChips(path, opts, sel, map) { return '<div class="chips">' + opts.map(function (o) { var on = (sel || []).indexOf(o) >= 0, m = map[o] || ['check', o]; return '<button class="chip ic ' + (on ? 'on' : '') + '" data-a="toggle" data-f="' + path + '" data-v="' + esc(o) + '">' + icon(on ? 'check' : m[0], 16) + esc(m[1]) + '</button>'; }).join('') + '</div>'; }
+  function photosField(path, list) {
+    return '<div class="photos">' + (list || []).map(function (k, i) { return '<div class="photo">' + photoSVG(k) + '<span class="tag">' + (i + 1) + '</span></div>'; }).join('') + ((list || []).length < 3 ? '<button class="photo-add" data-a="addPhoto" data-f="' + path + '" title="Agregar foto">' + icon('camera', 22) + '<span>+</span></button>' : '') + '</div>';
+  }
+  function mChangeForm() {
+    ensureChangeDraft();
+    var d = S.drafts.change, inc = inc0248(), n = parseInt(d.homes || '0', 10) || 0;
+    var h = '<div class="row between"><span class="small muted row" style="gap:5px">' + icon(tIc(inc.kind), 15) + '#0248 · ' + esc(tShort(inc.kind)) + '</span>' + demoBtn('change') + '</div>';
+    h += '<div class="field"><span>Ubicación</span><div class="locrow">' + icon('pin', 18) + '<input class="input" data-f="change.location" value="' + esc(d.location) + '"><span class="gps">' + icon('gps', 13) + 'GPS</span></div></div>';
+    h += '<div class="field"><span>Tipo <em>*</em></span><div class="opts3">' + CHANGE_OPTIONS.types.map(function (t) { return '<button class="opt' + (d.type === t ? ' on' : '') + '" data-a="set" data-f="change.type" data-v="' + esc(t) + '" title="' + esc(t) + '">' + icon(tIc(t), 22) + '<span>' + esc(TYPE_TILE[t] || t) + '</span></button>'; }).join('') + '</div></div>';
+    h += '<div class="field"><span>¿Qué ves? <em>*</em></span>' + iconChips('change.conditions', CHANGE_OPTIONS.conditions, d.conditions, COND) + '</div>';
+    h += '<div class="field"><span>Domicilios sin presión</span><div class="stepper"><button data-a="step" data-f="change.homes" data-v="-1" aria-label="Menos">' + icon('minus', 18) + '</button><span class="val">' + n + '</span><button data-a="step" data-f="change.homes" data-v="1" aria-label="Más">' + icon('plus', 18) + '</button><span class="homes">' + new Array(Math.min(n, 8) + 1).join(icon('home', 17)) + (n > 8 ? '+' : '') + '</span></div></div>';
+    h += '<div class="field"><span>Urgencia <em>*</em></span><div class="urg">' + CHANGE_OPTIONS.urgency.map(function (u) { return '<button class="u' + PLV[u] + (d.urgency === u ? ' on' : '') + '" data-a="set" data-f="change.urgency" data-v="' + u + '">' + prioMeter(u, true) + '<span>' + u + '</span></button>'; }).join('') + '</div>';
+    h += '<div class="cmpmini"><div><small>Orden</small>' + icon(tIc(inc.kind), 16) + prioMeter(inc.priority) + '</div>' + icon('arrowRight', 16) + '<div class="now"><small>Ahora</small>' + icon(tIc(d.type), 16) + (d.urgency ? prioMeter(d.urgency) : '<span class="muted">—</span>') + '</div></div></div>';
+    h += fric('sinautoridad', 'La cuadrilla marca una urgencia preliminar, pero cambiar la prioridad de la orden o pedir más recursos no le corresponde: tiene que consultarlo con Operaciones.');
+    h += '<div class="field"><span>Ya hiciste</span>' + iconChips('change.actions', CHANGE_OPTIONS.actions, d.actions, ACT) + '</div>';
+    h += '<div class="field"><span>Fotos</span>' + photosField('change.photos', d.photos) + '</div>';
+    h += '<label class="field"><span>Nota <i>opcional</i></span><textarea class="textarea sm" data-f="change.conditionsText" placeholder="Algo más para Operaciones">' + esc(d.conditionsText) + '</textarea></label>';
+    if (S.formError) h += '<div class="statusrow red">' + icon('alert', 18) + '<b>' + esc(S.formError) + '</b></div>';
+    h += '<button class="btn primary big" style="margin-top:16px" data-a="saveChange">' + icon(S.online ? 'send' : 'device', 18) + (S.online ? 'Enviar a Operaciones' : 'Guardar en el celular') + '</button>';
+    h += '<button class="btn ghost block" style="margin-top:6px" data-a="mgo" data-v="incidencia" data-id="0248">Cancelar</button>';
+    return h;
+  }
+  function mSaved() {
+    var p = proj(inc0248(), 'm'), e = p.changeEv; if (!e) return mIncident();
+    var h = '<div class="card hero">';
+    h += e.synced ? '<div class="bigic">' + icon('cloudCheck', 32) + '</div><div class="h2">Enviado a Operaciones</div><div class="small muted" style="margin-top:4px">' + e.time + '</div>'
+      : '<div class="bigic amber">' + icon('device', 32) + '</div><div class="h2">Guardado en el celular</div><div style="margin-top:8px"><span class="pill pend">' + icon('cloudPending', 14) + 'Sin enviar</span></div>';
+    h += hop([['device', 'Celular', 'done'], ['grid', 'Operaciones', e.synced ? 'done' : 'pend']]);
+    h += '</div>';
+    h += fric('handoff', e.synced ? 'El cambio salió hacia Operaciones, pero no hay confirmación de que alguien lo haya recibido ni de que alcance con este registro breve para entender la situación.' : 'El cambio tiene que llegar a Operaciones cuando vuelva la señal: puede llegar tarde, sin suficiente contexto o sin que sepamos si alguien lo recibió.');
+    if (e.data.requiresEval) h += '<div class="card evalc" style="margin-top:12px"><div class="row h3" style="color:var(--red)">' + icon('escalate', 18) + 'Lo decide Operaciones</div><div class="ichips" style="margin-top:10px">' + reasonChips(e.data.reasons) + '</div><div class="lockline">' + icon('lock', 14) + 'Sin maniobras en la red</div></div>';
+    if (e.data.requiresEval) h += fric('sinautoridad', 'El caso excede lo que la cuadrilla puede decidir: reorganizar el trabajo, cambiar prioridades o sumar recursos depende de Operaciones.');
+    h += '<div class="grid2" style="margin-top:12px"><button class="btn ia" data-a="mgo" data-v="asistente">' + icon('spark', 18) + 'Asistente</button><button class="btn secondary" data-a="critgo" data-v="esc">' + icon('book', 18) + 'Criterios</button></div><button class="btn ghost block" style="margin-top:6px" data-a="mgo" data-v="incidencia" data-id="0248">Volver a la orden</button>';
+    return h;
+  }
+  function anteBlock(a) {
+    var k = S.history.filter(function (x) { return x.id === '0176'; })[0], ok = a.coinc.filter(function (c) { return c.ok; }).length;
+    return '<div class="ante"><div class="row between"><span class="xs b row" style="gap:5px;color:var(--indigo)">' + icon('history', 13) + 'ANTECEDENTE</span><span class="match" title="Coincidencias con #0248">' + a.coinc.map(function (c) { return '<i class="' + (c.ok ? 'on' : '') + '"></i>'; }).join('') + '<b>' + ok + '/' + a.coinc.length + '</b></span></div><div class="h3" style="margin:5px 0 8px">#0176 · ' + esc(k.short) + '</div><div class="ichips">' + a.coinc.map(function (c) { return ichip(c.ok ? c.ic : 'minus', c.t, c.ok ? 'ia' : 'off'); }).join('') + '</div><div class="small row" style="margin-top:8px;gap:6px">' + icon('escalate', 15) + 'Se escaló · corte autorizado</div><button class="btn secondary sm" data-a="casego" data-v="0176">Ver #0176 ' + icon('arrowRight', 14) + '</button></div>';
+  }
+  function srcLine(a, list) { return '<div class="srcline">' + icon('database', 13) + esc(list || ('#0248 · #0176 · ' + a.crit.length + ' criterios')) + '<button class="lnk" data-a="critgo" data-v="hl">ver</button><span class="sp"></span>' + (a.offline ? '<span class="row" style="gap:3px;color:var(--amber)">' + icon('cloudPending', 13) + 'sin enviar</span>' : '<span class="row" style="gap:3px;color:var(--green)">' + icon('cloudCheck', 13) + 'guardado</span>') + '</div>'; }
+  function aiCard(a) {
+    var h = '<div class="msg a aic"><div class="who">' + icon('spark', 14) + 'Asistente</div>';
+    if (a.intent === 'limits') {
+      h += '<div class="nocard">' + icon('lock', 24) + '<div><b>No puedo autorizarlo</b><small>Lo autoriza Operaciones · CO-MAN-01</small></div></div>';
+      h += '<h5>' + icon('shield', 14) + 'Sí podés</h5>' + todoList(a.verif.slice(0, 4), function (v) { return v.done; });
+      h += '<div class="small row" style="margin-top:8px;gap:6px">' + icon('history', 15) + '#0176: el corte lo hizo el equipo de red</div>';
+      h += '<div class="limits">' + icon('lock', 14) + ' Sin señal tampoco se habilita (CO-OFF-01)</div>';
+      return h + srcLine(a, 'CO-MAN-01 · CO-OFF-01 · #0176') + '</div>';
+    }
+    if (a.intent === 'missing') return h + '<h5>' + icon('clipboard', 14) + 'Falta registrar</h5>' + todoList(a.missing) + srcLine(a, '#0248 · CO-DOC-01') + '</div>';
+    if (a.intent === 'criteria') {
+      h += '<h5>' + icon('book', 14) + 'Criterios para #0248</h5><ul class="todo">' + a.crit.map(function (c) { var k = CRITERIA.filter(function (x) { return x.id === c; })[0]; return '<li>' + icon(CAT_IC[k.cat], 17) + '<span><b>' + c + '</b> · ' + esc(k.title) + '</span></li>'; }).join('') + '</ul>';
+      return h + '<button class="btn secondary sm" style="margin-top:8px" data-a="critgo" data-v="hl">' + icon('book', 15) + 'Abrir criterios</button></div>';
+    }
+    if (a.intent === 'status') return h + '<div class="statusrow ' + (a.pending ? 'amber' : 'green') + '" style="margin-top:4px">' + icon(a.pending ? 'cloudPending' : 'cloudCheck', 20) + '<b>' + (a.pending ? a.pending + ' sin enviar' : 'Todo enviado') + '</b></div></div>';
+    if (a.intent === 'ante') return h + anteBlock(a) + '</div>';
+    if (!a.hasChange) h += '<button class="btn warn sm" style="margin-bottom:8px" data-a="mgo" data-v="cambio" data-id="0248">' + icon('edit', 15) + 'Registrá el cambio primero</button>';
+    h += anteBlock(a);
+    h += '<h5>' + icon('shield', 14) + 'Ahora</h5>' + todoList(a.verif, function (v) { return v.done; });
+    h += '<div class="esc">' + icon('device', 16) + icon('arrowRight', 14) + icon('grid', 16) + '<span><b>Escalar a Operaciones</b> · CO-ESC-01' + (a.offline ? ' · al sincronizar' : '') + '</span></div>';
+    h += '<div class="limits">' + icon('lock', 14) + ' <b>No:</b> válvulas, cortes ni excavación</div>';
+    return h + srcLine(a) + '</div>';
+  }
+  function mAssistant() {
+    var h = '<div class="aihead">' + icon('spark', 18) + '<b>Asistente</b>' + (PRES ? '' : '<span class="pill ia" style="padding:2px 8px">IA simulada</span>') + '<span class="sp"></span>' + (S.online ? ichip('cloud', S.lastSync) : ichip('device', 'Datos locales', 'warn')) + '</div>';
+    h += '<div class="chat" style="margin-top:12px">';
+    h += '<div class="msg a"><div class="who">' + icon('spark', 14) + 'Asistente</div>Hola, Raúl. Busco antecedentes, criterios y lo que falta registrar. <span class="xs muted row" style="gap:4px;margin-top:6px">' + icon('lock', 12) + 'No autorizo maniobras</span></div>';
+    S.chat.forEach(function (m) {
+      if (m.from === 'u') h += '<div class="msg u"><div class="who">' + m.time + '</div>' + esc(m.text) + '</div>';
+      else h += aiCard(m.ans);
+    });
+    if (S.chatPending) h += '<div class="msg a"><div class="who">' + icon('spark', 14) + 'Consultando</div><div class="thinking"><div class="row"><i class="spin"></i>' + icon('clipboard', 15) + '#0248</div><div class="row"><i class="spin"></i>' + icon('history', 15) + 'Historial</div><div class="row"><i class="spin"></i>' + icon('book', 15) + 'Criterios</div></div></div>';
+    h += '</div>';
+    var sug = [['history', 'Antecedentes y cómo seguir', DEMO_QUESTION], ['lock', '¿Puedo cerrar la válvula?', '¿Puedo cerrar la válvula del sector para frenar la pérdida?'], ['clipboard', '¿Qué falta registrar?', '¿Qué información falta registrar?'], ['book', '¿Qué criterios aplican?', '¿Qué criterios aplican?']];
+    if (!S.chatPending) h += '<div class="sugg">' + (S.chat.length ? sug.slice(1) : sug.slice(0, 3)).map(function (s) { return '<button data-a="askv" data-v="' + esc(s[2]) + '">' + icon(s[0], 15) + esc(s[1]) + '</button>'; }).join('') + '</div>';
+    return h;
+  }
+  function mResultForm() {
+    ensureResultDraft();
+    var d = S.drafts.result, p = proj(inc0248(), 'm'), auth = (p.update && p.update.authorized) || [];
+    var h = '<div class="row between"><span class="small muted row" style="gap:5px">' + icon('shield', 15) + 'Autorizado ' + (p.updateEv ? p.updateEv.time : '') + ' · ' + prioMeter(p.priority) + '</span>' + demoBtn('result') + '</div>';
+    h += '<div class="field"><span>Hecho</span><div class="checklist">' + auth.map(function (a) { return ckItem('result.done', a, d.done.indexOf(a) >= 0, ITEM_IC[a]); }).join('') + '</div></div>';
+    h += '<div class="field"><span>Resultado <em>*</em></span><div class="opts3">' + OUTCOMES.map(function (o) { return '<button class="opt ' + o[3] + (d.outcome === o[0] ? ' on' : '') + '" data-a="set" data-f="result.outcome" data-v="' + esc(o[0]) + '" title="' + esc(o[0]) + '">' + icon(o[1], 24) + '<span>' + o[2] + '</span></button>'; }).join('') + '</div></div>';
+    h += '<div class="field"><span>¿Hay servicio?</span><div class="segc" style="grid-template-columns:1fr 1fr"><button class="' + (d.restored === true ? 'on' : '') + '" data-a="setb" data-f="result.restored" data-v="1">' + icon('tap', 17) + ' Sí</button><button class="' + (d.restored === false ? 'on' : '') + '" data-a="setb" data-f="result.restored" data-v="0">' + icon('xCircle', 17) + ' No</button></div></div>';
+    h += '<div class="field"><span>Fotos</span>' + photosField('result.photos', d.photos) + '</div>';
+    h += '<label class="field"><span>Nota <i>opcional</i></span><textarea class="textarea sm" data-f="result.text" placeholder="¿Qué se hizo?">' + esc(d.text) + '</textarea></label>';
+    if (S.formError) h += '<div class="statusrow red">' + icon('alert', 18) + '<b>' + esc(S.formError) + '</b></div>';
+    h += '<button class="btn primary big" style="margin-top:16px" data-a="sendResult">' + icon('send', 18) + 'Enviar a validar</button>';
+    return h;
+  }
+  function ckItem(path, v, on, ic) { return '<button type="button" class="ck ' + (on ? 'on' : '') + '" data-a="toggle" data-f="' + path + '" data-v="' + esc(v) + '"><span class="box">' + (on ? icon('check', 14) : '') + '</span>' + (ic ? '<span class="cki">' + icon(ic, 17) + '</span>' : '') + '<span>' + esc(v) + '</span></button>'; }
+  function mClosure() {
+    var inc = inc0248(), p = proj(inc, 'm');
+    if (!p.result) return mIncident();
+    var h = '<div class="card hero">';
+    if (p.validation) h += '<div class="bigic">' + icon('checkCircle', 34) + '</div><div class="h2">Caso cerrado</div><div class="small muted row" style="justify-content:center;gap:5px;margin-top:4px">' + icon('stamp', 14) + esc(p.validation.by) + ' · ' + p.validEv.time + '</div>' + hop([['send', 'Enviado', 'done'], ['stamp', 'Validado', 'done'], ['history', 'Historial', 'done']]) + '<button class="btn primary big" style="margin-top:14px" data-a="casego" data-v="0248">' + icon('history', 18) + 'Ver en el historial</button>';
+    else h += '<div class="bigic amber">' + icon('stamp', 32) + '</div><div class="h2">Enviado a validar</div>' + hop([['send', 'Enviado', p.resultEv.synced ? 'done' : 'pend'], ['stamp', 'Validación', 'pend'], ['history', 'Historial', 'todo']]);
+    h += '</div><div class="card" style="margin-top:12px"><div class="ichips">' + outcomeChip(p.result.outcome) + ichip(p.result.restored ? 'tap' : 'xCircle', p.result.restored ? 'Con servicio' : 'Sin servicio', p.result.restored ? 'ok' : 'red') + '</div>' + (p.result.photos && p.result.photos.length ? '<div class="photos" style="margin-top:10px">' + p.result.photos.map(function (k) { return '<div class="photo">' + photoSVG(k) + '</div>'; }).join('') + '</div>' : '') + '</div>';
+    h += '<div class="sec"><div class="sec-t">Registro</div><div class="card">' + timeline(inc, 'm') + '</div></div>';
+    return h;
+  }
+
+  /* ================= HISTORIAL Y CRITERIOS (compartidos) ================= */
+  function historyView(side) {
+    var f = S.hist, q = norm(f.q);
+    var list = S.history.filter(function (c) {
+      if (f.status === 'resueltos' && c.status !== 'resuelto') return false;
+      if (f.status === 'pendientes' && c.status !== 'pendiente') return false;
+      if (f.sector !== 'Todos' && c.sector !== f.sector) return false;
+      if (q && norm([c.id, c.title, c.short, c.type, c.sector, c.address, c.tags.join(' '), c.found, c.lesson].join(' ')).indexOf(q) < 0) return false;
+      return true;
+    });
+    var h = '<div class="searchbox">' + icon('search', 18) + '<input data-k="hist-q-' + side + '" data-a-input="histq" placeholder="Buscar #, calle o condición" value="' + esc(f.q) + '"></div>';
+    h += '<div class="row wrap" style="margin-top:10px">' + [['todos', 'list', 'Todos'], ['resueltos', 'checkCircle', 'Resueltos'], ['pendientes', 'hourglass', 'Pendientes']].map(function (x) { return '<button class="chip ' + (f.status === x[0] ? 'on' : '') + '" data-a="histst" data-v="' + x[0] + '">' + icon(x[1], 15) + x[2] + '</button>'; }).join('') + '<select class="select" style="width:auto;padding:7px 10px;font-size:13px;border-radius:999px" data-a-change="histsec">' + ['Todos', 'Norte', 'Sur', 'Este', 'Oeste', 'Centro'].map(function (s) { return '<option value="' + s + '"' + (f.sector === s ? ' selected' : '') + '>' + (s === 'Todos' ? 'Sector' : s) + '</option>'; }).join('') + '</select></div>';
+    h += '<div class="row between" style="margin:10px 2px"><span class="xs muted">' + list.length + ' casos</span>' + (side === 'm' ? ichip('device', 'En el celular', 'ok') : '') + '</div>';
+    if (!list.length) h += '<div class="empty">' + icon('search', 22) + '<div style="margin-top:6px">Sin resultados</div></div>';
+    var grid = side === 'd';
+    h += grid ? '<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:10px">' : '';
+    h += list.map(function (c) {
+      var st = c.status === 'resuelto' ? '<span class="pill ok">' + icon(c.isNew ? 'spark' : 'checkCircle', 13) + (c.isNew ? 'Nuevo' : 'Resuelto') + '</span>' : '<span class="pill pend">' + icon('hourglass', 13) + 'Pendiente</span>';
+      return '<button class="case ' + (c.isNew && S.newCase === c.id ? 'new' : '') + '"' + (grid ? ' style="margin:0"' : '') + ' data-a="casego" data-v="' + c.id + '"><div class="row between"><span class="id">#' + c.id + ' <span class="xs muted" style="font-weight:600">' + c.date + '</span></span>' + st + '</div><div class="row" style="gap:9px;margin:6px 0 8px"><span class="tic sm">' + icon(tIc(c.type), 17) + '</span><div class="tt" style="margin:0">' + esc(c.short || c.title) + '</div></div><div class="ichips">' + ichip('pin', c.sector) + c.tags.slice(0, 2).map(tagChip).join('') + '</div></button>';
+    }).join('');
+    return h + (grid ? '</div>' : '');
+  }
+  function caseView(side, id) {
+    var c = S.history.filter(function (x) { return x.id === id; })[0]; if (!c) return historyView(side);
+    var citedByAI = S.chat.some(function (m) { return m.from === 'a'; }) && id === '0176';
+    var h = '<div class="card"><div class="row between"><span style="font-weight:800;color:var(--blue-700)">#' + c.id + ' <span class="xs muted" style="font-weight:600">' + c.date + '</span></span>' + (c.status === 'resuelto' ? '<span class="pill ok">' + icon('checkCircle', 13) + (c.isNew ? 'Nuevo' : 'Resuelto') + '</span>' : '<span class="pill pend">' + icon('hourglass', 13) + esc(c.pendingLabel) + '</span>') + '</div>';
+    h += '<div class="row" style="gap:10px;margin:8px 0 10px"><span class="tic">' + icon(tIc(c.type), 22) + '</span><div class="h2">' + esc(c.short || c.title) + '</div></div>';
+    h += '<div class="ichips">' + (citedByAI ? ichip('spark', 'Sugerido por la IA', 'ia') : '') + (c.isNew ? ichip('checkCircle', 'Agregado hoy', 'ok') : '') + ichip('pin', c.sector + ' · ' + c.address) + (c.validatedBy ? ichip('stamp', c.validatedBy) : '') + c.tags.map(tagChip).join('') + '</div></div>';
+    h += '<div class="' + (side === 'd' ? 'dgrid even' : '') + '" style="margin-top:12px"><div>';
+    h += '<div class="card"><div class="ab"><div><small>' + icon('phone', 12) + 'Reclamo</small>' + esc(c.initial) + '</div><div><small>' + icon('eye', 12) + 'Se encontró</small>' + esc(c.found) + '</div></div></div>';
+    h += '<div class="card"><div class="sec-t">Decisiones</div><ol class="steps2">' + c.decisions.map(function (d) { return '<li>' + esc(d) + '</li>'; }).join('') + '</ol></div>';
+    h += '</div><div>';
+    h += '<div class="card"><div class="row" style="gap:10px;align-items:flex-start"><span style="color:' + (c.status === 'resuelto' ? 'var(--green)' : 'var(--amber)') + '">' + icon(c.status === 'resuelto' ? 'checkCircle' : 'hourglass', 22) + '</span><div class="small">' + esc(c.result) + '</div></div></div>';
+    if (c.lesson && c.lesson !== '—') h += '<div class="lesson" style="margin-top:12px">' + icon('bulb', 22) + '<span>' + esc(c.lesson) + '</span></div>';
+    h += '<div class="card"><div class="sec-t">Criterios</div><div class="chips">' + c.criteria.map(function (k) { var x = CRITERIA.filter(function (y) { return y.id === k; })[0]; return '<button class="chip static" data-a="critgo" data-v="' + k + '">' + icon(CAT_IC[x ? x.cat : 'todas'], 13) + k + '</button>'; }).join('') + '</div></div></div></div>';
+    return h;
+  }
+  function criteriaView(side) {
+    var c = S.crit;
+    var h = '<div class="row between"><span class="small muted row" style="gap:5px">' + icon('shield', 15) + CRITERIA.length + ' criterios · v2026.3</span>' + (side === 'm' ? ichip('device', 'En el celular', 'ok') : '') + '</div>';
+    h += '<div class="chips ' + (side === 'm' ? 'scrollx' : '') + '" style="margin:12px 0">' + [{ id: 'todas', name: 'Todas' }].concat(CRITERIA_CATEGORIES).map(function (k) { return '<button class="chip ' + (c.cat === k.id ? 'on' : '') + '" data-a="critcat" data-v="' + k.id + '">' + icon(CAT_IC[k.id], 15) + k.name + '</button>'; }).join('') + '</div>';
+    var list = CRITERIA.filter(function (x) { return c.cat === 'todas' || x.cat === c.cat; });
+    var grid = side === 'd';
+    h += grid ? '<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:10px;align-items:start">' : '';
+    h += list.map(function (x) {
+      var open = c.open === x.id, hl = (c.hl || []).indexOf(x.id) >= 0;
+      var whoIc = /Operaciones|Supervisión/.test(x.who) && !/cuadrilla/i.test(x.who) ? 'grid' : (/→|y Operaciones/.test(x.who) ? 'escalate' : 'device');
+      return '<div class="crit ' + (hl ? 'hl' : '') + '"' + (grid ? ' style="margin:0"' : '') + '><button class="hd" data-a="critopen" data-v="' + x.id + '"><div class="row" style="gap:10px"><span class="cic">' + icon(CAT_IC[x.cat], 18) + '</span><div style="flex:1;min-width:0"><div class="code">' + x.id + '</div><div class="h3" style="margin-top:2px">' + esc(x.title) + '</div></div>' + (hl ? '<span class="pill ia">' + icon('spark', 12) + 'IA</span>' : icon(open ? 'chevronDown' : 'chevronRight', 16)) + '</div></button>' + (open ? '<div class="rule">' + esc(x.rule) + '<div class="ichips" style="margin-top:8px">' + ichip(whoIc, x.who, 'blue') + ichip('checkCircle', x.version + ' · ' + x.validated) + '</div></div>' : '') + '</div>';
+    }).join('');
+    return h + (grid ? '</div>' : '');
+  }
+
+  /* ================= APP ESCRITORIO · OPERACIONES / SUPERVISIÓN ================= */
+  function deskApp() {
+    var r = S.d.name, unread = S.alerts.filter(function (a) { return !a.read; }).length;
+    var toValidate = Object.keys(S.incidents).filter(function (k) { return proj(S.incidents[k], 'd').key === 'resuelta'; }).length;
+    var nav = [['panel', 'grid', 'Panel'], ['incidencias', 'list', 'Incidencias'], ['alertas', 'bell', 'Alertas', unread], ['validaciones', 'stamp', 'Validaciones', toValidate], ['historial', 'history', 'Historial'], ['criterios', 'book', 'Criterios']];
+    var navKey = { incidente: 'incidencias', caso: 'historial', cierre: 'validaciones' }[r] || r;
+    var sup = S.deskRole === 'supervision';
+    var h = '<div class="dapp"><aside class="side"><div class="logo">' + icon('logo', 26) + '<div>CAMPO<small>' + (sup ? 'Supervisión' : 'Operaciones') + '</small></div></div><nav>' + nav.map(function (n) { return '<button data-a="dgo" data-v="' + n[0] + '" class="' + (navKey === n[0] ? 'on' : '') + '" title="' + n[2] + '">' + icon(n[1], 18) + n[2] + (n[3] ? '<span class="b">' + n[3] + '</span>' : '') + '</button>'; }).join('') + '</nav></aside>';
+    var titles = { panel: 'Panel', incidencias: 'Incidencias', alertas: 'Alertas', validaciones: 'Validaciones', historial: 'Historial', criterios: 'Criterios', incidente: 'Incidencia #' + (S.d.id || ''), caso: 'Caso #' + (S.d.id || ''), cierre: 'Cierre #0248' };
+    h += '<div class="dcol"><div class="dtop"><div class="tt">' + esc(titles[r] || '') + '</div><span class="sp"></span>';
+    h += '<div class="crewsig ' + (S.online ? '' : 'stale') + '" title="Último dato de la Cuadrilla 3">' + icon(S.online ? 'wifi' : 'wifiOff', 15) + '<span class="d"></span>C3 · ' + lastCrewContact() + '</div>';
+    h += '<div class="seg" style="background:var(--g100)"><button class="' + (!sup ? 'on' : '') + '" style="color:' + (!sup ? 'var(--navy)' : 'var(--g600)') + '" data-a="deskrole" data-v="operaciones">Operaciones</button><button class="' + (sup ? 'on' : '') + '" style="color:' + (sup ? 'var(--navy)' : 'var(--g600)') + '" data-a="deskrole" data-v="supervision">Supervisión</button></div>';
+    h += '<span class="pill gray">' + icon('clock', 14) + now() + '</span><span class="av" title="' + (sup ? 'Supervisión · C. Duarte' : 'Operaciones · L. Ferreyra') + '">' + (sup ? 'CD' : 'LF') + '</span></div>';
+    h += '<div class="dmain" data-sk="d-' + r + '">' + dView() + '</div></div></div>';
+    return h;
+  }
+  function dView() {
+    switch (S.d.name) {
+      case 'panel': return dPanel();
+      case 'incidencias': return '<div class="card">' + incTable() + '</div>';
+      case 'alertas': return dAlerts();
+      case 'validaciones': return dValidations();
+      case 'historial': return historyView('d');
+      case 'caso': return '<button class="btn ghost sm" data-a="dgo" data-v="historial">' + icon('arrowLeft', 15) + 'Historial</button>' + caseView('d', S.d.id);
+      case 'criterios': return criteriaView('d');
+      case 'incidente': return dIncident();
+      case 'cierre': return dClosure();
+    }
+    return '';
+  }
+  function incTable(compact) {
+    var rows = ['0248', '0249', '0250', '0251', '0246'].map(function (k) {
+      var inc = S.incidents[k], p = proj(inc, 'd'), alert = S.alerts.some(function (a) { return a.inc === k && !a.read; });
+      var kind = k === '0248' && p.change ? p.change.type : inc.kind;
+      return '<tr class="click ' + (alert ? 'hl' : '') + '" data-a="dinc" data-v="' + k + '"><td class="nw"><b style="color:var(--blue-700)">#' + k + '</b>' + (alert ? ' <span class="newdot" title="Novedad sin revisar"></span>' : '') + '</td><td class="nw"><span class="row" style="gap:8px">' + icon(tIc(kind), 17) + esc(tShort(kind)) + '</span></td>' + (compact ? '' : '<td>' + inc.sector + '</td>') + '<td>' + prioMeter(p.priority) + '</td><td>' + statusPill(p) + '</td>' + (compact ? '' : '<td>C' + inc.crew.slice(-1) + '</td>') + '<td class="small"><span class="row" style="gap:5px;color:var(--g500)">' + (p.last ? icon(p.last.src === 'campo' ? 'device' : 'grid', 14) + '<b style="color:var(--g700)">' + p.last.time + '</b>' : '') + '</span></td></tr>';
+    }).join('');
+    return '<div class="tblwrap"><table class="tbl"><thead><tr><th>N.º</th><th>Tipo</th>' + (compact ? '' : '<th>Sector</th>') + '<th>Prioridad</th><th>Estado</th>' + (compact ? '' : '<th>Cuadrilla</th>') + '<th>' + (compact ? 'Hora' : 'Último dato') + '</th></tr></thead><tbody>' + rows + '</tbody></table></div>';
+  }
+  function alertRow(a) {
+    var inc = S.incidents[a.inc], p = proj(inc, 'd'), body = '';
+    if (a.kind === 'change' && p.change) body = (p.change.conditions || []).map(function (c) { return condChip(c); }).join('') + (p.change.homes ? ichip('home', p.change.homes, 'warn') : '') + '<span class="ichip warn">' + prioMeter(p.change.urgency) + '</span>' + (p.change.offline ? ichip('wifiOff', 'Sin señal ' + p.changeEv.time) : '');
+    if (a.kind === 'result' && p.result) body = outcomeChip(p.result.outcome) + ichip('hourglass', 'A validar');
+    return '<div class="alertrow ' + (a.read ? 'read' : '') + '"><div class="ico">' + icon(a.kind === 'result' ? 'stamp' : 'alert', 20) + '</div><div style="flex:1;min-width:0"><div class="row between"><b>' + esc(a.title) + '</b><span class="xs muted">' + a.time + '</span></div><div class="ichips" style="margin-top:7px">' + body + '</div></div><button class="btn ' + (a.read ? 'secondary' : 'primary') + ' sm" data-a="openAlert" data-v="' + a.id + '">' + (a.read ? 'Ver' : 'Revisar') + '</button></div>';
+  }
+  function kpi(ic, n, l, cls) { return '<div class="kpi ' + (cls || '') + '"><span class="i">' + icon(ic, 22) + '</span><div><div class="n">' + n + '</div><div class="l">' + l + '</div></div></div>'; }
+  function dPanel() {
+    var unread = S.alerts.filter(function (a) { return !a.read; });
+    var active = Object.keys(S.incidents).filter(function (k) { return proj(S.incidents[k], 'd').key !== 'cerrada'; }).length;
+    var toVal = Object.keys(S.incidents).filter(function (k) { return proj(S.incidents[k], 'd').key === 'resuelta'; }).length + 2;
+    var p = proj(inc0248(), 'd');
+    var h = '<div class="kpis">' + kpi('list', active, 'Activas') + kpi('users', 4, 'Cuadrillas') + kpi('bell', unread.length, 'Alertas', unread.length ? 'alert' : '') + kpi('stamp', toVal, 'A validar') + '</div>';
+    h += fric('sobrecarga', 'La misma persona (L. Ferreyra) organiza las órdenes de las 4 cuadrillas y recibe sus alertas, reportes y cierres: puede no tener tiempo de revisar todo y algún cambio importante puede quedar sin atender.');
+    if (unread.length) h += '<div class="dsec">' + unread.map(alertRow).join('') + fric('sindueno', 'La alerta llega a la central, pero no queda asignada a nadie en particular: todavía no está claro quién se hace responsable de revisarla y retomarla.') + '</div>';
+    h += '<div class="dgrid"><div class="card"><div class="sec-t">En curso<button class="btn ghost sm" data-a="dgo" data-v="incidencias">Ver todas</button></div>' + incTable(true) + '</div><div>';
+    h += '<div class="card"><div class="sec-t">Cuadrillas</div><div class="cmap">' + crewMapSVG({ c3on: S.online, alert: !!p.change && p.key === 'cambio' }) + '</div><div class="crews">' + [['C1', '#0249', true], ['C2', '#0250', true], ['C3', '#0248', S.online], ['C4', '#0246', true]].map(function (c) { return '<div><span class="d ' + (c[2] ? '' : 'off') + '"></span>' + c[0] + ' <small>' + c[1] + (c[0] === 'C3' && !S.online ? ' · ' + icon('wifiOff', 12) + lastCrewContact() : '') + '</small></div>'; }).join('') + '</div></div>';
+    h += '<div class="card"><div class="sec-t">#0248 · lo que ve la central</div><div class="row wrap" style="gap:10px"><span class="row" style="gap:6px;font-weight:700">' + icon(tIc(p.change ? p.change.type : inc0248().kind), 18) + esc(tShort(p.change ? p.change.type : inc0248().kind)) + '</span>' + prioMeter(p.priority) + statusPill(p) + '</div><div class="xs muted row" style="gap:5px;margin-top:10px">' + icon('clock', 13) + 'Último dato ' + (p.last ? p.last.time : '') + (S.online ? '' : ' · ' + icon('wifiOff', 13) + 'C3 sin señal') + '</div><button class="btn secondary sm" style="margin-top:10px" data-a="dinc" data-v="0248">Abrir #0248</button></div>';
+    return h + '</div></div>';
+  }
+  function dAlerts() {
+    if (!S.alerts.length) return '<div class="empty">' + icon('bell', 26) + '<div style="margin-top:6px">Sin alertas</div></div>';
+    return fric('sindueno', 'Las alertas llegan a la central, pero ninguna tiene un responsable asignado: si nadie las revisa, el aviso puede quedar sin retomar.') + S.alerts.map(alertRow).join('');
+  }
+  function dValidations() {
+    var list = Object.keys(S.incidents).filter(function (k) { return proj(S.incidents[k], 'd').key === 'resuelta'; });
+    var h = '<div class="row wrap" style="gap:8px"><span class="small muted row" style="gap:5px">' + icon('stamp', 16) + 'Se valida:</span>' + ichip('camera', 'Evidencia', 'blue') + ichip('shield', 'Lo autorizado', 'blue') + ichip('tap', 'Servicio', 'blue') + ichip('book', 'CO-CIE-01') + '</div>';
+    h += fric('sindueno', 'Hay cierres pendientes sin una persona asignada para validarlos: mientras nadie los toma, no se incorporan al historial.') + '<div class="dsec">';
+    if (!list.length) h += '<div class="empty" style="margin-bottom:10px">' + icon('checkCircle', 22) + '<div style="margin-top:6px">Nada del día por validar</div></div>';
+    h += list.map(function (k) { var inc = S.incidents[k], p = proj(inc, 'd'); return '<div class="alertrow"><div class="ico">' + icon('stamp', 20) + '</div><div style="flex:1"><div class="row between"><b>#' + k + ' · ' + esc(tShort(p.change ? p.change.type : inc.kind)) + '</b><span class="xs muted">' + p.resultEv.time + '</span></div><div class="ichips" style="margin-top:7px">' + outcomeChip(p.result.outcome) + ichip(p.result.restored ? 'tap' : 'xCircle', p.result.restored ? 'Con servicio' : 'Sin servicio', p.result.restored ? 'ok' : 'red') + ichip('camera', (p.result.photos || []).length + ((p.result.photos || []).length === 1 ? ' foto' : ' fotos')) + '</div></div><button class="btn primary sm" data-a="dinc" data-v="' + k + '">Revisar y validar</button></div>'; }).join('');
+    h += S.history.filter(function (c) { return c.status === 'pendiente' && c.pendingLabel === 'Pendiente de validación'; }).map(function (c) { return '<div class="alertrow read" style="margin-top:8px"><div class="ico">' + icon('stamp', 20) + '</div><div style="flex:1"><b>#' + c.id + ' · ' + esc(c.short || c.title) + '</b><div class="ichips" style="margin-top:6px">' + ichip('clock', c.date) + ichip('pin', c.sector) + '</div></div><button class="btn secondary sm" data-a="casego" data-v="' + c.id + '">Ver caso</button></div>'; }).join('');
+    return h + '</div>';
+  }
+  function dIncident() {
+    var inc = S.incidents[S.d.id] || inc0248(), p = proj(inc, 'd');
+    var kind = p.change ? p.change.type : inc.kind;
+    var h = '<div class="row between wrap"><div class="row wrap"><button class="btn ghost sm" data-a="dgo" data-v="incidencias">' + icon('arrowLeft', 15) + 'Incidencias</button><span class="tic">' + icon(tIc(kind), 20) + '</span><span class="h2">#' + inc.id + ' · ' + esc(tShort(kind)) + '</span>' + statusPill(p) + prioMeter(p.priority) + '</div><span class="ichips">' + ichip('pin', (inc.short || inc.address) + ' · ' + inc.sector) + ichip('users', inc.crew) + '</span></div>';
+    if (inc.id !== '0248') return h + '<div class="card" style="margin-top:14px"><div class="small muted">' + esc(inc.description) + '</div><div class="divider"></div>' + timeline(inc, 'd') + '</div>';
+    if (!p.change) h += '<div class="statusrow gray">' + icon(S.online ? 'info' : 'wifiOff', 20) + '<b>Solo la orden original</b><span class="sp"></span><span class="wait">' + icon('clock', 15) + 'Último dato C3 ' + lastCrewContact() + '</span></div>' + fric('handoff', 'Lo que la cuadrilla registró en campo todavía no llegó a la central: depende de que vuelva la señal y se sincronice, y puede llegar tarde.');
+    h += '<div class="dgrid" style="margin-top:14px"><div>';
+    var ch = p.change, ce = p.changeEv;
+    h += '<div class="card"><div class="sec-t">Orden vs. campo</div><div class="cmp"><div class="c"><div class="hd">' + icon('grid', 15) + 'Orden</div><div class="big"><span class="tic">' + icon(tIc(inc.kind), 20) + '</span>' + esc(tShort(inc.kind)) + '</div>' + prioMeter(inc.priority) + '<div class="ichips">' + ichip('phone', 'Reclamo ' + inc.reportedAt) + (inc.cues || []).map(function (c) { return ichip(c[0], c[1]); }).join('') + '</div></div><div class="mid">' + icon('arrowRight', 20) + '</div>';
+    if (ch) {
+      h += '<div class="c"><div class="hd">' + icon('device', 15) + 'Campo · C3</div><div class="big"><span class="tic warn">' + icon(tIc(ch.type), 20) + '</span>' + esc(tShort(ch.type)) + (ch.type !== inc.kind ? ' <span class="diff">CAMBIÓ</span>' : '') + '</div><div class="row" style="gap:8px">' + prioMeter(ch.urgency) + (URG[ch.urgency] > URG[inc.priority] ? ' <span class="diff">SUBE</span>' : '') + '</div>';
+      h += '<div class="ichips">' + ch.conditions.map(function (c) { return condChip(c); }).join('') + (ch.homes ? ichip('home', ch.homes + ' domicilios', 'warn') : '') + '</div><div class="ichips">' + (ch.actions || []).map(actChip).join('') + '</div>';
+      h += '<div class="ichips">' + (ch.offline ? ichip('wifiOff', 'Registrado ' + ce.time) : ichip('clock', 'Registrado ' + ce.time)) + ichip('cloudCheck', 'Recibido ' + (ce.syncedAt || '—'), 'ok') + '</div>' + (ch.conditionsText ? '<div class="note">«' + esc(ch.conditionsText) + '»</div>' : '') + '</div>';
+    } else h += '<div class="c empty-c"><div class="hd">' + icon('device', 15) + 'Campo · C3</div><div class="nodata">' + icon(S.online ? 'hourglass' : 'wifiOff', 26) + '<span>Sin reporte todavía</span></div></div>';
+    h += '</div>';
+    if (ch && ch.reasons && ch.reasons.length) h += '<div class="evalbar">' + icon('escalate', 18) + '<b>Requiere decisión</b><span class="sp"></span>' + ch.reasons.map(function (r) { var o = typeof r === 'string' ? { ic: 'alert', t: r } : r; return '<span class="rb" title="' + esc(o.t) + '">' + icon(o.ic, 15) + '</span>'; }).join('') + '<span class="xs">' + ch.reasons.length + ' motivos</span></div>';
+    h += '</div>';
+    if (ch && ch.photos && ch.photos.length) h += '<div class="card"><div class="sec-t">Evidencias</div><div class="photos">' + ch.photos.map(function (k) { return '<div class="photo" style="width:150px;height:105px">' + photoSVG(k) + '<span class="tag">' + ce.time + '</span></div>'; }).join('') + (p.result && p.result.photos ? p.result.photos.map(function (k) { return '<div class="photo" style="width:150px;height:105px">' + photoSVG(k) + '<span class="tag">' + icon('checkCircle', 10) + ' ' + p.resultEv.time + '</span></div>'; }).join('') : '') + '</div></div>';
+    if (p.ai.length) { var ai = p.ai[p.ai.length - 1]; h += '<div class="card airow"><span class="ii">' + icon('spark', 20) + '</span><div style="flex:1;min-width:0"><div class="row" style="gap:8px"><b>Consulta a la IA · ' + ai.time + '</b>' + (PRES ? '' : '<span class="pill ia" style="padding:1px 7px;font-size:10.5px">simulada</span>') + '</div><div class="small muted ellipsis" title="' + esc(ai.data.q) + '">«' + esc(ai.data.q) + '»</div></div><div class="ichips" style="flex:none">' + ichip('history', '#0176', 'ia') + ichip('book', ai.data.crit.length + ' criterios', 'ia') + ichip('lock', 'Sin maniobras', 'ok') + '</div></div>'; }
+    h += '<div class="card"><div class="sec-t">Registro</div>' + timeline(inc, 'd') + '</div>';
+    h += '</div><div>';
+    h += '<div class="card"><div class="sec-t">Ubicación</div><div class="map" style="height:190px">' + mapSVG(!!ch) + '</div>' + (ch ? '<div class="xs muted row" style="gap:5px;margin-top:8px"><span class="lg red"></span>Área posiblemente afectada</div>' : '') + '</div>';
+    h += dActionCard(inc, p);
+    return h + '</div></div>';
+  }
+  function dActionCard(inc, p) {
+    var h = '<div class="card" data-k="actioncard">';
+    var byChip = '<div class="ichips" style="margin-top:10px">' + ichip('user', S.deskRole === 'supervision' ? 'Supervisión · C. Duarte' : 'Operaciones · L. Ferreyra') + '</div>';
+    if (p.validation) {
+      h += '<div class="sec-t">Cierre</div><div class="statusrow green" style="margin-top:0">' + icon('checkCircle', 20) + '<b>Cerrada · ' + p.validEv.time + '</b></div><button class="btn primary block" style="margin-top:10px" data-a="dgo" data-v="cierre" data-id="0248">Ver cierre</button>';
+    } else if (p.result) {
+      ensureValidDraft(); var d = S.drafts.valid;
+      h += '<div class="sec-t">Validar cierre' + demoBtn('valid') + '</div><div class="ichips">' + outcomeChip(p.result.outcome) + ichip(p.result.restored ? 'tap' : 'xCircle', p.result.restored ? 'Con servicio' : 'Sin servicio', p.result.restored ? 'ok' : 'red') + '</div>' + (p.result.text ? '<div class="note" style="margin-top:8px">«' + esc(p.result.text) + '»</div>' : '');
+      h += '<div class="checklist" style="margin-top:10px">' + DEMO_VALIDATION.checks.map(function (c) { return ckItem('valid.checks', c, d.checks.indexOf(c) >= 0, ITEM_IC[c]); }).join('') + '</div><label class="field"><span>' + icon('bulb', 14) + ' Aprendizaje <i>opcional</i></span><textarea class="textarea sm" data-f="valid.lesson" placeholder="¿Qué conviene recordar?">' + esc(d.lesson) + '</textarea></label>' + byChip + (S.formError ? '<div class="statusrow red">' + icon('alert', 16) + '<b>' + esc(S.formError) + '</b></div>' : '') + '<button class="btn ok block" style="margin-top:12px" data-a="validate">' + icon('stamp', 18) + 'Validar cierre</button>';
+    } else if (p.update) {
+      var u = p.update;
+      h += '<div class="sec-t">Orden actualizada · ' + p.updateEv.time + '</div><div class="row" style="gap:10px">' + prioMeter(u.priority) + '</div>' + (p.updateEv.synced ? '<div class="statusrow green">' + icon('cloudCheck', 18) + '<b>Entregada a C3 · ' + p.updateEv.syncedAt + '</b></div>' : '<div class="statusrow amber">' + icon('cloudPending', 18) + '<b>Sin entregar · C3 sin señal</b></div>') + todoList(u.authorized, null, ITEM_IC) + (u.pending.length ? todoList(u.pending.map(function (x) { return { ic: 'hourglass', t: x }; }), null, null, 'pendl') : '') + '<div class="xs muted row" style="gap:5px;margin-top:10px">' + icon('hourglass', 14) + 'Esperando el resultado</div>';
+    } else if (p.change) {
+      ensureUpdateDraft(); var d2 = S.drafts.update;
+      h += '<div class="sec-t">Actualizar orden' + demoBtn('update') + '</div>' + fric('sobrecarga', 'Revisar el reporte, decidir la prioridad y autorizar acciones recae en la misma persona que atiende al resto de las cuadrillas.');
+      h += '<div class="field" style="margin-top:4px"><span>Prioridad</span><div class="urg" style="grid-template-columns:repeat(3,1fr)">' + ['Media', 'Alta', 'Crítica'].map(function (x) { return '<button class="u' + PLV[x] + (d2.priority === x ? ' on' : '') + '" data-a="set" data-f="update.priority" data-v="' + x + '">' + prioMeter(x, true) + '<span>' + x + '</span></button>'; }).join('') + '</div></div>';
+      h += '<div class="field"><span>' + icon('shield', 14) + ' Autorizar</span><div class="checklist">' + DEMO_UPDATE.authorized.map(function (a) { return ckItem('update.authorized', a, d2.authorized.indexOf(a) >= 0, ITEM_IC[a]); }).join('') + '</div></div>';
+      h += '<div class="field"><span>' + icon('hourglass', 14) + ' Queda pendiente</span><div class="checklist">' + DEMO_UPDATE.pending.map(function (a) { return ckItem('update.pending', a, d2.pending.indexOf(a) >= 0, ITEM_IC[a]); }).join('') + '</div></div>';
+      h += '<label class="field"><span>Mensaje <i>opcional</i></span><textarea class="textarea sm" data-f="update.message" placeholder="Breve, para la cuadrilla">' + esc(d2.message) + '</textarea></label>' + (S.formError ? '<div class="statusrow red">' + icon('alert', 16) + '<b>' + esc(S.formError) + '</b></div>' : '') + '<button class="btn primary block" style="margin-top:12px" data-a="sendUpdate">' + icon('send', 18) + 'Enviar a Cuadrilla 3</button>';
+    } else {
+      h += '<div class="sec-t">Acciones</div><div class="nodata sm">' + icon('checkCircle', 22) + '<span>Sin novedades de campo</span></div>';
+    }
+    return h + '</div>';
+  }
+  function dClosure() {
+    var inc = inc0248(), p = proj(inc, 'd');
+    if (!p.validation) return dIncident();
+    var t = function (type) { var e = inc.events.filter(function (x) { return x.type === type; })[0]; return e ? e.time : '—'; };
+    var ce = p.changeEv;
+    var steps = [[t('assigned'), 'users', 'Asignada', 'central'], [t('started'), 'play', 'Iniciada', 'campo'], [ce ? ce.time : '—', 'edit', 'Cambio' + (ce && ce.data.offline ? ' sin señal' : ''), 'campo'], [p.ai.length ? p.ai[0].time : '—', 'spark', 'Consulta IA · #0176', 'ia'], [ce ? ce.syncedAt : '—', 'sync', 'Sincronizado', 'central'], [t('update'), 'bell', 'Orden actualizada', 'central'], [t('result'), 'checkCircle', 'Resultado', 'campo'], [p.validEv.time, 'stamp', 'Validada', 'central']];
+    var h = '<div class="dgrid even"><div class="card hero"><div class="bigic">' + icon('checkCircle', 34) + '</div><div class="h1">#0248 cerrada</div><div class="small muted row" style="justify-content:center;gap:5px;margin-top:6px">' + icon('stamp', 14) + esc(p.validation.by) + ' · ' + p.validEv.time + '</div>' + hop([['send', 'Resultado', 'done'], ['stamp', 'Validado', 'done'], ['history', 'Historial', 'done']]) + '<div class="row" style="justify-content:center;margin-top:16px;gap:10px"><button class="btn primary" data-a="casego" data-v="0248">' + icon('history', 18) + 'Ver en el historial</button><button class="btn secondary" data-a="dgo" data-v="panel">Panel</button></div></div>';
+    h += '<div class="card"><div class="sec-t">Recorrido</div>' + tlKey() + '<ul class="tl2">' + steps.map(function (s) { return '<li class="' + s[3] + '"><span class="ic2">' + icon(s[1], 15) + '</span><span class="t">' + esc(s[2]) + '</span><span class="tm">' + s[0] + '</span></li>'; }).join('') + '</ul>' + (p.validation.lesson ? '<div class="lesson" style="margin-top:12px">' + icon('bulb', 22) + '<span>' + esc(p.validation.lesson) + '</span></div>' : '') + '</div></div>';
+    return h;
+  }
+
+  /* ================= GUÍA DE DEMOSTRACIÓN ================= */
+  function guideSteps() {
+    var inc = inc0248(), all = inc.events;
+    var has = function (t) { return all.some(function (e) { return e.type === t; }); };
+    var ch = all.filter(function (e) { return e.type === 'change'; })[0];
+    return [
+      { n: 'Escena 1 · Asignación', p: 'Operaciones creó la orden #0248 con prioridad media. En el rol Cuadrilla, pulsá «Iniciar» en la orden.', done: has('started'), go: [['Ver en Operaciones', 'operaciones', 'd', 'incidente', '0248'], ['Ir a Cuadrilla', 'cuadrilla', 'm', 'inicio']] },
+      { n: 'Escena 2 · Cambio de escenario', p: 'En la orden, pulsá «Registrar cambio» y completá el formulario (o usá «Completar demo»).', done: !!ch, go: [['Abrir formulario', 'cuadrilla', 'm', 'cambio', '0248']] },
+      { n: 'Escena 3 · Sin conexión', p: 'Pasá «Red de la cuadrilla» a «Sin conexión» (idealmente antes de guardar el cambio). El registro queda pendiente de sincronización y Operaciones no lo ve.', done: S.wentOffline && !!(ch && ch.data.offline), go: [['Ver vista dividida', 'dividida']] },
+      { n: 'Escena 4 · Consulta a la IA', p: 'Abrí el Asistente sin conexión y enviá la consulta sugerida. Revisá el antecedente #0176, los criterios y los límites.', done: has('ai'), go: [['Abrir asistente', 'cuadrilla', 'm', 'asistente']] },
+      { n: 'Escena 5 · Reconexión', p: 'Volvé a «Conectada» y pulsá «Sincronizar ahora». En Operaciones, revisá la alerta y enviá la actualización de la orden.', done: has('update'), go: [['Ir a Cuadrilla', 'cuadrilla', 'm', 'inicio'], ['Ir a Operaciones', 'operaciones', 'd', 'panel']] },
+      { n: 'Escena 6 · Resolución', p: 'En Cuadrilla, «Registrar resultado». En Operaciones o Supervisión, validá el cierre y buscá #0248 en el historial.', done: has('validated'), go: [['Resultado (Cuadrilla)', 'cuadrilla', 'm', 'resultado', '0248'], ['Validar (Supervisión)', 'supervision', 'd', 'incidente', '0248']] }
+    ];
+  }
+  var FRIC_GUIDE = [
+    ['handoff', 'Cuadrilla: «Guardado en el celular» y «Compartido». Operaciones: incidencia #0248 antes de sincronizar.'],
+    ['sindueno', 'Cuadrilla: registros pendientes de sincronizar. Operaciones: alertas del panel, pantalla Alertas y Validaciones.'],
+    ['sobrecarga', 'Operaciones: panel de control y formulario «Actualizar orden».'],
+    ['espera', 'Cuadrilla: orden #0248 después de registrar el cambio, mientras espera la decisión de Operaciones.'],
+    ['sinautoridad', 'Cuadrilla: «Urgencia» del formulario y aviso «Lo decide Operaciones».']
+  ];
+  // Lleva la demostración al momento del recorrido donde se ve cada fricción
+  function fricJump(key) {
+    timers.forEach(clearTimeout); timers = [];
+    var keep = { guide: S.guide }; var wasVideo = videoMode; videoMode = true; persist = false;
+    S = seed(); S.guide = keep.guide; S.fric = true;
+    start('0248'); S.m = { name: 'cambio', id: '0248' }; ensureChangeDraft(); demoFill('change');
+    var target = { side: 'm', sel: '[data-fric="sinautoridad"]' };
+    if (key !== 'sinautoridad') {
+      setOnline(false); saveChange();
+      if (key === 'handoff') { S.role = 'dividida'; S.m = { name: 'registrado', id: '0248' }; S.d = { name: 'incidente', id: '0248' }; target = { side: 'm', sel: '[data-fric="handoff"]' }; }
+      else {
+        setOnline(true); startSync(); completeSync();
+        if (key === 'espera') { S.role = 'cuadrilla'; S.syncUI = null; S.m = { name: 'incidencia', id: '0248' }; target = { side: 'm', sel: '[data-fric="espera"]' }; }
+        else { S.role = 'operaciones'; S.deskRole = 'operaciones'; S.d = { name: 'panel' }; target = { side: 'd', sel: '[data-fric="' + key + '"]' }; }
+      }
+    } else { S.role = 'cuadrilla'; }
+    videoMode = wasVideo; persist = true;
+    try { if (location.hash !== '#' + S.role) location.hash = S.role; } catch (e) { }
+    if (window.innerWidth < 760) S.guide = false;
+    commit();
+    var box = document.querySelector('[data-pane="' + target.side + '"] [data-sk]'), el = document.querySelector('[data-pane="' + target.side + '"] ' + target.sel);
+    if (box && el) box.scrollTop = el.getBoundingClientRect().top - box.getBoundingClientRect().top + box.scrollTop - 90;
+  }
+  function guide() {
+    var open = S.guide === null ? (window.innerWidth > 1240 && S.role === 'cuadrilla') : S.guide;
+    var steps = guideSteps(), cur = steps.findIndex(function (s) { return !s.done; });
+    var h = '<aside class="guide ' + (open ? 'open' : '') + '"><div class="gh"><div><div class="h3">Recorrido de demostración</div><div class="xs muted">Caso #0248 · Calle 12, Sector Norte</div></div><button class="btn ghost sm" data-a="guide" aria-label="Cerrar">' + icon('x', 18) + '</button></div><div class="gb">';
+    h += steps.map(function (s, i) { return '<div class="gstep ' + (s.done ? 'done' : (i === cur ? 'cur' : '')) + '"><div class="n">' + (s.done ? icon('checkCircle', 14) : '') + s.n + '</div><p>' + s.p + '</p><div class="row wrap">' + s.go.map(function (g) { return '<button class="btn secondary sm" data-a="gstep" data-v="' + g.join('|') + '">' + g[0] + '</button>'; }).join('') + '</div></div>'; }).join('');
+    h += '<div class="notice blue" style="margin-top:6px">' + icon('split', 18) + '<div>Usá «Vista dividida» para mostrar al mismo tiempo lo que sabe la Cuadrilla y lo que sabe Operaciones.</div></div>';
+    h += '<div class="h3" style="margin:18px 0 4px">Fricciones operativas · Clase 29</div><p class="small muted" style="margin:0 0 10px">Posibles problemas identificados al analizar el recorrido. No están comprobados ni resueltos.</p>';
+    h += FRIC_GUIDE.map(function (g) { return '<div class="gstep"><div class="fric-tag">' + icon('alert', 13) + FRIC[g[0]][0] + '</div><p>' + g[1] + '</p><button class="btn secondary sm" data-a="fricJump" data-v="' + g[0] + '">Ver en el prototipo</button></div>'; }).join('');
+    return h + '</div></aside>';
+  }
+
+  /* ================= MODALES ================= */
+  function renderModal() {
+    var root = document.getElementById('modal'); if (!root) return;
+    if (!modal) { root.innerHTML = ''; return; }
+    var h = '<div class="modal-bg" data-a="closeModal"><div class="modal" data-stop="1">';
+    if (modal === 'reset') h += '<h3>¿Reiniciar la demostración?</h3><p class="small">Se borran los registros cargados y se vuelve al estado inicial: orden #0248 recién asignada, con conexión.</p><div class="row" style="justify-content:flex-end;margin-top:14px"><button class="btn secondary" data-a="closeModal">Cancelar</button><button class="btn primary" data-a="doReset">Reiniciar</button></div>';
+    if (modal === 'about') h += '<h3>Qué es real y qué es simulado</h3><p class="small muted">Este prototipo funciona completo en el navegador, sin servicios externos.</p><table class="simtbl"><tr><td>Formularios, historial, criterios, búsquedas y filtros</td><td>Funcionan de verdad sobre datos ficticios precargados.</td></tr><tr><td>Almacenamiento</td><td>Se guarda en el navegador (localStorage). Si no está disponible, la demo funciona en memoria.</td></tr><tr><td>Conexión de la cuadrilla</td><td>Simulada con el interruptor «Red de la cuadrilla».</td></tr><tr><td>Servidor central y sincronización</td><td>Simulados dentro del navegador: cada registro indica si ya llegó al otro lado.</td></tr><tr><td>Asistente de IA</td><td>Simulado con reglas y respuestas predefinidas que leen los datos locales. No hay un modelo de IA real.</td></tr><tr><td>Fotos y mapa</td><td>Ilustraciones de referencia, no imágenes reales.</td></tr></table><div class="row" style="justify-content:flex-end;margin-top:14px"><button class="btn primary" data-a="closeModal">Entendido</button></div>';
+    root.innerHTML = h + '</div></div>';
+  }
+
+  /* ================= EVENTOS ================= */
+  function onClick(ev) {
+    var el = ev.target.closest('[data-a]'); if (!el) return;
+    if (el.getAttribute('data-a') === 'closeModal' && ev.target.closest('[data-stop]') && el.classList.contains('modal-bg')) return;
+    var a = el.getAttribute('data-a'), v = el.getAttribute('data-v'), id = el.getAttribute('data-id'), f = el.getAttribute('data-f');
+    var paneEl = el.closest('[data-pane]'), side = paneEl ? paneEl.getAttribute('data-pane') : null;
+    switch (a) {
+      case 'role': setRole(v); break;
+      case 'deskrole': S.deskRole = v; if (S.role !== 'dividida' && !PRES) S.role = v; if (v === 'supervision' && S.d.name === 'panel') S.d = { name: 'validaciones' }; commit(); break;
+      case 'toggleNet': setOnline(!S.online); break;
+      case 'guide': S.guide = !(S.guide === null ? (window.innerWidth > 1240 && S.role === 'cuadrilla') : S.guide); commit(); break;
+      case 'reset': modal = 'reset'; renderModal(); break;
+      case 'about': modal = 'about'; renderModal(); break;
+      case 'fricToggle': S.fric = !fricOn(); commit(); break;
+      case 'fricJump': fricJump(v); break;
+      case 'closeModal': modal = null; renderModal(); break;
+      case 'doReset': modal = null; resetAll(); break;
+      case 'mtab': S.formError = null; if (v === 'orden') go('m', 'incidencia', '0248'); else go('m', v); break;
+      case 'mgo': S.formError = null; go('m', v, id); break;
+      case 'mback': S.formError = null; var bk = { incidencia: 'inicio', cambio: 'incidencia', registrado: 'incidencia', caso: 'historial', resultado: 'incidencia', cierre: 'incidencia' }[S.m.name] || 'inicio'; go('m', bk, '0248'); break;
+      case 'start': start(id); break;
+      case 'toggle': var arr = getPath(f) || []; var i = arr.indexOf(v); if (i >= 0) arr.splice(i, 1); else arr.push(v); setPath(f, arr); commit(); break;
+      case 'set': setPath(f, v); commit(); break;
+      case 'setb': setPath(f, v === '1'); commit(); break;
+      case 'step': var nn = (parseInt(getPath(f) || '0', 10) || 0) + parseInt(v, 10); setPath(f, nn > 0 ? String(nn) : ''); commit(); break;
+      case 'addPhoto': var ph = getPath(f) || []; var kinds = f.indexOf('result') === 0 ? ['reparacion', 'calzada', 'vereda'] : ['calzada', 'vereda', 'reparacion']; ph.push(kinds[ph.length % 3]); setPath(f, ph); commit(); break;
+      case 'demoFill': demoFill(v); break;
+      case 'saveChange': saveChange(); break;
+      case 'sync': doSync(); break;
+      case 'closeSync': S.syncUI = null; commit(); break;
+      case 'ask': ask(S.drafts.composer); break;
+      case 'askv': ask(v); break;
+      case 'critgo': S.crit.hl = v === 'hl' ? ['CO-DOC-01', 'CO-SEG-01', 'CO-DOC-02', 'CO-MAN-01', 'CO-ESC-01'] : (/^CO-/.test(v) ? [v] : []); S.crit.cat = /^CO-/.test(v) || v === 'hl' ? 'todas' : v; S.crit.open = /^CO-/.test(v) ? v : (v === 'esc' ? 'CO-ESC-01' : null); if (side === 'd') go('d', 'criterios'); else go('m', 'criterios'); break;
+      case 'critcat': S.crit.cat = v; S.crit.hl = []; commit(); break;
+      case 'critopen': S.crit.open = S.crit.open === v ? null : v; commit(); break;
+      case 'casego': if (side === 'd') go('d', 'caso', v); else go('m', 'caso', v); break;
+      case 'histst': S.hist.status = v; commit(); break;
+      case 'dgo': S.formError = null; go('d', v, id); break;
+      case 'dinc': S.formError = null; go('d', 'incidente', v); break;
+      case 'openAlert': var al = S.alerts.filter(function (x) { return x.id === v; })[0]; if (al) { al.read = true; go('d', 'incidente', al.inc); } break;
+      case 'sendUpdate': sendUpdate(); break;
+      case 'sendResult': sendResult(); break;
+      case 'validate': validate(); break;
+      case 'gstep': var g = v.split('|'); if (g[1]) setRole(g[1]); if (g[2]) go(g[2], g[3], g[4]); if (window.innerWidth < 760) { S.guide = false; commit(); } break;
+    }
+  }
+  function onInput(ev) {
+    var el = ev.target;
+    var f = el.getAttribute('data-f');
+    if (f) { if (f === 'composer') S.drafts.composer = el.value; else setPath(f, el.value); save(); return; }
+    if (el.getAttribute('data-a-input') === 'histq') { S.hist.q = el.value; commit(); }
+  }
+  function onChange(ev) {
+    var el = ev.target;
+    if (el.getAttribute('data-a-change') === 'histsec') { S.hist.sector = el.value; commit(); }
+    if (el.tagName === 'SELECT' && el.getAttribute('data-f')) { setPath(el.getAttribute('data-f'), el.value); commit(); }
+  }
+  function onKey(ev) {
+    if (ev.target.getAttribute && ev.target.getAttribute('data-f') === 'composer' && ev.key === 'Enter' && !ev.shiftKey) { ev.preventDefault(); ask(ev.target.value); }
+    if (ev.key === 'Escape' && modal) { modal = null; renderModal(); }
+    if (PRES && ev.altKey && ev.shiftKey && ev.code === 'KeyR') { ev.preventDefault(); resetAll(); }
+  }
+  function resetAll() { timers.forEach(clearTimeout); timers = []; var role = S.role, g = S.guide; S = seed(); S.role = role; S.guide = g; commit(); toast(PRES ? 'Reiniciado' : 'Demostración reiniciada', 'refresh'); }
+  function applyHash() { var h = (location.hash || '').slice(1); if (PRES) { if (h === 'reiniciar') { resetAll(); try { history.replaceState(null, '', location.pathname + location.search); } catch (e) { location.hash = ''; } } return; } if (['cuadrilla', 'operaciones', 'supervision', 'dividida'].indexOf(h) >= 0 && h !== S.role) setRole(h); }
+
+  /* ================= INICIO ================= */
+  function init() {
+    S = load() || seed();
+    if (PRES) { S.role = 'dividida'; S.fric = false; S.guide = false; document.body.classList.add('pres'); }
+    if (S.chatPending) S.chatPending = false;
+    if (S.syncUI && S.syncUI.phase === 'syncing') S.syncUI.phase = 'recovered';
+    document.addEventListener('click', onClick);
+    document.addEventListener('input', onInput);
+    document.addEventListener('change', onChange);
+    document.addEventListener('keydown', onKey);
+    window.addEventListener('hashchange', applyHash);
+    applyHash();
+    render();
+  }
+
+  /* API para automatizar la demostración y grabar el video */
+  window.CAMPO = {
+    state: function () { return S; }, exportState: function () { return clone(S); },
+    loadState: function (o) { S = clone(o); S.chatPending = !!o.chatPending; render(); },
+    reset: function () { S = seed(); render(); }, render: render,
+    go: function (side, name, id) { go(side, name, id); }, role: setRole, online: setOnline,
+    start: start, saveChange: saveChange, ask: ask, sync: doSync, startSync: startSync, completeSync: completeSync,
+    sendUpdate: sendUpdate, sendResult: sendResult, validate: validate, demoFill: demoFill,
+    set: function (path, v) { var parts = path.split('.'), o = S; for (var i = 0; i < parts.length - 1; i++) o = o[parts[i]]; o[parts[parts.length - 1]] = v; render(); },
+    embed: function (side) { embedSide = side; document.body.classList.add('embed'); render(); },
+    video: function (on) { videoMode = !!on; persist = !on; render(); },
+    scroll: function (side, y) { var el = document.querySelector('[data-pane="' + side + '"] [data-sk]'); if (el) el.scrollTop = y; return el ? el.scrollHeight - el.clientHeight : 0; },
+    scrollTo: function (side, sel, off) { var box = document.querySelector('[data-pane="' + side + '"] [data-sk]'), el = document.querySelector('[data-pane="' + side + '"] ' + sel); if (box && el) { box.scrollTop = el.getBoundingClientRect().top - box.getBoundingClientRect().top + box.scrollTop - (off || 0); } },
+    rect: function (side, sel) { var el = document.querySelector((side ? '[data-pane="' + side + '"] ' : '') + sel); if (!el) return null; var r = el.getBoundingClientRect(); return { x: r.left, y: r.top, w: r.width, h: r.height }; }
+  };
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init); else init();
+})();
+
+</script>
+</body>
+</html>
